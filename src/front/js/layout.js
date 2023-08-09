@@ -13,6 +13,11 @@ import Footwear from './views/Footwear.jsx'
 import Clothes from './views/Clothes.jsx'
 import ProductDetails from './views/ProductDetails.jsx'
 import Accessories from './views/Accessories.jsx'
+
+import AboutUs from './views/AboutUs.jsx'
+import Feactures from './views/Feactures.jsx'
+
+
 import Footer from './component/Footer.jsx'
 import PrivateRoute from './component/PrivateRoute.jsx'
 
@@ -42,6 +47,10 @@ const Layout = () => {
             <Route path='/accesories' element={<Accessories />} />
             <Route path='*' element={<h1>Not found!</h1>} />
 
+            <Route path='/aboutUs' element={<AboutUs />} />
+            <Route path='/feactures' element={<Feactures />} />
+
+
             {/* Private routes */}
             <Route element={<PrivateRoute />}>
               <Route path='/cart' element={<Cart />} />
@@ -49,6 +58,7 @@ const Layout = () => {
               <Route path='/settings' element={<Settings />} />
               <Route path='/create' element={<Create />} />
             </Route>
+
           </Routes>
           <Outlet />
           <Footer />
