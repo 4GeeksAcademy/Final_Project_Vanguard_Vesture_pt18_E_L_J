@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: be7e0040bd8d
+Revision ID: 39f9c386d2b4
 Revises: 
-Create Date: 2023-08-05 23:23:36.186449
+Create Date: 2023-08-08 21:44:53.291613
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'be7e0040bd8d'
+revision = '39f9c386d2b4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,11 +23,6 @@ def upgrade():
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
-    )
-    op.create_table('sizes',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=250), nullable=False),
-    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -54,10 +49,16 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=200), nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
-    sa.Column('description', sa.String(length=1000), nullable=True),
-    sa.Column('color', sa.String(length=50), nullable=True),
-    sa.Column('image_url', sa.String(length=350), nullable=True),
-    sa.Column('type', sa.String(length=100), nullable=True),
+    sa.Column('description', sa.String(length=1000), nullable=False),
+    sa.Column('color', sa.String(length=50), nullable=False),
+    sa.Column('type', sa.String(length=100), nullable=False),
+    sa.Column('category_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('sizes',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=250), nullable=False),
     sa.Column('category_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -76,6 +77,14 @@ def upgrade():
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.PrimaryKeyConstraint('order_id', 'product_id')
+    )
+    op.create_table('product_images',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('image_url', sa.String(length=500), nullable=False),
+    sa.Column('product_id', sa.Integer(), nullable=False),
+    sa.Column('order', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('product_sizes_stock',
     sa.Column('product_id', sa.Integer(), nullable=False),
@@ -113,11 +122,12 @@ def downgrade():
     op.drop_table('shopping_carts')
     op.drop_table('products_rating')
     op.drop_table('product_sizes_stock')
+    op.drop_table('product_images')
     op.drop_table('order_items')
     op.drop_table('favorites')
+    op.drop_table('sizes')
     op.drop_table('products')
     op.drop_table('orders')
     op.drop_table('users')
-    op.drop_table('sizes')
     op.drop_table('categories')
     # ### end Alembic commands ###

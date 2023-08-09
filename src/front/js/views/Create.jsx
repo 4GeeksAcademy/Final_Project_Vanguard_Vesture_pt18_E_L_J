@@ -7,13 +7,16 @@ import { Context } from '../store/appContext.js'
 
 const Create = () => {
   const { store } = useContext(Context)
-  
-  if (!store.user.is_admin) return <Navigate to='/' />
+
+  // if (!store.user.is_admin) return <Navigate to='/' />
 
   return (
     <div>
       <Navbar />
-      <NewProduct />
+      <div className='container'>
+        <h1 className='my-2'>Create product</h1>
+        <NewProduct />
+      </div>
     </div>
   )
 }

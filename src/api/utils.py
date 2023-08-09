@@ -78,27 +78,20 @@ def save_new_product(request_body):
         )
     
     
-    try:
-        product = Product(name=request_body['name'], price=request_body['price'],
-            description=request_body.get('description'), color=request_body.get('color'),
-            image_url=request_body.get('image_url'), category_id=request_body['category_id'],
-            type=request_body.get('type')
-        )
-        db.session.add(product)
-        if request_body.get('sizes_quantity') is not None:
-            for size in request_body['sizes_quantity']:
-                size_db = Size.query.get(size['size_id'])
-                if size_db is None:
-                    raise APIException(message=f'Size with id {size["size_id"]} not found', status_code=422)
-                size_quantity = ProductSizeStock(size=size_db, product=product, stock=size['quantity'])
-                db.session.add(size_quantity)
-                
-        db.session.commit()
-    except exc.IntegrityError as e:
-        db.session.rollback()
-        message = generate_error_message(str(e.orig))
-        raise APIException(message=message, status_code=400)
-
+    product = Product(name=request_body['name'], price=request_body['price'],
+        description=request_body.get('description'), color=request_body.get('color'), category_id=request_body['category_id'],
+        type=request_body.get('type')
+    )
+    db.session.add(product)
+    if request_body.get('sizes_stock') is not None:
+        for size in request_body['sizes_stock']:
+            size_db = Size.query.get(size['id'])
+            if size_db is None:
+                raise APIException(message=f'Size with id {size["id"]} not found', status_code=422)
+            size_quantity = ProductSizeStock(size=size_db, product=product, stock=size['stock'])
+            db.session.add(size_quantity)
+            
+    db.session.commit()
     return product
 
 def update_product_by_id(id, request_body):

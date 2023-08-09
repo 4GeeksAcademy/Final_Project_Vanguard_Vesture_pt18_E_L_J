@@ -542,8 +542,15 @@ def delete_category(category_id):
 # Size routes
 @api.route('/sizes', methods=['GET'])
 def all_sizes():
-    sizes = Size.query.all()
-    return jsonify([s.serialize() for s in sizes]), 200
+    clothes_sizes = Size.query.filter_by(category_id=1).all()
+    accessories_sizes = Size.query.filter_by(category_id=2).all()
+    shoes_sizes = Size.query.filter_by(category_id=3).all()
+
+    return jsonify({
+        'clothes': [s.serialize() for s in clothes_sizes],
+        'accessories': [s.serialize() for s in accessories_sizes],
+        'shoes': [s.serialize() for s in shoes_sizes]
+    }), 200
 
 @api.route('/sizes/<int:size_id>', methods=['GET'])
 def get_size_by_id(size_id):
@@ -551,6 +558,21 @@ def get_size_by_id(size_id):
     if size is None:
         raise APIException(message='Size not found', status_code=404)
     return jsonify(size.serialize()), 200
+
+@api.route('/sizes/clothes', methods=['GET'])
+def get_clothes_sizes():
+    sizes = Size.query.filter_by(category_id=1).all()
+    return jsonify([s.serialize() for s in sizes]), 200
+
+@api.route('/sizes/accessories', methods=['GET'])
+def get_accessories_sizes():
+    sizes = Size.query.filter_by(category_id=2).all()
+    return jsonify([s.serialize() for s in sizes]), 200
+
+@api.route('/sizes/shoes', methods=['GET'])
+def get_shoes_sizes():
+    sizes = Size.query.filter_by(category_id=3).all()
+    return jsonify([s.serialize() for s in sizes]), 200
 
 @api.route('/sizes', methods=['POST'])
 @jwt_required()
@@ -560,13 +582,16 @@ def create_size():
     check_is_admin_by_user_id(current_user_id) 
     if 'name' not in request_body:
         raise APIException(message='Name is required', status_code=422)
+    if 'category_id' not in request_body:
+        raise APIException(message='Category ID is required', status_code=422)
     
     # Checks is the size exists by the name
     size = Size.query.filter_by(name=request_body['name']).first()
     if size is not None:
-        raise APIException(message='Size already exists', status_code=409)
+        raise APIException(message='Size name already exists', status_code=409)
     
-    size = Size(name=request_body['name'].upper())
+    category = Category.query.get(request_body['category_id'])
+    size = Size(name=request_body['name'].upper(), category=category)
     db.session.add(size)
     db.session.commit()
     

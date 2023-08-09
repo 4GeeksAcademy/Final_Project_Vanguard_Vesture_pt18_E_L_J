@@ -1,187 +1,226 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Context } from '../store/appContext.js'
 import { useNavigate } from 'react-router-dom'
+import { Context } from '../store/appContext.js'
+
+const CATEGORIES = {
+  1: 'clothes',
+  2: 'choes',
+  3: 'accessories',
+}
 
 const NewProduct = () => {
-  // let navigate = useNavigate()
-  // const userString = localStorage.getItem('user')
-  // const user = JSON.parse(userString);
-
   const { actions, store } = useContext(Context)
+  const [selectedCategory, setSelectedCategory] = useState(1)
+  const [sizes, setSizes] = useState(null)
+  const [newSizeName, setNewSizeName] = useState('')
 
+  const navigate = useNavigate()
 
-  // Get the input values (You can replace these with actual data from your model)
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
-  const [color, setColor] = useState('');
-  const [type, setType] = useState('');
-  const [category_id, setCategory] = useState('');
-  // const [sizes , setSizes] = useState({S:"" , M:"" , L:"" , XL:""});
-  const [imageUrl , setImageUrl] = useState('');
+  useEffect(() => {
+    actions.getSizes().then((res) => setSizes(res))
+  }, [])
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
+    // Sizes that have stock > 0
+    const product = {
+      name: event.target.name.value,
+      price: event.target.price.value,
+      description: event.target.description.value,
+      color: event.target.color.value,
+      type: event.target.type.value,
+      category_id: selectedCategory,
+      sizes_stock: sizes[CATEGORIES[selectedCategory]].filter((s) => Boolean(s.stock)),
+    }
+    actions.addNewProduct(product).then((res) => navigate(`/product/${res.id}`))
+  }
 
-    // Aquí puedes llamar a la función actions.SendCreateProduct con los datos del formulario
-    // const newForm = {
-    //   name,
-    //   price,
-    //   description,
-    //   color,
-    //   type,
-    //   category_id,
-    //   // sizes: sizes.split(',').map((size) => size.trim()), // Convertir el string de tallas a un arreglo
-    //   imageUrl,
-    // };
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(Number(event.target.value))
+  }
 
-   
-    // Llama a la función para manejar el envío del formulario con los datos del formData
-    
-      actions.addNewProduct( name,
-        price,
-        description,
-        color,
-        type,
-        category_id,
-        imageUrl)
- 
-    // Restablecer los campos del formulario a su estado inicial
-    setName('');
-    setPrice('');
-    setDescription('');
-    setColor('');
-    setType('');
-    setCategory('');
-    // setSizes('');
-    setImageUrl('');
-  };
+  const handleSizeStockChange = (event) => {
+    const sizeId = Number(event.target.id)
+    const stock = Number(event.target.value)
+    const newSizes = sizes[CATEGORIES[selectedCategory]].map((size) => {
+      if (size.id === sizeId) {
+        return { ...size, stock }
+      }
+      return size
+    })
+    setSizes({ ...sizes, [CATEGORIES[selectedCategory]]: newSizes })
+  }
 
-  const handleCancel = () => {
-    setName('');
-    setPrice('');
-    setDescription('');
-    setColor('');
-    setType('');
-    setCategory('');
-    // setSizes('');
-    setImgageUrl('');
-  };
-
-
-
+  const handleCreateSize = (event) => {
+    actions.createSize(newSizeName, selectedCategory).then((res) => {
+      setSizes({
+        ...sizes,
+        [CATEGORIES[selectedCategory]]: [
+          ...sizes[CATEGORIES[selectedCategory]],
+          res,
+        ],
+      })
+      setNewSizeName('')
+    })
+  }
 
   return (
     <div>
-      <form
-      style={{ borderRadius: '15px' }}
-      className='card w-75 mx-auto m-5 text-white bg-black'
-      id='dataCard'
-      onSubmit={handleSubmit}
-    >
-      <div className='row p-5'>
-        <div className='col'>
-          <div className='m-1'>
-            <span>NAME</span>
-            <input
-            className='m-1 text-center'
-              type='text'
-              id='name'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className='m-1'>
-            <span>PRICE</span>
-            <input
-            className='m-1 text-center'
-              type='text'
-              id='price'
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-            />
-          </div>
-          <div className='m-1'>
-            <span>DESCRIPTION</span>
-            <input
-            className='m-1 text-center'
-              type='text'
-              id='description'
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-          <div className='m-1'>
-            <span>COLOR</span>
-            <input
-            className='m-1 text-center'
-              type='text'
-              id='color'
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-            />
-          </div>
-          <div className='m-1'>
-            <span>TYPE</span>
-            <input
-            className='m-1 text-center'
-              type='text'
-              id='type'
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            />
-          </div>
-          <div className='m-1'>
-            <span>CATEGORY</span>
-            <input
-            className='m-1 text-center'
-              type='text'
-              id='category'
-              value={category_id}
-              onChange={(e) => setCategory(e.target.value)}
-            />
-          </div>
-          {/* <div className='m-1'>
-            <span>SIZES</span>
-            <input
-            className='m-1 text-center'
-              type='text'
-              id='sizes'
-              value={sizes}
-              onChange={(e) => setSizes(e.target.value)}
-            />
-          </div> */}
+      <form onSubmit={handleSubmit}>
+        <div className='mb-3'>
+          <label htmlFor='name' className='form-label h4'>
+            Name
+          </label>
+          <input type='text' className='form-control' id='name' required />
         </div>
 
-        <div className='col'>
-          <div className='m-1 text-center'>
-            <span className='row'>PHOTO</span>
+        <div className='mb-3'>
+          <label htmlFor='price' className='form-label h4'>
+            Price
+          </label>
+          <input
+            type='number'
+            className='form-control'
+            id='price'
+            step='any'
+            required
+          />
+        </div>
+
+        <div className='mb-3'>
+          <label htmlFor='description' className='form-label h4'>
+            Description
+          </label>
+          <textarea
+            className='form-control'
+            id='description'
+            rows='3'
+            required
+          ></textarea>
+        </div>
+
+        <div className='mb-3'>
+          <label htmlFor='color' className='form-label h4'>
+            Color
+          </label>
+          <input type='text' className='form-control' id='color' required />
+        </div>
+
+        <div className='mb-3'>
+          <label htmlFor='type' className='form-label h4'>
+            Type
+          </label>
+          <input type='text' className='form-control' id='type' required />
+        </div>
+
+        <h4>Category</h4>
+        <div className='mb-3'>
+          <div className='form-check'>
             <input
-            className='m-1 text-center'
-              type='text'
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder='URL de la imagen'
+              className='form-check-input'
+              type='radio'
+              name='category'
+              id='clothes'
+              value={1}
+              checked={selectedCategory === 1}
+              onChange={handleCategoryChange}
             />
-            <img
-              className='row'
-              style={{ objectFit: 'cover', width: '400px', borderRadius: '15px' }}
-              src={imageUrl}
-              alt=''
+            <label className='form-check-label' htmlFor='clothes'>
+              Clothes
+            </label>
+          </div>
+          <div className='form-check'>
+            <input
+              className='form-check-input'
+              type='radio'
+              name='category'
+              id='accessories'
+              value={2}
+              checked={selectedCategory === 2}
+              onChange={handleCategoryChange}
             />
+            <label className='form-check-label' htmlFor='accessories'>
+              Accessories
+            </label>
+          </div>
+          <div className='form-check'>
+            <input
+              className='form-check-input'
+              type='radio'
+              name='category'
+              id='shoes'
+              value={3}
+              checked={selectedCategory === 3}
+              onChange={handleCategoryChange}
+            />
+            <label className='form-check-label' htmlFor='shoes'>
+              Shoes
+            </label>
           </div>
         </div>
-      </div>
 
-      <button type='submit' className='btn btn-success m-3'>
-        CREATE
-      </button>
-      <button type='button' className='btn btn-danger m-3' onClick={handleCancel}>
-        CANCEL
-      </button>
-    </form>
+        <div className='mb-3'>
+          <h4>Stock</h4>
+          <div className='row g-2'>
+            {sizes &&
+              sizes[CATEGORIES[selectedCategory]].map((size) => {
+                return (
+                  <div
+                    className='d-flex flex-column align-items-center gap-1 p-1 col-6 col-md-4 col-lg-3'
+                    style={{ minWidth: '150px' }}
+                    key={size.id}
+                  >
+                    <label htmlFor={size.id} className='fs-4 fw-bold'>
+                      {size.name}
+                    </label>
+                    <div className='d-flex gap-2 align-items-center'>
+                      <input
+                        type='number'
+                        id={size.id}
+                        style={{
+                          width: '60px',
+                        }}
+                        onChange={handleSizeStockChange}
+                        value={size.stock || 0}
+                        min='0'
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+          </div>
+        </div>
 
+        {/* Add new size */}
+        <div className='mb-3'>
+          <h4>Add new size</h4>
+          <div className='d-flex gap-2 align-items-center'>
+            <input
+              type='text'
+              id='newSize'
+              style={{
+                width: '60px',
+              }}
+              value={newSizeName}
+              onChange={(e) => setNewSizeName(e.target.value)}
+            />
+            <button
+              type='button'
+              className='btn btn-dark'
+              onClick={handleCreateSize}
+            >
+              Add
+            </button>
+          </div>
+          <div id='size-help' className='form-text'>
+            The size will be added to the selected category
+          </div>
+        </div>
+
+        <button type='submit' className='btn btn-dark'>
+          Submit
+        </button>
+      </form>
     </div>
   )
 }
