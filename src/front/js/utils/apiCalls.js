@@ -18,9 +18,10 @@ async function makeRequest(url, method = 'GET', body = null, token = null) {
   const data = await response.json()
 
   if (!response.ok) {
-    const newError = new Error(data.message)
+    const newError = new Error()
     newError.httpStatus = response.status
     newError.missing_values = response.missing_values
+    newError.message = data.message
     throw newError
   }
   return data
@@ -64,9 +65,31 @@ export async function validateToken(token) {
 }
 
 export async function createProduct(product, token) {
-  const response = await makeRequest('/products', 'POST', product, token)
-
-  return response
+  const createdProduct = await makeRequest('/products', 'POST', product, token)
+  const imagesFromCloudinary = await Promise.all(
+    product.images.map((image) => {
+      const imgFormData = new FormData()
+      imgFormData.append('file', image)
+      imgFormData.append('cloud_name', 'dspkak5d0')
+      imgFormData.append('upload_preset', 'vanguar_vesture_preset')
+      return fetch('https://api.cloudinary.com/v1_1/dspkak5d0/image/upload', {
+        method: 'POST',
+        body: imgFormData,
+      })
+    })
+  ).then((responses) => Promise.all(responses.map((res) => res.json())))
+  
+  const imagesFromDB = await Promise.all(
+    imagesFromCloudinary.map((img, index) => {
+      return makeRequest(
+        `/products/${createdProduct.id}/images`,
+        'POST',
+        { image_url: img.url.toString(), order: index },
+        token
+      )
+    })
+  )
+  return { ...createdProduct, images: imagesFromDB }
 }
 
 export async function getFavorites(token) {

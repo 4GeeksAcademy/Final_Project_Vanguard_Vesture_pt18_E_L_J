@@ -2,9 +2,16 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Context } from '../store/appContext.js'
 
+import ImageList from '@mui/material/ImageList'
+import ImageListItem from '@mui/material/ImageListItem'
+
+import uuid from 'react-uuid'
+
+import styles from '../views/styles/NewProduct.module.css'
+
 const CATEGORIES = {
   1: 'clothes',
-  2: 'choes',
+  2: 'shoes',
   3: 'accessories',
 }
 
@@ -13,6 +20,10 @@ const NewProduct = () => {
   const [selectedCategory, setSelectedCategory] = useState(1)
   const [sizes, setSizes] = useState(null)
   const [newSizeName, setNewSizeName] = useState('')
+  const [images, setImages] = useState([])
+
+  const [isDragging, setIsDragging] = useState(false)
+  const handleDragging = (dragging) => setIsDragging(dragging)
 
   const navigate = useNavigate()
 
@@ -22,7 +33,6 @@ const NewProduct = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    // Sizes that have stock > 0
     const product = {
       name: event.target.name.value,
       price: event.target.price.value,
@@ -30,7 +40,11 @@ const NewProduct = () => {
       color: event.target.color.value,
       type: event.target.type.value,
       category_id: selectedCategory,
-      sizes_stock: sizes[CATEGORIES[selectedCategory]].filter((s) => Boolean(s.stock)),
+      // Sizes that have stock > 0 and belong to the selected category
+      sizes_stock: sizes[CATEGORIES[selectedCategory]].filter((s) =>
+        Boolean(s.stock)
+      ),
+      images,
     }
     actions.addNewProduct(product).then((res) => navigate(`/product/${res.id}`))
   }
@@ -62,6 +76,20 @@ const NewProduct = () => {
       })
       setNewSizeName('')
     })
+  }
+
+  const handleOnDrop = (event, image) => {
+    event.preventDefault()
+    const droppedImageId = event.dataTransfer.getData('imageId')
+    const droppedImage = images.find((img) => img.id === droppedImageId)
+    const draggedOverImageId = image.id
+    const draggedOverImage = images.find((img) => img.id === draggedOverImageId)
+    const droppedImageIndex = images.indexOf(droppedImage)
+    const draggedOverImageIndex = images.indexOf(draggedOverImage)
+    const newImages = [...images]
+    newImages[droppedImageIndex] = draggedOverImage
+    newImages[draggedOverImageIndex] = droppedImage
+    setImages(newImages)
   }
 
   return (
@@ -159,6 +187,32 @@ const NewProduct = () => {
           </div>
         </div>
 
+        {/* Add new size */}
+        <div className='mb-3'>
+          <h4>Add new size</h4>
+          <div className='d-flex gap-2 align-items-center'>
+            <input
+              type='text'
+              id='newSize'
+              style={{
+                width: '60px',
+              }}
+              value={newSizeName}
+              onChange={(e) => setNewSizeName(e.target.value)}
+            />
+            <button
+              type='button'
+              className='btn btn-dark'
+              onClick={handleCreateSize}
+            >
+              Add
+            </button>
+          </div>
+          <div id='size-help' className='form-text'>
+            The size will be added to the selected category
+          </div>
+        </div>
+
         <div className='mb-3'>
           <h4>Stock</h4>
           <div className='row g-2'>
@@ -191,29 +245,67 @@ const NewProduct = () => {
           </div>
         </div>
 
-        {/* Add new size */}
+        {/* Images */}
         <div className='mb-3'>
-          <h4>Add new size</h4>
-          <div className='d-flex gap-2 align-items-center'>
-            <input
-              type='text'
-              id='newSize'
-              style={{
-                width: '60px',
-              }}
-              value={newSizeName}
-              onChange={(e) => setNewSizeName(e.target.value)}
-            />
-            <button
-              type='button'
-              className='btn btn-dark'
-              onClick={handleCreateSize}
-            >
-              Add
-            </button>
-          </div>
-          <div id='size-help' className='form-text'>
-            The size will be added to the selected category
+          <h4>Images</h4>
+          <input
+            className='d-block my-2'
+            type='file'
+            accept='image/png, image/jpg, image/jpeg'
+            name='image'
+            onChange={(e) => {
+              const file = e.target.files[0]
+              file['id'] = uuid()
+              setImages([...images, e.target.files[0]])
+              e.target.value = null
+            }}
+          />
+          {/* <button type='submit' className='btn btn-primary' onClick={() => {}}>
+            Add Image
+          </button> */}
+          {images.length > 0 && (
+            <div id='size-help' className='form-text'>
+              Drag and drop to reorder images
+            </div>
+          )}
+          {/* Preview de images */}
+          <div>
+            <div className='d-flex flex-wrap gap-2'>
+              {images.map((image) => (
+                <div
+                  key={image.id}
+                  className='d-flex flex-column gap-1 align-items-center mt-2'
+                  style={{ height: '260px', width: '200px' }}
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData('imageId', image.id)
+                    setIsDragging(true)
+                  }}
+                  onDragEnd={() => setIsDragging(false)}
+                  onDrop={(e) => handleOnDrop(e, image)}
+                  onDragOver={(e) => e.preventDefault()}
+                >
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={image.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                  <button
+                    type='button'
+                    className='btn btn-danger'
+                    onClick={() => {
+                      setImages(images.filter((img) => img.id !== image.id))
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

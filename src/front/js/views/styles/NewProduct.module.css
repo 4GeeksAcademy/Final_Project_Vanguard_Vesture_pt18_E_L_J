@@ -1,0 +1,5 @@
+.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+    border: 2px solid #888888;
+}

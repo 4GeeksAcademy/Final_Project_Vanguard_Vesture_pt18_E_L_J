@@ -1,5 +1,10 @@
 import * as api from '../utils/apiCalls.js'
 const API_URL = process.env.BACKEND_URL + 'api'
+const CATEGORIES = {
+  1: 'clothes',
+  2: 'shoes',
+  3: 'accessories',
+}
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -85,6 +90,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         type,
         category_id,
         sizes_stock,
+        images
       }) => {
         const product = {
           name,
@@ -94,11 +100,13 @@ const getState = ({ getStore, getActions, setStore }) => {
           type,
           category_id,
           sizes_stock,
+          images
         }
-        const response = await api.createProduct(product, getStore().token)
-        console.log(response)
+        const createdProduct = await api.createProduct(product, getStore().token)
         console.log('Succefully created product')
-        return response
+        console.log(createdProduct)
+        setStore({ [CATEGORIES[category_id]]: [...getStore()[CATEGORIES[category_id]], createdProduct] })
+        return createdProduct
       },
 
       getClothes: async () => {
