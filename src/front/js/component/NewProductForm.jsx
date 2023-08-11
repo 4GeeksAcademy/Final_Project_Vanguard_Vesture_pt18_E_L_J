@@ -90,155 +90,163 @@ const NewProduct = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className='mb-3'>
-          <label htmlFor='name' className='form-label h4'>
-            Name
-          </label>
-          <input type='text' className='form-control' id='name' required />
-        </div>
+        <div className='row mb-3 g-3'>
+          {/* Name */}
+          <div className='col-12 col-lg-6'>
+            <label htmlFor='name' className='form-label h4'>
+              Name
+            </label>
+            <input type='text' className='form-control' id='name' required />
+          </div>
 
-        <div className='mb-3'>
-          <label htmlFor='price' className='form-label h4'>
-            Price
-          </label>
-          <input
-            type='number'
-            className='form-control'
-            id='price'
-            step='any'
-            required
-          />
-        </div>
+          {/* Price */}
+          <div className='col-6 col-lg-4'>
+            <label htmlFor='price' className='form-label h4'>
+              Price
+            </label>
+            <input
+              type='number'
+              className='form-control'
+              id='price'
+              step='any'
+              required
+            />
+          </div>
 
-        <div className='mb-3'>
-          <label htmlFor='description' className='form-label h4'>
-            Description
-          </label>
-          <textarea
-            className='form-control'
-            id='description'
-            rows='3'
-            required
-          ></textarea>
-        </div>
+          {/* Color */}
+          <div className='col-6 col-lg-3'>
+            <label htmlFor='color' className='form-label h4'>
+              Color
+            </label>
+            <input type='text' className='form-control' id='color' required />
+          </div>
 
-        <div className='mb-3'>
-          <label htmlFor='color' className='form-label h4'>
-            Color
-          </label>
-          <input type='text' className='form-control' id='color' required />
-        </div>
+          {/* Type */}
+          <div className='col-6 col-lg-3'>
+            <label htmlFor='type' className='form-label h4'>
+              Type
+            </label>
+            <input type='text' className='form-control' id='type' required />
+          </div>
 
-        <div className='mb-3'>
-          <label htmlFor='type' className='form-label h4'>
-            Type
-          </label>
-          <input type='text' className='form-control' id='type' required />
-        </div>
-
-        {/* Images */}
-        <div className='mb-3'>
-          <h4>Images</h4>
-          <InputImage inputOnChange={handleImageOnChage} />
-          {images.length > 0 && (<>
-            <div id='size-help' className='form-text'>
-              Drag and drop to reorder images
+          {/* Categories */}
+          <div className='col-6 col-lg-6 ps-lg-5'>
+            <h4>Category</h4>
+            <div className='form-check'>
+              <input
+                className='form-check-input'
+                type='radio'
+                name='category'
+                id='clothes'
+                value={1}
+                checked={selectedCategory === 1}
+                onChange={handleCategoryChange}
+              />
+              <label className='form-check-label' htmlFor='clothes'>
+                Clothes
+              </label>
             </div>
-            <div id='size-help' className='form-text'>
-              The first image will be the main image
+            <div className='form-check'>
+              <input
+                className='form-check-input'
+                type='radio'
+                name='category'
+                id='accessories'
+                value={2}
+                checked={selectedCategory === 2}
+                onChange={handleCategoryChange}
+              />
+              <label className='form-check-label' htmlFor='accessories'>
+                Accessories
+              </label>
             </div>
-            </>
-          )}
-          {/* Preview de images */}
-          <PreviewImages
-            images={images}
-            onDragStart={handleOnDragStart}
-            onDrop={handleOnDrop}
-            setIsDragging={setIsDragging}
-            isDragging={isDragging}
-            onDelete={handleDeleteImage}
-          />
-        </div>
-
-        {/* Categories */}
-        <h4>Category</h4>
-        <div className='mb-3'>
-          <div className='form-check'>
-            <input
-              className='form-check-input'
-              type='radio'
-              name='category'
-              id='clothes'
-              value={1}
-              checked={selectedCategory === 1}
-              onChange={handleCategoryChange}
-            />
-            <label className='form-check-label' htmlFor='clothes'>
-              Clothes
-            </label>
+            <div className='form-check'>
+              <input
+                className='form-check-input'
+                type='radio'
+                name='category'
+                id='shoes'
+                value={3}
+                checked={selectedCategory === 3}
+                onChange={handleCategoryChange}
+              />
+              <label className='form-check-label' htmlFor='shoes'>
+                Shoes
+              </label>
+            </div>
           </div>
-          <div className='form-check'>
-            <input
-              className='form-check-input'
-              type='radio'
-              name='category'
-              id='accessories'
-              value={2}
-              checked={selectedCategory === 2}
-              onChange={handleCategoryChange}
-            />
-            <label className='form-check-label' htmlFor='accessories'>
-              Accessories
-            </label>
-          </div>
-          <div className='form-check'>
-            <input
-              className='form-check-input'
-              type='radio'
-              name='category'
-              id='shoes'
-              value={3}
-              checked={selectedCategory === 3}
-              onChange={handleCategoryChange}
-            />
-            <label className='form-check-label' htmlFor='shoes'>
-              Shoes
-            </label>
-          </div>
-        </div>
 
-        {/* Add new size */}
-        <div className='mb-3'>
-          <h4>Add new size</h4>
-          <NewSize setSizes={setSizes} selectedCategory={selectedCategory} />
-        </div>
+          {/* Description */}
+          <div className='col-12'>
+            <label htmlFor='description' className='form-label h4'>
+              Description
+            </label>
+            <textarea
+              className='form-control'
+              id='description'
+              rows='3'
+              required
+            ></textarea>
+          </div>
 
-        <div className='mb-3'>
-          <h4>Stock</h4>
-          <div className='d-flex flex-wrap gap-4'>
-            {sizes &&
-              sizes[CATEGORIES[selectedCategory]].map((size) => {
-                return (
-                  <div
-                    className='d-flex flex-column align-items-center'
-                    key={size.id}
-                  >
-                    <label htmlFor={size.id} className='fs-4 fw-bold'>
-                      {size.name}
-                    </label>
-                    <input
-                      type='number'
-                      id={size.id}
-                      style={{
-                        width: '60px',
-                      }}
-                      onChange={handleSizeStockChange}
-                      value={size.stock || 0}
-                      min='0'
-                    />
-                  </div>
-                )
-              })}
+          {/* Images */}
+          <div className='col-12'>
+            <h4>Images</h4>
+            <InputImage inputOnChange={handleImageOnChage} />
+            {images.length > 0 && (
+              <>
+                <div id='size-help' className='form-text'>
+                  Drag and drop to reorder images
+                </div>
+                <div id='size-help' className='form-text'>
+                  The first image will be the main image
+                </div>
+              </>
+            )}
+            <PreviewImages
+              images={images}
+              onDragStart={handleOnDragStart}
+              onDrop={handleOnDrop}
+              setIsDragging={setIsDragging}
+              isDragging={isDragging}
+              onDelete={handleDeleteImage}
+            />
+          </div>
+
+          {/* Stock */}
+          <div className='col-12 col-lg-8'>
+            <h4>Stock</h4>
+            <div className='d-flex flex-wrap gap-4'>
+              {sizes &&
+                sizes[CATEGORIES[selectedCategory]].map((size) => {
+                  return (
+                    <div
+                      className='d-flex flex-column align-items-center'
+                      key={size.id}
+                    >
+                      <label htmlFor={size.id} className='fs-4 fw-bold'>
+                        {size.name}
+                      </label>
+                      <input
+                        type='number'
+                        id={size.id}
+                        style={{
+                          width: '60px',
+                        }}
+                        onChange={handleSizeStockChange}
+                        value={size.stock || 0}
+                        min='0'
+                      />
+                    </div>
+                  )
+                })}
+            </div>
+          </div>
+
+          {/* Add new size */}
+          <div className='col-12 col-lg-4'>
+            <h4>Add new size</h4>
+            <NewSize setSizes={setSizes} selectedCategory={selectedCategory} />
           </div>
         </div>
 

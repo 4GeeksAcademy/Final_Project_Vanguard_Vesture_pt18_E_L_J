@@ -24,7 +24,7 @@ const NewSize = ({ setSizes, selectedCategory }) => {
           type='text'
           id='newSize'
           style={{
-            width: '60px',
+            width: '70px',
           }}
           value={newSizeName}
           onChange={(e) => setNewSizeName(e.target.value)}

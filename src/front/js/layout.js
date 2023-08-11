@@ -8,7 +8,7 @@ import Signup from './views/SignUp.jsx'
 import Cart from './views/Cart.jsx'
 import Settings from './views/Settings.jsx'
 import Admin from './views/Admin.jsx'
-import Create from './views/Create.jsx'
+import Create from './views/CreateProduct.jsx'
 import Footwear from './views/Footwear.jsx'
 import Clothes from './views/Clothes.jsx'
 import ProductDetails from './views/ProductDetails.jsx'
@@ -47,8 +47,8 @@ const Layout = () => {
               <Route path='/cart' element={<Cart />} />
               <Route path='/admin' element={<Admin />} />
               <Route path='/settings' element={<Settings />} />
-              <Route path='/create' element={<Create />} />
             </Route>
+              <Route path='/create' element={<Create />} />
           </Routes>
           <Outlet />
           <Footer />
