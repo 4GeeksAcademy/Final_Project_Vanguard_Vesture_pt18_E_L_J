@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { Context } from '../store/appContext.js'
 
 import Navbar from '../component/Navbar.jsx'
-import NewProduct from '../component/NewProduct.jsx'
+import NewProduct from '../component/NewProductForm.jsx'
 
 
 const Create = () => {
