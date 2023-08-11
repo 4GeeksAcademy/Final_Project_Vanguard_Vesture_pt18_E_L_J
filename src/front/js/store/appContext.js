@@ -23,7 +23,9 @@ const injectContext = (PassedComponent) => {
 
     useEffect(() => {
       state.actions.validateToken()
-      state.actions.getClothesTypes()
+      state.actions.getTypes('clothes')
+      state.actions.getTypes('shoes')
+      state.actions.getTypes('accessories')
     }, [])
 
     // The initial value for the context is not null anymore, but the current state of this component,

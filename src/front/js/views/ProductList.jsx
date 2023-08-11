@@ -2,37 +2,38 @@ import React, { useContext, useEffect, useState, useMemo } from 'react'
 import { Context } from '../store/appContext.js'
 
 import Navbar from '../component/Navbar.jsx'
-import ClothesCard from '../component/ClothesCard.jsx'
+import ProductCard from '../component/ProductCard.jsx'
+import Loader from '../component/Loader.jsx'
 
-const Clothes = () => {
+const ProductList = ({ category }) => {
   const { actions, store } = useContext(Context)
+
+  const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [selectedTypes, setSelectedTypes] = useState([])
   const [minPrice, setMinPrice] = useState(0)
   const [maxPrice, setMaxPrice] = useState(0)
 
-  useEffect(() => {
-    actions.getClothes()
-  }, [])
-
-  const filteredClothes = useMemo(
+  const filteredProducts = useMemo(
     () =>
-      store.clothes.filter((clothe) => {
-        let inputFilter = clothe.name
+      store[category].filter((product) => {
+        let inputFilter = product.name
           .toLowerCase()
           .includes(search.toLowerCase())
 
-        let typeFilter = selectedTypes.includes(clothe.type)
+        let typeFilter = selectedTypes.includes(product.type)
         if (selectedTypes.length === 0) typeFilter = true
 
-        let minFilter = clothe.price >= minPrice
-        let maxFilter = clothe.price <= maxPrice
-        let priceFilter = (minPrice == 0 ? true : minFilter) && (maxFilter ? true : maxPrice == 0)
+        let minFilter = product.price >= minPrice
+        let maxFilter = product.price <= maxPrice
+        let priceFilter =
+          (minPrice == 0 ? true : minFilter) &&
+          (maxFilter ? true : maxPrice == 0)
         if (minPrice === 0 && maxPrice === 0) priceFilter = true
 
         return inputFilter && typeFilter && priceFilter
       }),
-    [store.clothes, search, selectedTypes, minPrice, maxPrice]
+    [store[category], search, selectedTypes, minPrice, maxPrice]
   )
 
   const handleSubmit = (e) => {
@@ -41,12 +42,17 @@ const Clothes = () => {
     setMaxPrice(e.target[1].value || 0)
   }
 
-  return (
-    <>
-      <Navbar />
+  useEffect(() => {
+    actions.getProducts(category).finally(() => setIsLoading(false))
+  }, [])
 
-      <div className='container'>
-        <h1>Clothes</h1>
+  return (
+    <div style={{ minHeight: '100vh' }}>
+      <Navbar />
+      <div className='position-relative container'>
+        <h1 className='text-capitalize'>{category}</h1>
+
+        {isLoading && <Loader />}
         <div className='d-flex gap-2 flex-wrap'>
           <div className='dropdown'>
             <button
@@ -59,7 +65,7 @@ const Clothes = () => {
               Filter by type
             </button>
             <ul className='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
-              {store.clothes_types.map((type) => (
+              {store[`${category}_types`].map((type) => (
                 <li className='dropdown-item d-flex gap-2' key={type}>
                   <input
                     className=' form-check-input'
@@ -87,7 +93,6 @@ const Clothes = () => {
               ))}
             </ul>
           </div>
-
           {/* Price filter */}
           <form
             className='d-flex gap-1 align-items-center'
@@ -131,18 +136,14 @@ const Clothes = () => {
           />
         </div>
 
-        <div className='d-flex gap-4 flex-wrap'>
-          {store.clothes && store.clothes.length > 0 ? (
-            filteredClothes.map((clothe) => (
-              <ClothesCard key={clothe.id} index={clothe.id} clothe={clothe} />
-            ))
-          ) : (
-            <h1>Cargando!!!</h1>
-          )}
+        <div className='d-flex flex-wrap gap-2 justify-content-center'>
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default Clothes
+export default ProductList

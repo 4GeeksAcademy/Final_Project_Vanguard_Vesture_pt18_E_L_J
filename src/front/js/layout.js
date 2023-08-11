@@ -9,17 +9,12 @@ import Cart from './views/Cart.jsx'
 import Settings from './views/Settings.jsx'
 import Admin from './views/Admin.jsx'
 import Create from './views/CreateProduct.jsx'
-import Footwear from './views/Footwear.jsx'
-import Clothes from './views/Clothes.jsx'
 import ProductDetails from './views/ProductDetails.jsx'
-import Accessories from './views/Accessories.jsx'
-
 import AboutUs from './views/AboutUs.jsx'
 import Feactures from './views/Feactures.jsx'
-
-
 import Footer from './component/Footer.jsx'
 import PrivateRoute from './component/PrivateRoute.jsx'
+import ProductList from './views/ProductList.jsx'
 
 import injectContext from './store/appContext'
 
@@ -33,7 +28,7 @@ const Layout = () => {
     return <BackendURL />
 
   return (
-    <div>
+    <div style={{ marginBottom: '90px'}}>
       <BrowserRouter basename={basename}>
         <ScrollToTop>
           <Routes>
@@ -41,10 +36,19 @@ const Layout = () => {
             <Route path='/home' element={<Home />} />
             <Route path='/signup' element={<Signup />} />
             <Route path='/login' element={<Login />} />
-            <Route path='/footwear' element={<Footwear />} />
-            <Route path='/clothes' element={<Clothes />} />
+            <Route
+              path='/clothes'
+              element={<ProductList category='clothes' />}
+            />
+            <Route
+              path='/footwear'
+              element={<ProductList category='shoes' />}
+            />
+            <Route
+              path='/accesories'
+              element={<ProductList category='accessories' />}
+            />
             <Route path='/product/:id' element={<ProductDetails />} />
-            <Route path='/accesories' element={<Accessories />} />
             <Route path='*' element={<h1>Not found!</h1>} />
 
             <Route path='/aboutUs' element={<AboutUs />} />
