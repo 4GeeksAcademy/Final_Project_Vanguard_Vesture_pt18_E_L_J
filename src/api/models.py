@@ -200,6 +200,7 @@ class Category(db.Model):
     name = db.Column(db.String(100), nullable=False, unique=True)
 
     products = db.relationship('Product', back_populates='category')
+    sizes = db.relationship('Size', back_populates='category')
 
     def serialize(self):
         return {
@@ -211,7 +212,11 @@ class Size(db.Model):
     __tablename__ = 'sizes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+
+    category = db.relationship('Category', back_populates='sizes')
     products = db.relationship('ProductSizeStock', back_populates='size')
+
     def serialize(self):
         return {
             'id': self.id,

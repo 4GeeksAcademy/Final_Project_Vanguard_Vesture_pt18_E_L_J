@@ -18,9 +18,10 @@ async function makeRequest(url, method = 'GET', body = null, token = null) {
   const data = await response.json()
 
   if (!response.ok) {
-    const newError = new Error(data.message)
+    const newError = new Error()
     newError.httpStatus = response.status
     newError.missing_values = response.missing_values
+    newError.message = data.message
     throw newError
   }
   return data
@@ -63,34 +64,32 @@ export async function validateToken(token) {
   return user
 }
 
-export async function createProduct(
-  name,
-  price,
-  description,
-  color,
-  type,
-  category_id,
-  // sizes,
-  image_url,
-  token
-) {
-  const response = await makeRequest(
-    '/products',
-    'POST',
-    {
-      name: name,
-      price: price,
-      description: description,
-      color: color,
-      type: type,
-      category_id: category_id,
-      // sizes: sizes,
-      image_url: image_url,
-    },
-    token
+export async function createProduct(product, token) {
+  const createdProduct = await makeRequest('/products', 'POST', product, token)
+  const imagesFromCloudinary = await Promise.all(
+    product.images.map((image) => {
+      const imgFormData = new FormData()
+      imgFormData.append('file', image)
+      imgFormData.append('cloud_name', 'dspkak5d0')
+      imgFormData.append('upload_preset', 'vanguar_vesture_preset')
+      return fetch('https://api.cloudinary.com/v1_1/dspkak5d0/image/upload', {
+        method: 'POST',
+        body: imgFormData,
+      })
+    })
+  ).then((responses) => Promise.all(responses.map((res) => res.json())))
+  
+  const imagesFromDB = await Promise.all(
+    imagesFromCloudinary.map((img, index) => {
+      return makeRequest(
+        `/products/${createdProduct.id}/images`,
+        'POST',
+        { image_url: img.url.toString(), order: index },
+        token
+      )
+    })
   )
-
-  return response
+  return { ...createdProduct, images: imagesFromDB }
 }
 
 export async function getFavorites(token) {
@@ -124,24 +123,23 @@ export async function getProductByID(id) {
   return response
 }
 
-export async function postShoppingCart( product_id, quantity ,size_id,token) {
-  console.log("quantity",quantity)
+export async function postShoppingCart(product_id, quantity, size_id, token) {
+  console.log('quantity', quantity)
   const response = await makeRequest(
-    '/cart' ,
+    '/cart',
     'POST',
     {
       product_id: product_id,
       size_id: size_id,
       quantity: quantity,
-      
     },
     token
   )
-  
+
   return response
 }
 
-export async function deleteShoppingCart(token, product_id,size_id) {
+export async function deleteShoppingCart(token, product_id, size_id) {
   const response = await makeRequest(
     '/cart/' + product_id + '/size/' + size_id,
     'DELETE',
@@ -152,6 +150,25 @@ export async function deleteShoppingCart(token, product_id,size_id) {
 }
 
 export async function getClothesTypes() {
-  const response = await makeRequest('/clothes/types', 'GET', null)
+  const response = await makeRequest('/clothes/types', 'GET')
+  return response
+}
+
+export async function getSizes() {
+  const response = await makeRequest('/sizes', 'GET')
+  return response
+}
+
+export async function createSize(name, category_id, token) {
+  const response = await makeRequest(
+    '/sizes',
+    'POST',
+    {
+      name: name,
+      category_id,
+    },
+    token
+  )
+
   return response
 }
