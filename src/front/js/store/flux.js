@@ -10,7 +10,7 @@ const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
       user: {},
-      token: undefined,
+      token: null,
       clothes: [],
       shoes: [],
       accessories: [],

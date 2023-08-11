@@ -15,7 +15,6 @@ import ProductDetails from './views/ProductDetails.jsx'
 import Accessories from './views/Accessories.jsx'
 import Footer from './component/Footer.jsx'
 import PrivateRoute from './component/PrivateRoute.jsx'
-import Test from './views/Test.jsx'
 
 import injectContext from './store/appContext'
 
@@ -42,14 +41,13 @@ const Layout = () => {
             <Route path='/product/:id' element={<ProductDetails />} />
             <Route path='/accesories' element={<Accessories />} />
             <Route path='*' element={<h1>Not found!</h1>} />
-            <Route path='/test' element={<Test />} />
 
-              <Route path='/create' element={<Create />} />
             {/* Private routes */}
             <Route element={<PrivateRoute />}>
               <Route path='/cart' element={<Cart />} />
               <Route path='/admin' element={<Admin />} />
               <Route path='/settings' element={<Settings />} />
+              <Route path='/create' element={<Create />} />
             </Route>
           </Routes>
           <Outlet />

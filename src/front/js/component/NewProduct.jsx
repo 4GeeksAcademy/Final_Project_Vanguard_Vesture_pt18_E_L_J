@@ -2,28 +2,20 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Context } from '../store/appContext.js'
 
-import ImageList from '@mui/material/ImageList'
-import ImageListItem from '@mui/material/ImageListItem'
+import InputImage from './InputImage.jsx'
+import PreviewImages from './PreviewImages.jsx'
+import NewSize from './NewSize.jsx'
 
 import uuid from 'react-uuid'
-
-import styles from '../views/styles/NewProduct.module.css'
-
-const CATEGORIES = {
-  1: 'clothes',
-  2: 'shoes',
-  3: 'accessories',
-}
+import { CATEGORIES } from '../utils/enums.js'
 
 const NewProduct = () => {
-  const { actions, store } = useContext(Context)
+  const { actions } = useContext(Context)
   const [selectedCategory, setSelectedCategory] = useState(1)
   const [sizes, setSizes] = useState(null)
-  const [newSizeName, setNewSizeName] = useState('')
   const [images, setImages] = useState([])
 
   const [isDragging, setIsDragging] = useState(false)
-  const handleDragging = (dragging) => setIsDragging(dragging)
 
   const navigate = useNavigate()
 
@@ -65,17 +57,9 @@ const NewProduct = () => {
     setSizes({ ...sizes, [CATEGORIES[selectedCategory]]: newSizes })
   }
 
-  const handleCreateSize = (event) => {
-    actions.createSize(newSizeName, selectedCategory).then((res) => {
-      setSizes({
-        ...sizes,
-        [CATEGORIES[selectedCategory]]: [
-          ...sizes[CATEGORIES[selectedCategory]],
-          res,
-        ],
-      })
-      setNewSizeName('')
-    })
+  const handleOnDragStart = (event, image) => {
+    event.dataTransfer.setData('imageId', image.id)
+    setIsDragging(true)
   }
 
   const handleOnDrop = (event, image) => {
@@ -90,6 +74,17 @@ const NewProduct = () => {
     newImages[droppedImageIndex] = draggedOverImage
     newImages[draggedOverImageIndex] = droppedImage
     setImages(newImages)
+  }
+
+  const handleImageOnChage = (e) => {
+    const file = e.target.files[0]
+    file['id'] = uuid()
+    setImages([...images, e.target.files[0]])
+    e.target.value = null
+  }
+
+  const handleDeleteImage = (idToDelete) => {
+    setImages(images.filter((img) => img.id !== idToDelete))
   }
 
   return (
@@ -141,6 +136,31 @@ const NewProduct = () => {
           <input type='text' className='form-control' id='type' required />
         </div>
 
+        {/* Images */}
+        <div className='mb-3'>
+          <h4>Images</h4>
+          <InputImage inputOnChange={handleImageOnChage} />
+          {images.length > 0 && (<>
+            <div id='size-help' className='form-text'>
+              Drag and drop to reorder images
+            </div>
+            <div id='size-help' className='form-text'>
+              The first image will be the main image
+            </div>
+            </>
+          )}
+          {/* Preview de images */}
+          <PreviewImages
+            images={images}
+            onDragStart={handleOnDragStart}
+            onDrop={handleOnDrop}
+            setIsDragging={setIsDragging}
+            isDragging={isDragging}
+            onDelete={handleDeleteImage}
+          />
+        </div>
+
+        {/* Categories */}
         <h4>Category</h4>
         <div className='mb-3'>
           <div className='form-check'>
@@ -190,122 +210,35 @@ const NewProduct = () => {
         {/* Add new size */}
         <div className='mb-3'>
           <h4>Add new size</h4>
-          <div className='d-flex gap-2 align-items-center'>
-            <input
-              type='text'
-              id='newSize'
-              style={{
-                width: '60px',
-              }}
-              value={newSizeName}
-              onChange={(e) => setNewSizeName(e.target.value)}
-            />
-            <button
-              type='button'
-              className='btn btn-dark'
-              onClick={handleCreateSize}
-            >
-              Add
-            </button>
-          </div>
-          <div id='size-help' className='form-text'>
-            The size will be added to the selected category
-          </div>
+          <NewSize setSizes={setSizes} selectedCategory={selectedCategory} />
         </div>
 
         <div className='mb-3'>
           <h4>Stock</h4>
-          <div className='row g-2'>
+          <div className='d-flex flex-wrap gap-4'>
             {sizes &&
               sizes[CATEGORIES[selectedCategory]].map((size) => {
                 return (
                   <div
-                    className='d-flex flex-column align-items-center gap-1 p-1 col-6 col-md-4 col-lg-3'
-                    style={{ minWidth: '150px' }}
+                    className='d-flex flex-column align-items-center'
                     key={size.id}
                   >
                     <label htmlFor={size.id} className='fs-4 fw-bold'>
                       {size.name}
                     </label>
-                    <div className='d-flex gap-2 align-items-center'>
-                      <input
-                        type='number'
-                        id={size.id}
-                        style={{
-                          width: '60px',
-                        }}
-                        onChange={handleSizeStockChange}
-                        value={size.stock || 0}
-                        min='0'
-                      />
-                    </div>
+                    <input
+                      type='number'
+                      id={size.id}
+                      style={{
+                        width: '60px',
+                      }}
+                      onChange={handleSizeStockChange}
+                      value={size.stock || 0}
+                      min='0'
+                    />
                   </div>
                 )
               })}
-          </div>
-        </div>
-
-        {/* Images */}
-        <div className='mb-3'>
-          <h4>Images</h4>
-          <input
-            className='d-block my-2'
-            type='file'
-            accept='image/png, image/jpg, image/jpeg'
-            name='image'
-            onChange={(e) => {
-              const file = e.target.files[0]
-              file['id'] = uuid()
-              setImages([...images, e.target.files[0]])
-              e.target.value = null
-            }}
-          />
-          {/* <button type='submit' className='btn btn-primary' onClick={() => {}}>
-            Add Image
-          </button> */}
-          {images.length > 0 && (
-            <div id='size-help' className='form-text'>
-              Drag and drop to reorder images
-            </div>
-          )}
-          {/* Preview de images */}
-          <div>
-            <div className='d-flex flex-wrap gap-2'>
-              {images.map((image) => (
-                <div
-                  key={image.id}
-                  className='d-flex flex-column gap-1 align-items-center mt-2'
-                  style={{ height: '260px', width: '200px' }}
-                  draggable
-                  onDragStart={(e) => {
-                    e.dataTransfer.setData('imageId', image.id)
-                    setIsDragging(true)
-                  }}
-                  onDragEnd={() => setIsDragging(false)}
-                  onDrop={(e) => handleOnDrop(e, image)}
-                  onDragOver={(e) => e.preventDefault()}
-                >
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt={image.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                  <button
-                    type='button'
-                    className='btn btn-danger'
-                    onClick={() => {
-                      setImages(images.filter((img) => img.id !== image.id))
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
