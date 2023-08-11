@@ -102,56 +102,9 @@ const getState = ({ getStore, getActions, setStore }) => {
         return response
       },
 
-      getClothes: async () => {
-        try {
-          const store = getStore()
-          const result = await fetch(API_URL + '/products/clothing')
-          const data = await result.json()
-
-          if (Array.isArray(data)) {
-            setStore({ clothes: data })
-            console.log('Prendas cargadas')
-            console.log(store.clothes)
-          } else {
-            console.log('El resultado de la API no es un array válido:', data)
-          }
-        } catch (error) {
-          console.log('No se pudo recuperar lista prendas', error)
-        }
-      },
-      getShoes: async () => {
-        try {
-          const store = getStore()
-          const result = await fetch(API_URL + '/products/shoes')
-          const data = await result.json()
-
-          if (Array.isArray(data)) {
-            setStore({ shoes: data })
-            console.log('shoes uploaded')
-            console.log(store.shoes)
-          } else {
-            console.log('El resultado de la API no es un array válido:', data)
-          }
-        } catch (error) {
-          console.log('No se pudo recuperar lista prendas', error)
-        }
-      },
-      getAccessories: async () => {
-        try {
-          const store = getStore()
-          const result = await fetch(API_URL + '/products/accessories')
-          const data = await result.json()
-
-          if (Array.isArray(data)) {
-            setStore({ accessories: data })
-            console.log('accesorios cargados')
-            console.log(store.accessories)
-          } else {
-            console.log('El resultado de la API no es un array válido:', data)
-          }
-        } catch (error) {
-          console.log('No se pudo recuperar lista prendas', error)
-        }
+      getProducts: async (category) => {
+        const products = await api.getProducts(category)
+        setStore({ [category]: products })
       },
       getProductDetails: async (id) => {
         const product = await api.getProductByID(id)
@@ -233,11 +186,30 @@ const getState = ({ getStore, getActions, setStore }) => {
         return response
       },
 
-      changeTotalCart: async (value) => {
-        const store = getStore()
-        const updatedTotal = store.total_cart + value
+      // changeTotalCart: async (value) => {
+      //   const store = getStore()
+      //   const updatedTotal = store.total_cart + value
 
-        setStore({ total_cart: updatedTotal })
+      //   setStore({ total_cart: updatedTotal })
+      // },
+      updateCartItemQuantity: (product_id, size_id, quantity) => {
+        const store = getStore()
+        const updatedShoppingCart = store.shopping_cart.map((item) => {
+          if (item.product.id === product_id && item.size.id === size_id) {
+            item.quantity = quantity
+          }
+          return item
+        })
+
+        setStore({
+          shopping_cart: updatedShoppingCart,
+        })
+      },
+      getTotalCart: () => {
+        return getStore().shopping_cart.reduce(
+          (total, item) => total + item.quantity * item.product.price,
+          0
+        )
       },
     },
   }

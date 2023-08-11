@@ -6,11 +6,14 @@ const CartProduct = ({ cartItem }) => {
   const { actions, store } = useContext(Context)
 
   const [quantity, setQuantity] = useState(cartItem.quantity)
-  const [value, setValue] = useState(cartItem.product.price * cartItem.quantity)
 
   useEffect(() => {
-    actions.changeTotalCart(value)
-  }, [value])
+    actions.updateCartItemQuantity(
+      cartItem.product.id,
+      cartItem.size.id,
+      quantity
+    )
+  }, [quantity])
 
   const navigate = useNavigate()
 
@@ -18,18 +21,6 @@ const CartProduct = ({ cartItem }) => {
     navigate(`/product/${cartItem.product.id}`)
   }
 
-  const handleMinus = () => {
-    quantity > 1 && setQuantity(quantity - 1)
-    setValue(cartItem.product.price * quantity)
-  }
-  const handlePlus = () => {
-    quantity < cartItem.quantity && setQuantity(quantity + 1)
-    setValue(cartItem.product.price * quantity)
-  }
-
-  // Objeto que llega de la api
-  // cartItem:
-  //   {product: , size , quantity}
   console.log(cartItem)
 
   return (
@@ -58,33 +49,48 @@ const CartProduct = ({ cartItem }) => {
             </p>
 
             <p className='card-text'>
-              <span></span>
               <button
-                onClick={() => handleMinus()}
-                className='btn btn-black m-3'
+                onClick={() =>
+                  setQuantity((prev) => (prev === 1 ? prev : prev - 1))
+                }
+                className='btn btn-black'
               >
                 <i
                   className='fa-solid fa-minus'
                   style={{ color: '#000000' }}
                 ></i>
               </button>
-              {quantity}
+
+              <input
+                type='number'
+                value={quantity}
+                onChange={(e) =>
+                  e.target.value > 0 && setQuantity(e.target.value)
+                }
+                className='border-0 text-center'
+                style={{ width: '50px' }}
+              />
               <button
-                onClick={() => handlePlus()}
-                className='btn btn-black m-3'
+                onClick={() => {
+                  const cartSizeId = cartItem.size.id
+                  const sizeStock = cartItem.product.sizes_stock.find(s => s.id === cartSizeId).stock
+                  if (quantity === sizeStock) return
+                  setQuantity((prev) => prev + 1)
+                }}
+                className='btn btn-black'
               >
                 <i
                   className='fa-solid fa-plus'
                   style={{ color: '#000000' }}
                 ></i>
-              </button>{' '}
+              </button>
             </p>
 
             <p className='card-text'>
               <span>Price: U$S</span> {cartItem.product.price}
             </p>
             <p className='card-text'>
-              <span>Total: U$S</span> {value}
+              <span>Total: U$S</span> {actions.getTotalCart()}
             </p>
           </div>
 

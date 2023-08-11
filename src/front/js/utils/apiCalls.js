@@ -120,7 +120,7 @@ export async function deleteFavorites(token, product_id) {
 }
 
 export async function getProductByID(id) {
-  const response = await makeRequest(`/products/${id}`, 'GET', null)
+  const response = await makeRequest(`/products/${id}`)
   return response
 }
 
@@ -148,5 +148,10 @@ export async function deleteShoppingCart(token, product_id,size_id) {
     null,
     token
   )
+  return response
+}
+
+export async function getProducts(category) {
+  const response = await makeRequest(`/products/${category}`)
   return response
 }

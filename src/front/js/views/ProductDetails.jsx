@@ -9,8 +9,6 @@ import styles from './styles/ProductDetails.module.css'
 
 const ProductDetails = () => {
   const { actions, store } = useContext(Context)
-  const [showError, setShowError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
   const [product, setProduct] = useState(null)
   const [selectedSizeID, setSelectedSizeID] = useState(null)
   const [quantity, setQuantity] = useState(1)
@@ -26,7 +24,6 @@ const ProductDetails = () => {
         if (error.response.status === 404) navigate('/404')
         else {
           showError(true)
-          // setErrorMessage(error.response.data.message)
           console.log(error)
         }
       })
@@ -38,6 +35,7 @@ const ProductDetails = () => {
     }
   }, [product])
 
+  // NOTA: Agregar Loader
   if (!product) return <h1>Loading...</h1>
 
   return (
@@ -139,6 +137,7 @@ const ProductDetails = () => {
           </div>
         </div>
         {/* End carousel */}
+
         {/* Sizes */}
         <div className='container-fluid mt-2 p-0'>
           <h3 className='my-3'>Sizes</h3>
@@ -154,7 +153,7 @@ const ProductDetails = () => {
                   }}
                 >
                   <div
-                    className={`overflow-hidden border border-secondary d-flex flex-column align-items-center p-2 ${
+                    className={`overflow-hidden border border-secondary rounded-2 d-flex flex-column align-items-center p-2 ${
                       styles.hover
                     } ${selectedSizeID === size.id && styles.selected}`}
                   >
@@ -171,8 +170,10 @@ const ProductDetails = () => {
           </div>
         </div>
         {/* End sizes */}
+
         <h3 className='my-3'>Description</h3>
         <p>{product.description}</p>
+
         {/* Quantity */}
         <h2>Quantity</h2>
         <div className='d-flex align-items-center gap-2'>
@@ -184,7 +185,7 @@ const ProductDetails = () => {
           >
             <i className='fa-solid fa-minus' style={{ color: '#000000' }}></i>
           </button>
-          {/* FIX ALTURA */}
+
           <input
             type='number'
             value={quantity}
@@ -193,7 +194,12 @@ const ProductDetails = () => {
             style={{ width: '50px' }}
           />
           <button
-            onClick={() => setQuantity((prev) => prev + 1)}
+            onClick={() => {
+              if (!selectedSizeID) return
+              const productStock = product.sizes_stock.find(s => s.id === selectedSizeID).stock
+              if (quantity >= productStock) return
+              setQuantity((prev) => prev + 1)
+            }}
             className='btn btn-black'
           >
             <i className='fa-solid fa-plus' style={{ color: '#000000' }}></i>
@@ -208,18 +214,26 @@ const ProductDetails = () => {
             <>
               <button
                 type='button'
-                className='btn btn-outline-primary'
-                onClick={() =>
+                className='btn btn-outline-dark'
+                onClick={() => {
+                  if (!selectedSizeID) return
                   actions.postShoppingCart(product.id, quantity, selectedSizeID)
-                }
+                }}
               >
                 Add to cart
               </button>
-              <button type='button' className='btn btn-outline-primary'>
+              <button type='button' className='btn btn-outline-dark'>
                 Buy now
               </button>
-              <button type='button' className='btn btn-danger'>
-                <i className='fa-solid fa-heart'></i>
+              <button
+                onClick={() => actions.postFavorites(product.id)}
+                className={`btn bg-black ${
+                  store.favorites.some((favorite) => favorite.id === product.id)
+                    ? 'text-danger'
+                    : 'text-white'
+                }`}
+              >
+                <strong>♥</strong>
               </button>
             </>
           )}

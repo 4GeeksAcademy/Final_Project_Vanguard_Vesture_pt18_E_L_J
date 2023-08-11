@@ -364,7 +364,7 @@ def delete_product_image(product_id, product_image_id):
     db.session.commit()
     return Response(status=204)
 
-@api.route('/products/clothing', methods=['GET'])
+@api.route('/products/clothes', methods=['GET'])
 def get_clothing_products():
     products = Product.query.filter_by(category_id=1)
     return jsonify([p.serialize() for p in products]), 200
