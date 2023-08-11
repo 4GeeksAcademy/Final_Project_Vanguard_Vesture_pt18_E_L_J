@@ -9,7 +9,7 @@ import NewProduct from '../component/NewProductForm.jsx'
 const Create = () => {
   const { store } = useContext(Context)
 
-  // if (!store.user.is_admin) return <Navigate to='/' />
+  if (!store.user.is_admin) return <Navigate to='/' />
 
   return (
     <div>
