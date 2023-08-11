@@ -47,7 +47,7 @@ const Cart = () => {
       ) : (
         <h1 className='text-center'>You haven't items in you cart</h1>
       )}
-      <h1 className='text-center'>Total Pay: U$S {store.total_cart}</h1>
+      <h1 className='text-center'>Total Pay: U$S {actions.getTotalCart()}</h1>
       <div className="d-flex justify-content-center">
         <button className="btn btn-success m-3">PAY ORDER</button>
         <button onClick={() => clearCart()} className="btn btn-danger m-3">CANCEL ORDER</button>

@@ -1,10 +1,7 @@
 import * as api from '../utils/apiCalls.js'
 const API_URL = process.env.BACKEND_URL + 'api'
-const CATEGORIES = {
-  1: 'clothes',
-  2: 'shoes',
-  3: 'accessories',
-}
+
+import { CATEGORIES } from '../utils/enums.js'
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -17,8 +14,9 @@ const getState = ({ getStore, getActions, setStore }) => {
       details: {},
       favorites: [],
       shopping_cart: [],
-      total_cart: 0,
       clothes_types: [],
+      shoes_types: [],
+      accessories_types: [],
     },
     actions: {
       login: async (email, password) => {
@@ -90,7 +88,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         type,
         category_id,
         sizes_stock,
-        images
+        images,
       }) => {
         const product = {
           name,
@@ -100,65 +98,26 @@ const getState = ({ getStore, getActions, setStore }) => {
           type,
           category_id,
           sizes_stock,
-          images
+          images,
         }
-        const createdProduct = await api.createProduct(product, getStore().token)
+        const createdProduct = await api.createProduct(
+          product,
+          getStore().token
+        )
         console.log('Succefully created product')
         console.log(createdProduct)
-        setStore({ [CATEGORIES[category_id]]: [...getStore()[CATEGORIES[category_id]], createdProduct] })
+        setStore({
+          [CATEGORIES[category_id]]: [
+            ...getStore()[CATEGORIES[category_id]],
+            createdProduct,
+          ],
+        })
         return createdProduct
       },
 
-      getClothes: async () => {
-        try {
-          const store = getStore()
-          const result = await fetch(API_URL + '/products/clothing')
-          const data = await result.json()
-
-          if (Array.isArray(data)) {
-            setStore({ clothes: data })
-            console.log('Prendas cargadas')
-            console.log(store.clothes)
-          } else {
-            console.log('El resultado de la API no es un array válido:', data)
-          }
-        } catch (error) {
-          console.log('No se pudo recuperar lista prendas', error)
-        }
-      },
-      getShoes: async () => {
-        try {
-          const store = getStore()
-          const result = await fetch(API_URL + '/products/shoes')
-          const data = await result.json()
-
-          if (Array.isArray(data)) {
-            setStore({ shoes: data })
-            console.log('shoes uploaded')
-            console.log(store.shoes)
-          } else {
-            console.log('El resultado de la API no es un array válido:', data)
-          }
-        } catch (error) {
-          console.log('No se pudo recuperar lista prendas', error)
-        }
-      },
-      getAccessories: async () => {
-        try {
-          const store = getStore()
-          const result = await fetch(API_URL + '/products/accessories')
-          const data = await result.json()
-
-          if (Array.isArray(data)) {
-            setStore({ accessories: data })
-            console.log('accesorios cargados')
-            console.log(store.accessories)
-          } else {
-            console.log('El resultado de la API no es un array válido:', data)
-          }
-        } catch (error) {
-          console.log('No se pudo recuperar lista prendas', error)
-        }
+      getProducts: async (category) => {
+        const products = await api.getProducts(category)
+        setStore({ [category]: products })
       },
       getProductDetails: async (id) => {
         const product = await api.getProductByID(id)
@@ -247,9 +206,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         setStore({ total_cart: updatedTotal })
       },
-      getClothesTypes: async () => {
-        const response = await api.getClothesTypes()
-        setStore({ clothes_types: response })
+      getTypes: async (category) => {
+        const response = await api.getTypes(category)
+        setStore({ [`${category}_types`]: response })
       },
       getSizes: async () => {
         const response = await api.getSizes()

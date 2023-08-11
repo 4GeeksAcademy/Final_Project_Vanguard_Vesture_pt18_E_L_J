@@ -119,7 +119,7 @@ export async function deleteFavorites(token, product_id) {
 }
 
 export async function getProductByID(id) {
-  const response = await makeRequest(`/products/${id}`, 'GET', null)
+  const response = await makeRequest(`/products/${id}`)
   return response
 }
 
@@ -149,8 +149,13 @@ export async function deleteShoppingCart(token, product_id, size_id) {
   return response
 }
 
-export async function getClothesTypes() {
-  const response = await makeRequest('/clothes/types', 'GET')
+export async function getProducts(category) {
+  const response = await makeRequest(`/products/${category}`)
+  return response
+}
+
+export async function getTypes(category) {
+  const response = await makeRequest(`/${category}/types`)
   return response
 }
 
