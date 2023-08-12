@@ -14,7 +14,7 @@ const ProductCard = ({ product }) => {
         style={{ width: '18rem', height: '500px', borderRadius: '20px' }}
       >
         <img
-          src={product.images[0].image_url}
+          src={product.images.length > 0 ? product.images[0].image_url : ''}
           className=''
           style={{
             height: '18rem',

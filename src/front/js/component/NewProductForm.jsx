@@ -33,7 +33,7 @@ const NewProduct = () => {
       type: event.target.type.value,
       category_id: selectedCategory,
       // Sizes that have stock > 0 and belong to the selected category
-      sizes_stock: sizes[CATEGORIES[selectedCategory]].filter((s) =>
+      sizes_stock: sizes.filter((s) =>
         Boolean(s.stock)
       ),
       images,
