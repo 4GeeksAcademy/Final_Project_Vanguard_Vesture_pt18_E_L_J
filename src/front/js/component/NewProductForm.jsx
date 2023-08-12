@@ -7,21 +7,21 @@ import PreviewImages from './PreviewImages.jsx'
 import NewSize from './NewSize.jsx'
 
 import uuid from 'react-uuid'
-import { CATEGORIES } from '../utils/enums.js'
+import { CATEGORIES } from '../utils/contants.js'
 
 const NewProduct = () => {
-  const { actions } = useContext(Context)
+  const { actions, store } = useContext(Context)
   const [selectedCategory, setSelectedCategory] = useState(1)
-  const [sizes, setSizes] = useState(null)
   const [images, setImages] = useState([])
+  const [sizes, setSizes] = useState([])
+
+  useEffect(() => {
+    setSizes(store.sizes[CATEGORIES[selectedCategory]])
+  }, [selectedCategory, store.sizes])
 
   const [isDragging, setIsDragging] = useState(false)
 
   const navigate = useNavigate()
-
-  useEffect(() => {
-    actions.getSizes().then((res) => setSizes(res))
-  }, [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -48,13 +48,11 @@ const NewProduct = () => {
   const handleSizeStockChange = (event) => {
     const sizeId = Number(event.target.id)
     const stock = Number(event.target.value)
-    const newSizes = sizes[CATEGORIES[selectedCategory]].map((size) => {
-      if (size.id === sizeId) {
-        return { ...size, stock }
-      }
+    const newSizes = sizes.map((size) => {
+      if (size.id === sizeId) return { ...size, stock }
       return size
     })
-    setSizes({ ...sizes, [CATEGORIES[selectedCategory]]: newSizes })
+    setSizes(newSizes)
   }
 
   const handleOnDragStart = (event, image) => {
@@ -217,29 +215,28 @@ const NewProduct = () => {
           <div className='col-12 col-lg-8'>
             <h4>Stock</h4>
             <div className='d-flex flex-wrap gap-4'>
-              {sizes &&
-                sizes[CATEGORIES[selectedCategory]].map((size) => {
-                  return (
-                    <div
-                      className='d-flex flex-column align-items-center'
-                      key={size.id}
-                    >
-                      <label htmlFor={size.id} className='fs-4 fw-bold'>
-                        {size.name}
-                      </label>
-                      <input
-                        type='number'
-                        id={size.id}
-                        style={{
-                          width: '60px',
-                        }}
-                        onChange={handleSizeStockChange}
-                        value={size.stock || 0}
-                        min='0'
-                      />
-                    </div>
-                  )
-                })}
+              {sizes.map((size) => {
+                return (
+                  <div
+                    className='d-flex flex-column align-items-center'
+                    key={size.id}
+                  >
+                    <label htmlFor={size.id} className='fs-4 fw-bold'>
+                      {size.name}
+                    </label>
+                    <input
+                      type='number'
+                      id={size.id}
+                      style={{
+                        width: '60px',
+                      }}
+                      onChange={handleSizeStockChange}
+                      value={size.stock || 0}
+                      min='0'
+                    />
+                  </div>
+                )
+              })}
             </div>
           </div>
 

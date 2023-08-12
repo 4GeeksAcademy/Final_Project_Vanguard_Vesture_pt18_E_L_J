@@ -1,5 +1,5 @@
 export const CATEGORIES = {
     1: 'clothes',
-    2: 'shoes',
-    3: 'accessories',
+    2: 'accessories',
+    3: 'shoes',
   }

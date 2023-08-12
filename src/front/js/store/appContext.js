@@ -26,6 +26,7 @@ const injectContext = (PassedComponent) => {
       state.actions.getTypes('clothes')
       state.actions.getTypes('shoes')
       state.actions.getTypes('accessories')
+      state.actions.getSizes()
     }, [])
 
     // The initial value for the context is not null anymore, but the current state of this component,
