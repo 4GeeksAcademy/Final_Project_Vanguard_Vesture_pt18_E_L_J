@@ -12,6 +12,7 @@ from src.api.routes import api
 from src.api.admin import setup_admin
 from src.api.commands import setup_commands
 from flask_jwt_extended import JWTManager
+from src.api.paypal_back import payment_api
 
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -44,8 +45,10 @@ setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
-
+app.register_blueprint(payment_api, url_prefix='/api/payment')
 db_load_categories(app, db)
+
+
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)

@@ -15,8 +15,15 @@ import Feactures from './views/Feactures.jsx'
 import Footer from './component/Footer.jsx'
 import PrivateRoute from './component/PrivateRoute.jsx'
 import ProductList from './views/ProductList.jsx'
+import {PayPalScriptProvider} from "@paypal/react-paypal-js";
 
 import injectContext from './store/appContext'
+
+const initialOptions = {
+  clientId: "AbO_LEPpQ-uq7z8NWvdqLth9q1Rgi-MxjpTnGfOe809Ruy-TBzJk2wJg9-0bKzvMU243cIiyVuAcMKMD",
+  currency: "USD",
+  intent: "capture",
+};
 
 //create your first component
 const Layout = () => {
@@ -31,7 +38,8 @@ const Layout = () => {
     <div style={{ marginBottom: '90px'}}>
       <BrowserRouter basename={basename}>
         <ScrollToTop>
-          <Routes>
+        <PayPalScriptProvider option={initialOptions}> 
+        <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/home' element={<Home />} />
             <Route path='/signup' element={<Signup />} />
@@ -62,10 +70,10 @@ const Layout = () => {
               <Route path='/settings' element={<Settings />} />
               <Route path='/create' element={<Create />} />
             </Route>
-
           </Routes>
           <Outlet />
           <Footer />
+        </PayPalScriptProvider>
         </ScrollToTop>
       </BrowserRouter>
     </div>
