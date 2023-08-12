@@ -1,7 +1,7 @@
 import * as api from '../utils/apiCalls.js'
 const API_URL = process.env.BACKEND_URL + 'api'
 
-import { CATEGORIES } from '../utils/enums.js'
+import { CATEGORIES } from '../utils/contants.js'
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -17,6 +17,11 @@ const getState = ({ getStore, getActions, setStore }) => {
       clothes_types: [],
       shoes_types: [],
       accessories_types: [],
+      sizes: {
+        clothes: [],
+        shoes: [],
+        accessories: [],
+      },
     },
     actions: {
       login: async (email, password) => {
@@ -199,12 +204,24 @@ const getState = ({ getStore, getActions, setStore }) => {
         console.log('Shopping item deleted')
         return response
       },
-
-      changeTotalCart: async (value) => {
+      updateCartItemQuantity: (product_id, size_id, quantity) => {
         const store = getStore()
-        const updatedTotal = store.total_cart + value
+        const updatedShoppingCart = store.shopping_cart.map((item) => {
+          if (item.product.id === product_id && item.size.id === size_id) {
+            item.quantity = quantity
+          }
+          return item
+        })
 
-        setStore({ total_cart: updatedTotal })
+        setStore({
+          shopping_cart: updatedShoppingCart,
+        })
+      },
+      getTotalCart: () => {
+        return getStore().shopping_cart.reduce(
+          (total, item) => total + item.quantity * item.product.price,
+          0
+        )
       },
       getTypes: async (category) => {
         const response = await api.getTypes(category)
@@ -212,15 +229,17 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getSizes: async () => {
         const response = await api.getSizes()
-        return response
+        setStore({ sizes: response })
       },
       createSize: async (name, category_id) => {
-        const response = await api.createSize(
+        const newSize = await api.createSize(
           name,
           category_id,
           getStore().token
         )
-        return response
+        setStore({
+          sizes: { ...getStore().sizes, [CATEGORIES[category_id]]: [...getStore().sizes[CATEGORIES[category_id]],newSize] },
+        })
       },
     },
   }

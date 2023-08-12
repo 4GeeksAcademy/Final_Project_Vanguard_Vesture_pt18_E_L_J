@@ -1,20 +1,16 @@
 import React, { useState, useContext } from 'react'
 import { Context } from '../store/appContext.js'
 
-import { CATEGORIES } from '../utils/enums.js'
+import { CATEGORIES } from '../utils/contants.js'
 
 const NewSize = ({ setSizes, selectedCategory }) => {
   const [newSizeName, setNewSizeName] = useState('')
   const { actions } = useContext(Context)
 
   const handleCreateSize = () => {
-    actions.createSize(newSizeName, selectedCategory).then((res) => {
-      setSizes((prev) => ({
-        ...prev,
-        [CATEGORIES[selectedCategory]]: [...prev[CATEGORIES[selectedCategory]], res],
-      }))
-      setNewSizeName('')
-    })
+    actions
+      .createSize(newSizeName, selectedCategory)
+      .then((res) => setNewSizeName(''))
   }
 
   return (
