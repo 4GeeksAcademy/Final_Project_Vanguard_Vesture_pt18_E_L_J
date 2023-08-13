@@ -43,7 +43,6 @@ export async function signup(
   phone,
   location,
   address,
-  payment_method
 ) {
   const response = await makeRequest('/signup', 'POST', {
     email: email,
@@ -53,7 +52,6 @@ export async function signup(
     phone: phone,
     location: location,
     address: address,
-    payment_method: payment_method,
   })
 
   return response
@@ -175,5 +173,32 @@ export async function createSize(name, category_id, token) {
     token
   )
 
+  return response
+}
+export async function deleteCallUser(token) {
+  const response = await makeRequest(
+    '/user/',
+    'DELETE',
+    null,
+    token
+  )
+  return response
+}
+export async function editCallUser(token, user) {
+  const response = await makeRequest(
+    '/user/',
+    'PUT',
+    {
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      password: user.password,
+      address: user.address,
+      location: user.location,
+      
+      
+    },
+    token
+  )
   return response
 }

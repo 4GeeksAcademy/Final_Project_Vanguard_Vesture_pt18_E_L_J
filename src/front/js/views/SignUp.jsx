@@ -10,7 +10,6 @@ const Signup = () => {
   const [location, setLocation] = useState('')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState('')
 
   const { actions } = useContext(Context)
 
@@ -28,7 +27,6 @@ const Signup = () => {
         phone,
         location,
         address,
-        paymentMethod
       )
       .then((res) => navigate('/login'))
       .catch((error) => {
@@ -128,33 +126,6 @@ const Signup = () => {
             className='form-control'
             id='address'
           />
-        </div>
-        <div className='m-3 row '>
-          <label htmlFor='exampleInputEmail1' className='form-label col'>
-            <h5>Your Favorite Payment Methond</h5>
-          </label>
-          <label>
-            <input
-              className=' m-3'
-              type='radio'
-              name='metodo_pago'
-              value='VISA'
-              checked={paymentMethod === 'VISA'}
-              onChange={handlePaymentSelection}
-            />
-            VISA
-          </label>
-          <label>
-            <input
-              className=' m-3'
-              type='radio'
-              name='metodo_pago'
-              value='MASTERCARD'
-              checked={paymentMethod === 'MASTERCARD'}
-              onChange={handlePaymentSelection}
-            />
-            MASTERCARD
-          </label>
         </div>
         <button
           style={{ cursor: 'pointer' }}

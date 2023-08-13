@@ -43,7 +43,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         phone,
         location,
         address,
-        payment_method
       ) => {
         const response = await api.signup(
           email,
@@ -53,7 +52,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           phone,
           location,
           address,
-          payment_method
         )
         console.log(response)
         console.log('Succefully created user')
@@ -241,8 +239,22 @@ const getState = ({ getStore, getActions, setStore }) => {
           sizes: { ...getStore().sizes, [CATEGORIES[category_id]]: [...getStore().sizes[CATEGORIES[category_id]],newSize] },
         })
       },
+      deleteUser : async () => {
+        const response = await api.deleteCallUser(getStore().token)
+        setStore({ user: {} })
+        console.log(response)
+        getActions().logout()
+        return response
+        
+      },
+      editUser : async (user) => {
+        const response = await api.editCallUser(getStore().token, user)
+        setStore({ user: response.user })
+				return console.log(response)
+			
     },
   }
 }
+  }
 
 export default getState
