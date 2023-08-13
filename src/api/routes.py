@@ -6,10 +6,13 @@ from src.api.models import db, User, Product, Order , OrderItems, Category, Size
 from src.api.utils import generate_sitemap, APIException
 from src.api.utils import save_new_product, update_product_by_id, update_category_by_id
 from src.api.utils import check_is_admin_by_user_id
+from src.api.utils import generate_paypal_access_token, handle_paypal_response
 import bcrypt
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+import requests
+
 
 api = Blueprint('api', __name__)
 
@@ -706,3 +709,64 @@ def all_shoes_types():
     types = db.session.query(Product.type).filter_by(category_id=3).distinct().all()
     types_as_string = [type[0] for type in types]
     return jsonify(types_as_string), 200
+
+# Paypal routes
+@api.route('/create-paypal-order', methods=['POST'])
+def create_paypal_order():
+    request_body = request.get_json()
+    cart = request_body.get('cart')
+    
+    if cart is None:
+        raise APIException(message='Cart is empty', status_code=422)
+    if len(cart) == 0:
+        raise APIException(message='Cart is empty', status_code=422)
+    
+    amount = request_body.get('amount')
+    if amount is None:
+        raise APIException(message='Amount is missing', status_code=422)
+    if amount <= 0:
+        raise APIException(message='Amount must be greater than 0', status_code=422)
+    
+
+    access_token = generate_paypal_access_token()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}"
+    }
+    body = {
+        "intent": "CAPTURE",
+        "purchase_units": [
+            {
+                "amount": {
+                    "currency_code": "USD",
+                    "value": amount
+                }
+            }
+        ]
+    }
+
+    order_response = requests.post(
+        'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+        headers=headers,
+        json=body
+    )
+
+    return handle_paypal_response(order_response)
+    
+
+@api.route('/capture-paypal-order', methods=['POST'])
+def capture_paypal_order():
+    request_body = request.get_json()
+    order_id = request_body.get('orderID')
+    if order_id is None:
+        raise APIException(message='Order ID is missing', status_code=422)
+
+    paypal_access_token = generate_paypal_access_token()
+    response = requests.post(
+        f'https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}/capture',
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {paypal_access_token}"
+        }
+    )
+    return handle_paypal_response(response)

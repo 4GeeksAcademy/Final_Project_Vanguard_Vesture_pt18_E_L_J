@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 // import { useNavigate } from 'react-router-dom'
 import Navbar from '../component/Navbar.jsx'
 import CartProduct from '../component/CartProduct.jsx'
+import PaymentComponent from '../component/PaymentComponent.jsx'
+
 
 
 
@@ -16,7 +18,8 @@ const Cart = () => {
   }, [store.token]);
 
   
-  
+  const cost = actions.getTotalCart()
+
   const clearCart = async () => {
     const shoppingCart = store.shopping_cart;
 
@@ -49,7 +52,9 @@ const Cart = () => {
       )}
       <h1 className='text-center'>Total Pay: U$S {actions.getTotalCart()}</h1>
       <div className="d-flex justify-content-center">
-        <button className="btn btn-success m-3">PAY ORDER</button>
+        {/* <button className="btn btn-success m-3">PAY ORDER</button> */}
+        <PaymentComponent
+        cost={cost}/>
         <button onClick={() => clearCart()} className="btn btn-danger m-3">CANCEL ORDER</button>
       </div>
 

@@ -2,6 +2,9 @@ from flask import jsonify, url_for
 from sqlalchemy import exc
 from src.api.models import db, Category, Product, User, Size, ProductSizeStock
 import re
+import os
+import requests
+import base64
 
 class APIException(Exception):
     status_code = 400
@@ -147,3 +150,22 @@ def update_category_by_id(id, request_body):
         raise APIException(message=message, status_code=400)
     return category
 
+def generate_paypal_access_token():
+    client_id = os.environ.get('PAYPAL_CLIENT_ID')
+    client_secret = os.environ.get('PAYPAL_CLIENT_SECRET')
+    auth = f"{client_id}:{client_secret}"
+    encoded_auth = base64.b64encode(auth.encode('utf-8')).decode('utf-8')
+
+    response = requests.post(
+        'https://api-m.sandbox.paypal.com/v1/oauth2/token', 
+        data="grant_type=client_credentials", 
+        headers={"Authorization": f"Basic {encoded_auth}"}
+    )
+    response_json = response.json()
+    return response_json['access_token']
+
+def handle_paypal_response(response):
+    if response.status_code == 200 or response.status_code == 201:
+        return response.json(), response.status_code
+    error_message = response.text
+    raise APIException(message=error_message, status_code=response.status_code)
