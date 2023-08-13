@@ -28,9 +28,7 @@ const ProductList = ({ category }) => {
 
   const filterBySize = (product, selectedSizes) =>
     selectedSizes.length === 0 ||
-    selectedSizes.some((size) =>
-      product.sizes_stock.some((s) => s.size === size)
-    )
+    product.sizes_stock.some((size) => selectedSizes.includes(size.id))
 
   const filteredProducts = useMemo(
     () =>
@@ -41,7 +39,7 @@ const ProductList = ({ category }) => {
           filterByPrice(product, minPrice, maxPrice) &&
           filterBySize(product, selectedSizesID)
       ),
-    [store[category], search, selectedTypes, minPrice, maxPrice]
+    [store[category], search, selectedTypes, selectedSizesID, minPrice, maxPrice]
   )
 
   const handleSubmit = (e) => {
@@ -52,10 +50,6 @@ const ProductList = ({ category }) => {
 
   useEffect(() => {
     actions.getProducts(category).finally(() => setIsLoading(false))
-  }, [])
-
-  useEffect(() => {
-    actions.getSizes().then((res) => setSizes(res))
   }, [])
 
   return (
@@ -191,7 +185,7 @@ const ProductList = ({ category }) => {
           />
         </div>
 
-        <div className='d-flex flex-wrap gap-2 justify-content-center'>
+        <div className='d-flex flex-wrap gap-2 justify-content-center justify-content-md-start'>
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
