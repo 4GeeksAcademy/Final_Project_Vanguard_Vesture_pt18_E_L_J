@@ -111,11 +111,19 @@ const getState = ({ getStore, getActions, setStore }) => {
         )
         console.log('Succefully created product')
         console.log(createdProduct)
+        
+        // Create a new list of types with the new type if it doesn't exist
+        const newTypes = [
+          ...getStore()[`${CATEGORIES[category_id]}_types`],
+          type,
+        ].filter((type, index, self) => self.indexOf(type) === index)
+        
         setStore({
           [CATEGORIES[category_id]]: [
             ...getStore()[CATEGORIES[category_id]],
             createdProduct,
           ],
+          [`${CATEGORIES[category_id]}_types`]: newTypes
         })
         return createdProduct
       },
