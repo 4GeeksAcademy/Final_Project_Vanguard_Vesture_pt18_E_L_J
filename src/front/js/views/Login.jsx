@@ -32,7 +32,6 @@ export const Login = () => {
 
   return (
     <div>
-      <Navbar />
       <h1 className='mx-auto p-5 text-center' style={{ fontSize: '3rem' }}>
         Welcome Back!
       </h1>

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
-// import { useNavigate } from 'react-router-dom'
+import React, { useContext, useEffect } from 'react'
 import Navbar from '../component/Navbar.jsx'
 import CartProduct from '../component/CartProduct.jsx'
 
@@ -30,8 +29,6 @@ const Cart = () => {
 
   return (
     <div>
-      <Navbar />
-
       <h1 className=' d-flex justify-content-center align-items-center'>Cart</h1>
       {store.shopping_cart && store.shopping_cart.length > 0 ? (
         store.shopping_cart.map((cartItem) => (

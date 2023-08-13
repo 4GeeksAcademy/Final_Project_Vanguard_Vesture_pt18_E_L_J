@@ -50,10 +50,10 @@ class Product(db.Model):
     type = db.Column(db.String(100), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
 
-    images = db.relationship('ProductImage', back_populates='product')
+    images = db.relationship('ProductImage', back_populates='product', cascade='all, delete-orphan')
     category = db.relationship('Category', back_populates='products')
     orders = db.relationship('OrderItems', back_populates='product')
-    sizes_stock = db.relationship('ProductSizeStock', back_populates='product')
+    sizes_stock = db.relationship('ProductSizeStock', back_populates='product', cascade='all, delete-orphan')
     users_ratings = db.relationship('ProductsRating', back_populates='product')
     shopping_carts = db.relationship('ShoppingCart', back_populates='product')
 

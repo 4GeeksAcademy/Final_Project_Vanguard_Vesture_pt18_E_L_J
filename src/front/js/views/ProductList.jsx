@@ -55,16 +55,13 @@ const ProductList = ({ category }) => {
   }, [])
 
   useEffect(() => {
-    actions.getSizes().then((res) => setSizes(res))
+    actions.getSizes()
   }, [])
 
   return (
-    <div style={{ minHeight: '100vh' }}>
-      <Navbar />
-      <div className='position-relative container'>
+      <div className='container'>
         <h1 className='text-capitalize'>{category}</h1>
 
-        {isLoading && <Loader />}
         <div className='d-flex gap-2 flex-wrap'>
           {/* Type filter */}
           <div className='dropdown'>
@@ -191,13 +188,14 @@ const ProductList = ({ category }) => {
           />
         </div>
 
+        {isLoading && <Loader />}
+
         <div className='d-flex flex-wrap gap-2 justify-content-center'>
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>
-    </div>
   )
 }
 

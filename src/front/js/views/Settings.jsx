@@ -5,7 +5,6 @@ const Settings = () => {
 
   return (
     <div>
-      <Navbar />
       <h1> Soy Settings</h1>
     </div>
   )
