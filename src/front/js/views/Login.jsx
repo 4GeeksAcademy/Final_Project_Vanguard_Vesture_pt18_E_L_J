@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Context } from '../store/appContext'
 import { useNavigate, Navigate, useLocation } from 'react-router'
-import Navbar from '../component/Navbar.jsx'
+// import Navbar from '../component/Navbar.jsx'
 
 export const Login = () => {
   const [email, setEmail] = useState('')

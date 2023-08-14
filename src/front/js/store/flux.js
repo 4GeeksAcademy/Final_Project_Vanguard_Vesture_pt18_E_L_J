@@ -163,14 +163,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         console.log('Favorite deleted')
         return response
       },
-      // getShoppingCart:async() => {
-      //   const store = getStore();
-      //   const response = await api.getShoppingCart(store.token)
-      //   // setStore({shopping_cart:response})
-      //   // console.log(response)
-      //   console.log('Shopping cart loaded')
-      //   // return response
-      // },
+      
       postShoppingCart: async (product_id, quantity, size_id) => {
         const response = await api.postShoppingCart(
           product_id,
@@ -261,6 +254,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return console.log(response)
 			
     },
+    deleteProduct : async (product_id ) => {
+      const response = await api.deleteCallProduct(getStore().token, product_id )
+      // setStore({ products: response })
+      console.log(response)
+      
+      return response
+      
+    },
+    editProduct : async (product_id , product) => {
+      const response = await api.editCallProduct(getStore().token, product_id , product)
+      const products = getStore()[CATEGORIES[response.category_id]].map((product) => {
+        if (product.id === product_id) return response
+        return product
+      })
+      setStore({ [CATEGORIES[product.category_id]]: products })
+      return response
+    
+  },
   }
 }
   }

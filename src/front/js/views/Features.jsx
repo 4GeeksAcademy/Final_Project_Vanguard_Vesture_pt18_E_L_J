@@ -1,8 +1,8 @@
 import React from "react";
-import Navbar from "../component/Navbar.jsx";
+// import Navbar from "../component/Navbar.jsx";
 // import Styles from "../views/styles/features.css"
 
-const Feactures = () => {
+const Features = () => {
     return (
         <div style={{backgroundColor: "black", color: "white"}}>
             <div className="features">
@@ -40,4 +40,4 @@ const Feactures = () => {
     )
 }
 
-export default Feactures;
+export default Features;

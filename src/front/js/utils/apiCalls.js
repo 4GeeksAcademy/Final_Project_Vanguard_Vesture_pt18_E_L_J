@@ -202,3 +202,31 @@ export async function editCallUser(token, user) {
   )
   return response
 }
+export async function deleteCallProduct(token , product_id) {
+  const response = await makeRequest(
+    '/products/'+ product_id,
+    'DELETE',
+    null,
+    token
+  )
+  return response
+}
+export async function editCallProduct(token, product_id , product) {
+  const response = await makeRequest(
+    '/products/'+ product_id,
+    'PUT',
+    {
+      
+            name: product.name ,
+            price: product.price,
+            description: product.description,
+            color: product.color,
+            type: product.type,
+            sizes_stock: product.sizes_stock,
+            category_id: product.category_id ,
+      
+    },
+    token
+  )
+  return response
+}

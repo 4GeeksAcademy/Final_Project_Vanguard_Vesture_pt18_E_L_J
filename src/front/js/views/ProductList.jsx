@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react'
 import { Context } from '../store/appContext.js'
 
-import Navbar from '../component/Navbar.jsx'
+// import Navbar from '../component/Navbar.jsx'
 import ProductCard from '../component/ProductCard.jsx'
 import Loader from '../component/Loader.jsx'
-import { CATEGORIES } from '../utils/contants.js'
+// import { CATEGORIES } from '../utils/contants.js'
 
 const ProductList = ({ category }) => {
   const { actions, store } = useContext(Context)

@@ -12,7 +12,7 @@ import Admin from './views/Admin.jsx'
 import Create from './views/CreateProduct.jsx'
 import ProductDetails from './views/ProductDetails.jsx'
 import AboutUs from './views/AboutUs.jsx'
-import Feactures from './views/Feactures.jsx'
+import Features from './views/Features.jsx'
 import Footer from './component/Footer.jsx'
 import PrivateRoute from './component/PrivateRoute.jsx'
 import ProductList from './views/ProductList.jsx'
@@ -63,8 +63,8 @@ const Layout = () => {
                 />
                 <Route path='/product/:id' element={<ProductDetails />} />
                 <Route path='*' element={<h1>Not found!</h1>} />
-                <Route path='/aboutUs' element={<AboutUs />} />
-                <Route path='/feactures' element={<Feactures />} />
+                <Route path='/aboutus' element={<AboutUs />} />
+                <Route path='/features' element={<Features />} />
 
                 {/* Private routes */}
                 <Route element={<PrivateRoute />}>

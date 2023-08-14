@@ -409,9 +409,12 @@ def delete_product(product_id):
     product = Product.query.get(product_id)
     if product is None:
         raise APIException(message='Product not found', status_code=404)
+    if len(product.shopping_carts) > 0:
+        for shopping_cart in product.shopping_carts:
+            db.session.delete(shopping_cart)
     db.session.delete(product)
     db.session.commit()
-    return Response(status=204)
+    return Response(message='Product deleted',status=204)
 
 @api.route('/products/<int:product_id>/rating', methods=['GET'])
 def get_product_rating(product_id):
