@@ -4,6 +4,7 @@ import { Context } from '../store/appContext.js'
 
 import Rating from '@mui/material/Rating'
 import Loader from '../component/Loader.jsx'
+import EditProductForm from '../component/EditProductForm.jsx'
 import SizesSelector from '../component/SizesSelector.jsx'
 
 const ProductDetails = () => {
@@ -13,7 +14,17 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1)
   const [rating, setRating] = useState(0)
   const { id } = useParams()
+  const [isOpen, setOpen] = useState(false);
   const navigate = useNavigate()
+ 
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  
+  const closeModal = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     actions
@@ -55,10 +66,10 @@ const ProductDetails = () => {
       </div>
       {store.user.is_admin && (
         <div className='d-flex gap-2' style={{ marginLeft: '12px' }}>
-          <button type='button' className='btn btn-outline-secondary'>
+          <button onClick={openModal} type='button' className='btn btn-outline-secondary'>
             <i className='fa-solid fa-pen-to-square'></i>
           </button>
-          <button type='button' className='btn btn-danger'>
+          <button onClick={()=>actions.deleteProduct(id)} type='button' className='btn btn-danger'>
             <i className='fa-solid fa-trash'></i>
           </button>
         </div>
@@ -217,6 +228,7 @@ const ProductDetails = () => {
           </>
         )}
       </div>
+      <EditProductForm setProduct={setProduct} product_id={product.id} isOpen={isOpen} onClose={closeModal} />
     </div>
   )
 }

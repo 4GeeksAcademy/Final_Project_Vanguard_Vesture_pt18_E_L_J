@@ -55,7 +55,7 @@ class Product(db.Model):
     orders = db.relationship('OrderItems', back_populates='product')
     sizes_stock = db.relationship('ProductSizeStock', back_populates='product', cascade='all, delete-orphan')
     users_ratings = db.relationship('ProductsRating', back_populates='product')
-    shopping_carts = db.relationship('ShoppingCart', back_populates='product')
+    shopping_carts = db.relationship('ShoppingCart', back_populates='product', cascade='all, delete-orphan')
 
     def serialize(self):
         return {

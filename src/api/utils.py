@@ -102,22 +102,22 @@ def update_product_by_id(id, request_body):
     if product is None:
         raise APIException(message='Product not found', status_code=404)
 
-    print(product.__dict__.keys())
+    
     for key in product.__dict__.keys():
         if key in request_body:
             setattr(product, key, request_body[key])
             
-    if request_body.get('sizes_quantity') is not None:
-        for size_from_body in request_body['sizes_quantity']:
-            size_db = Size.query.get(size_from_body['size_id'])
+    if request_body.get('sizes_stock') is not None:
+        for size_from_body in request_body['sizes_stock']:
+            size_db = Size.query.get(size_from_body['id'])
             if size_db is None:
-                raise APIException(message=f'Size with id {size_from_body["size_id"]} not found', status_code=422)
-            size_quantity = ProductSizeStock.query.filter_by(size=size_db, product=product).first()
-            if size_quantity is None:
-                new_size_quantity = ProductSizeStock(size=size_db, product=product, stock=size_from_body['quantity'])
-                db.session.add(new_size_quantity)
+                raise APIException(message=f'Size with id {size_from_body["id"]} not found', status_code=422)
+            size_stock = ProductSizeStock.query.filter_by(size=size_db, product=product).first()
+            if size_stock is None:
+                new_size_stock = ProductSizeStock(size=size_db, product=product, stock=size_from_body['stock'])
+                db.session.add(new_size_stock)
             else:
-                size_quantity.quantity = size_from_body['quantity']
+                size_stock.stock = size_from_body['stock']
 
     try:
         db.session.commit()

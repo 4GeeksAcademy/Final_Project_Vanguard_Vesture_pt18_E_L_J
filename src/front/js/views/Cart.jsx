@@ -3,9 +3,6 @@ import Navbar from '../component/Navbar.jsx'
 import CartProduct from '../component/CartProduct.jsx'
 import PaymentComponent from '../component/PaymentComponent.jsx'
 
-
-
-
 import { Context } from '../store/appContext.js'
 
 const Cart = () => {

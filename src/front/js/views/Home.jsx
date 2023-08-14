@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
-import Navbar from "../component/Navbar.jsx";
+// import Navbar from "../component/Navbar.jsx";
 import { Context } from '../store/appContext.js';
 import { Link } from 'react-router-dom'
 
