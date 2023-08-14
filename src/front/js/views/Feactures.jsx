@@ -5,7 +5,6 @@ import Navbar from "../component/Navbar.jsx";
 const Feactures = () => {
     return (
         <div style={{backgroundColor: "black", color: "white"}}>
-            <Navbar />
             <div className="features">
             <br/>
             <h1 style={{display: "flex", justifyContent: "center"}}>FUNCTIONS & STEPS</h1>

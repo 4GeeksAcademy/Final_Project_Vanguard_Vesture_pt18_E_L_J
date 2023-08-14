@@ -13,7 +13,6 @@ const Create = () => {
 
   return (
     <div>
-      <Navbar />
       <div className='container'>
         <h1 className='my-2'>Create product</h1>
         <NewProduct />
