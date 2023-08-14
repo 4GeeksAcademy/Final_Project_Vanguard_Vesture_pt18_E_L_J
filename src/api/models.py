@@ -10,8 +10,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     address = db.Column(db.String(200))
+    phone = db.Column(db.String(20))
     location = db.Column(db.String(100))
-    payment_method = db.Column(db.String(100))
     is_admin = db.Column(db.Boolean, default=False)
 
     favorites = db.relationship('Product', secondary='favorites')
@@ -29,8 +29,8 @@ class User(db.Model):
             'first_name': self.first_name,
             'email': self.email,
             'address': self.address,
+            'phone': self.phone,
             'location': self.location,
-            'payment_method': self.payment_method,
             'is_admin': self.is_admin,
         }
     

@@ -10,7 +10,6 @@ const Signup = () => {
   const [location, setLocation] = useState('')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState('')
 
   const { actions } = useContext(Context)
 
@@ -28,7 +27,6 @@ const Signup = () => {
         phone,
         location,
         address,
-        paymentMethod
       )
       .then((res) => navigate('/login'))
       .catch((error) => {
@@ -51,7 +49,7 @@ const Signup = () => {
       <h1 className='mx-auto text-center p-3' style={{ fontSize: '3rem' }}>
         Welcome to Vanguard Vesture!
       </h1>
-      <form className='card w-50 mx-auto mb-5 bg-black text-white' onSubmit={handleSubmit}>
+      <form className='card w-75 mx-auto mb-5 bg-black text-white' onSubmit={handleSubmit}>
         <div className='m-3 '>
           <label htmlFor='exampleInputEmail1' className='form-label'>
             <h5>Email address</h5>
@@ -128,33 +126,6 @@ const Signup = () => {
             className='form-control'
             id='address'
           />
-        </div>
-        <div className='m-3 row '>
-          <label htmlFor='exampleInputEmail1' className='form-label col'>
-            <h5>Your Favorite Payment Methond</h5>
-          </label>
-          <label>
-            <input
-              className=' m-3'
-              type='radio'
-              name='metodo_pago'
-              value='VISA'
-              checked={paymentMethod === 'VISA'}
-              onChange={handlePaymentSelection}
-            />
-            VISA
-          </label>
-          <label>
-            <input
-              className=' m-3'
-              type='radio'
-              name='metodo_pago'
-              value='MASTERCARD'
-              checked={paymentMethod === 'MASTERCARD'}
-              onChange={handlePaymentSelection}
-            />
-            MASTERCARD
-          </label>
         </div>
         <button
           style={{ cursor: 'pointer' }}

@@ -46,8 +46,8 @@ def signup():
         email=data['email'],
         password=hashed_password.decode('utf-8'),  # Decodificar el hash para almacenarlo como cadena
         address=data['address'],
+        phone=data['phone'],
         location=data['location'],
-        payment_method=data['payment_method'],
     )
 
     db.session.add(new_user)
@@ -98,33 +98,43 @@ def get_user_by_id(user_id):
         return jsonify({'message': 'Usuario no encontrado'}), 404
     return jsonify(user.serialize()), 200
 
-@api.route('/user/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
-    user = User.query.get(user_id)
+@api.route('/user/', methods=['PUT'])
+@jwt_required()
+def update_user():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
     if not user:
         return jsonify({'message': 'Usuario no encontrado'}), 404
-
-    data = request.json 
-    user.first_name = data.get('firstName', user.first_name)
-    user.last_name = data.get('lastName', user.last_name)
+    data = request.json
+    hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()) 
+    user.first_name = data.get('first_name', user.first_name)
+    user.last_name = data.get('last_name', user.last_name)
+    user.password = hashed_password.decode('utf-8')
     user.email = data.get('email', user.email)
     user.address = data.get('address', user.address)
     user.location = data.get('location', user.location)
-    user.payment_method = data.get('paymentMethod', user.payment_method)
-    user.is_admin = data.get('isAdmin', user.is_admin)
+    user.is_admin = data.get('is_admin', user.is_admin)
 
     db.session.commit()
-    return jsonify({'message': 'Usuario modificado exitosamente'}), 200
+    return jsonify({'message': 'Usuario modificado exitosamente',"user":user.serialize()}), 200
 
-@api.route('/user/<int:user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    user = User.query.get(user_id)
+@api.route('/user/', methods=['DELETE'])
+@jwt_required()
+def delete_user():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
     if not user:
         return jsonify({'message': 'Usuario no encontrado'}), 404
-
+    
+    if user.is_admin == True:
+        return jsonify({'message': "El admin no puede ser eliminado"})
+    if len(user.shopping_cart) > 0:
+        for product in user.shopping_cart:
+            db.session.delete(product)
     db.session.delete(user)
     db.session.commit()
     return jsonify({'message': 'Usuario eliminado exitosamente'}), 200
+    
 
 @api.route('/users/favorites', methods=['GET'])
 @jwt_required()
