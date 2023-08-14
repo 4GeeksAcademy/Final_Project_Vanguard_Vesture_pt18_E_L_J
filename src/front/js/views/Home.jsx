@@ -23,7 +23,6 @@ const Home = () => {
 
 	return (
 		<div>
-			<Navbar />
 
 			<div className="container-fluid card-group">
 				<div className="card">

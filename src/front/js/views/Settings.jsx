@@ -38,7 +38,6 @@ const Settings = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="container mx-auto">
         <h2>Account Settings</h2>
         <p><strong>Email:</strong> {email}</p>

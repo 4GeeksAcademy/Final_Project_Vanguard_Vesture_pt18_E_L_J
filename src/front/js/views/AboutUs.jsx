@@ -5,7 +5,6 @@ import Navbar from "../component/Navbar.jsx";
 const AboutUs = () => {
     return (
         <div>
-            <Navbar />
             <br />
             <p style={{display: "flex", justifyContent: "center"}}>LOCATION</p>
             <div className="container" style={{display: "flex", justifyContent: "center"}}>
