@@ -29,10 +29,10 @@ const CheckoutProduct = () => {
   return (
     <div className='container py-4'>
       <h1 className='mb-3'>Buy now!</h1>
-      <div className='d-flex justify-content-between'>
-        <h2>{product.name}</h2>
-        <span className='h3 fw-bold'>
-          ${product.price.toLocaleString('en-US')}
+      <div className='d-flex gap-3 align-items-center mb-3'>
+        <h2 className='m-0'>{product.name}</h2>
+        <span className='badge bg-secondary ms-1 fs-5'>
+          ${(product.price * quantity).toLocaleString('en-US')} c/u
         </span>
       </div>
       <div className='d-flex flex-column gap-3'>
@@ -59,9 +59,9 @@ const CheckoutProduct = () => {
         </div>
 
         <div className='d-flex align-items-center'>
-          <h5 className='me-auto'>
+          <h5 className='m-0 me-4'>
             Total:
-            <span className='badge bg-secondary ms-1 fs-6'>
+            <span className='badge bg-info ms-1 fs-6'>
               ${(product.price * quantity).toLocaleString('en-US')}
             </span>
           </h5>
@@ -104,53 +104,75 @@ const CheckoutProduct = () => {
 
         <hr />
 
-        <h3>Billing Info</h3>
-        <div className='form-check'>
-          <input
-            className='form-check-input'
-            type='checkbox'
-            id='use-my-profile'
-            checked={useProfileInfo}
-            onChange={(e) => setUseProfileInfo(e.target.checked)}
-          />
-          <label className='form-check-label' htmlFor='use-my-profile'>
-            Use my profile info
-          </label>
-        </div>
+        <div className='row g-3'>
+          <h3 className='col-12'>Billing Info</h3>
+          <div className='col-12'>
+            <input
+              className='form-check-input'
+              type='checkbox'
+              id='use-my-profile'
+              checked={useProfileInfo}
+              onChange={(e) => setUseProfileInfo(e.target.checked)}
+            />
+            <label className='form-check-label ms-2' htmlFor='use-my-profile'>
+              Use my profile info
+            </label>
+          </div>
 
-        <div className='d-flex flex-column gap-2'>
-          <label htmlFor='name'>Full name</label>
-          <input
-            type='text'
-            id='name'
-            className='border border-secondary'
-            value={useProfileInfo ? `${user.first_name} ${user.last_name}` : name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <label htmlFor='address'>Delivery Address</label>
-          <input
-            type='text'
-            id='address'
-            className='border border-secondary'
-            value={useProfileInfo ? user.address : address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          <label htmlFor='phone'>Phone</label>
-          <input
-            type='text'
-            id='phone'
-            className='border border-secondary'
-            value={useProfileInfo ? user.phone : phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
-          <label htmlFor='email'>Email</label>
-          <input
-            type='email'
-            id='email'
-            className='border border-secondary'
-            value={useProfileInfo ? user.email : email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div className='col-12 col-sm-6'>
+            <label htmlFor='name' className='form-label'>
+              Full name
+            </label>
+            <input
+              type='email'
+              className='form-control'
+              id='name'
+              placeholder='John Doe'
+              value={
+                useProfileInfo ? `${user.first_name} ${user.last_name}` : name
+              }
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className='col-12 col-sm-6'>
+            <label htmlFor='email' className='form-label'>
+              Email address
+            </label>
+            <input
+              type='email'
+              className='form-control'
+              id='email'
+              value={useProfileInfo ? user.email : email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder='name@example.com'
+            />
+          </div>
+          <div className='col-12'>
+            <label htmlFor='address' className='form-label'>
+              Delivery Address
+            </label>
+            <input
+              type='text'
+              className='form-control'
+              id='address'
+              placeholder='1234 Main St'
+              value={useProfileInfo ? user.address : address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+          <div className='col-12 col-sm-6 col-lg-4'>
+            <label htmlFor='phone' className='form-label'>
+              Phone number
+            </label>
+            <input
+              type='text'
+              className='form-control'
+              id='phone'
+              placeholder='(123) 456-7890'
+              value={useProfileInfo ? user.phone : phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
