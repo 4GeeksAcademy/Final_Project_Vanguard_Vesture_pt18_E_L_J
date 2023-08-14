@@ -68,7 +68,7 @@ export const Login = () => {
         </button>
       </form>
       <h5
-        className='mt-3 card w-75 mx-auto'
+        className='mt-3 text-center card w-75 mx-auto'
         style={{ cursor: 'pointer' }}
         onClick={handleRedirect}
       >

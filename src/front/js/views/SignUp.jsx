@@ -49,7 +49,7 @@ const Signup = () => {
       <h1 className='mx-auto text-center p-3' style={{ fontSize: '3rem' }}>
         Welcome to Vanguard Vesture!
       </h1>
-      <form className='card w-50 mx-auto mb-5 bg-black text-white' onSubmit={handleSubmit}>
+      <form className='card w-75 mx-auto mb-5 bg-black text-white' onSubmit={handleSubmit}>
         <div className='m-3 '>
           <label htmlFor='exampleInputEmail1' className='form-label'>
             <h5>Email address</h5>
