@@ -57,17 +57,16 @@ const Layout = () => {
               <Route path='/aboutUs' element={<AboutUs />} />
               <Route path='/feactures' element={<Feactures />} />
 
-              <Route
-                path='/checkout/:productID'
-                element={<CheckoutProduct />}
-              />
-              <Route path='/checkout/cart' element={<CheckoutProduct cart />} />
               {/* Private routes */}
               <Route element={<PrivateRoute />}>
                 <Route path='/cart' element={<Cart />} />
                 <Route path='/admin' element={<Admin />} />
                 <Route path='/settings' element={<Settings />} />
                 <Route path='/create' element={<Create />} />
+                <Route
+                  path='/checkout/:productID'
+                  element={<CheckoutProduct />}
+                />
               </Route>
             </Routes>
           </div>

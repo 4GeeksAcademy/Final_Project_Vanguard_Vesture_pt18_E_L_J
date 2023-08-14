@@ -180,7 +180,7 @@ const ProductDetails = () => {
 
       {/* Price */}
       <h3 className='my-3'>${product.price.toLocaleString('en-US')}</h3>
-      
+
       {/* Buttons */}
       <div className='d-flex flex-wrap gap-2'>
         {!store.user.is_admin && (
@@ -195,7 +195,13 @@ const ProductDetails = () => {
             >
               Add to cart
             </button>
-            <button type='button' className='btn btn-outline-dark'>
+            <button
+              type='button'
+              className='btn btn-outline-dark'
+              onClick={() => {
+                navigate('/checkout/' + product.id)
+              }}
+            >
               Buy now
             </button>
             <button
