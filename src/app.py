@@ -6,14 +6,12 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
-from src.api.utils import APIException, generate_sitemap, db_load_categories
+from src.api.utils import APIException, generate_sitemap, db_load_categories, load_firts_admin_user
 from src.api.models import db
 from src.api.routes import api
 from src.api.admin import setup_admin
 from src.api.commands import setup_commands
 from flask_jwt_extended import JWTManager
-from src.api.paypal_back import payment_api
-
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
@@ -45,8 +43,8 @@ setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
-app.register_blueprint(payment_api, url_prefix='/api/payment')
 db_load_categories(app, db)
+load_firts_admin_user(app, db)
 
 
 

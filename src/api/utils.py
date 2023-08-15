@@ -61,6 +61,28 @@ def db_load_categories(app, db):
     except:
         print('All categories already exists')
 
+def load_firts_admin_user(app, db):
+    try:
+        with app.app_context():
+            if User.query.count() > 0:
+                print('Admin user already exists')
+                return
+            user = User(
+                first_name='Admin',
+                last_name='Admin',
+                email='admin@admin.com',
+                password='admin',
+                address='Admin address',
+                phone='123456789',
+                location='Admin location',
+                is_admin=True
+            )
+            db.session.add(user)
+            db.session.commit()
+            print('Created admin user')
+    except:
+        print('Error')
+
 
 def generate_error_message(error_text):
     key_text = re.search(r'(?<=Key \().*?(?=\))', error_text).group(0)

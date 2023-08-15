@@ -5,6 +5,7 @@ import { Context } from '../store/appContext.js'
 
 import Loader from '../component/Loader.jsx'
 import SizesSelector from '../component/SizesSelector.jsx'
+import PaymentComponent from '../component/PaymentComponent.jsx'
 
 const CheckoutProduct = () => {
   const { actions, store } = useContext(Context)
@@ -15,14 +16,29 @@ const CheckoutProduct = () => {
   const [product, setProduct] = useState(null)
 
   const [useProfileInfo, setUseProfileInfo] = useState(false)
-  const [name, setName] = useState('')
+  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [address, setAddress] = useState('')
+  
 
   useEffect(() => {
     actions.getProductDetails(params.productID).then((res) => setProduct(res))
   }, [])
+
+  useEffect(() => {
+    if (useProfileInfo) {
+      setFullName(user.first_name + ' ' + user.last_name)
+      setEmail(user.email)
+      setPhoneNumber(user.phone)
+      setAddress(user.address)
+    } else {
+      setFullName('')
+      setEmail('')
+      setPhoneNumber('')
+      setAddress('')
+    }
+  }, [useProfileInfo])
 
   if (!product) return <Loader />
 
@@ -32,13 +48,14 @@ const CheckoutProduct = () => {
       <div className='d-flex gap-3 align-items-center mb-3'>
         <h2 className='m-0'>{product.name}</h2>
         <span className='badge bg-secondary ms-1 fs-5'>
-          ${(product.price * quantity).toLocaleString('en-US')} c/u
+          ${product.price.toLocaleString('en-US')} c/u
         </span>
       </div>
+
       <div className='d-flex flex-column gap-3'>
         <div className='d-flex gap-2' style={{ height: '180px' }}>
           <img
-            src={product.images[0].image_url}
+            src={product.images[0]?.image_url}
             alt={product.name}
             className='img-fluid border border-secondary'
             style={{
@@ -61,7 +78,10 @@ const CheckoutProduct = () => {
         <div className='d-flex align-items-center'>
           <h5 className='m-0 me-4'>
             Total:
-            <span className='badge bg-info ms-1 fs-6'>
+            <span
+              className='badge bg-info ms-1 fs-6'
+              style={{ minWidth: '80px' }}
+            >
               ${(product.price * quantity).toLocaleString('en-US')}
             </span>
           </h5>
@@ -79,12 +99,21 @@ const CheckoutProduct = () => {
           <input
             type='number'
             value={quantity}
-            onChange={(e) => e.target.value > 0 && setQuantity(e.target.value)}
+            onChange={(e) => {
+              if (!selectedSizeID) return
+              if (e.target.value < 1) return
+              const sizeStock = product.sizes_stock.find(
+                (s) => s.id === selectedSizeID
+              ).stock
+              if (e.target.value > sizeStock) return
+              setQuantity(e.target.value)
+            }}
             className='border-0 text-center border border-secondary'
             style={{
               width: '50px',
               backgroundColor: '#f1f1f1',
               borderRadius: '5px',
+              zIndex: '-99',
             }}
           />
           <button
@@ -104,6 +133,7 @@ const CheckoutProduct = () => {
 
         <hr />
 
+        {/* Billing Form */}
         <div className='row g-3'>
           <h3 className='col-12'>Billing Info</h3>
           <div className='col-12'>
@@ -124,14 +154,12 @@ const CheckoutProduct = () => {
               Full name
             </label>
             <input
-              type='email'
+              type='text'
               className='form-control'
               id='name'
               placeholder='John Doe'
-              value={
-                useProfileInfo ? `${user.first_name} ${user.last_name}` : name
-              }
-              onChange={(e) => setName(e.target.value)}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
             />
           </div>
           <div className='col-12 col-sm-6'>
@@ -142,7 +170,7 @@ const CheckoutProduct = () => {
               type='email'
               className='form-control'
               id='email'
-              value={useProfileInfo ? user.email : email}
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder='name@example.com'
             />
@@ -156,7 +184,7 @@ const CheckoutProduct = () => {
               className='form-control'
               id='address'
               placeholder='1234 Main St'
-              value={useProfileInfo ? user.address : address}
+              value={address}
               onChange={(e) => setAddress(e.target.value)}
             />
           </div>
@@ -169,14 +197,25 @@ const CheckoutProduct = () => {
               className='form-control'
               id='phone'
               placeholder='(123) 456-7890'
-              value={useProfileInfo ? user.phone : phoneNumber}
+              value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
         </div>
+        <PaymentComponent
+          cartItems={[
+            {
+              size: { id: selectedSizeID },
+              product,
+              quantity,
+            },
+          ]}
+          billingInfo={{ fullName, email, phoneNumber, address }}
+          isBillingInfoValid={Boolean(
+            fullName && email && phoneNumber && address && selectedSizeID
+          )}
+        />
       </div>
-
-      <button className='btn btn-dark mt-3'>Buy now</button>
     </div>
   )
 }

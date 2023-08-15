@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, Response
-from src.api.models import db, User, Product, Order , OrderItems, Category, Size, ShoppingCart, ProductSizeStock, ProductsRating, ProductImage
+from src.api.models import db, User, Product, Order , OrderItem, Category, Size, ShoppingCart, ProductSizeStock, ProductsRating, ProductImage
 from src.api.utils import generate_sitemap, APIException
 from src.api.utils import save_new_product, update_product_by_id, update_category_by_id
 from src.api.utils import check_is_admin_by_user_id
@@ -12,7 +12,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 import requests
-
+import datetime
 
 api = Blueprint('api', __name__)
 
@@ -166,118 +166,7 @@ def delete_favorite(product_id):
     user.favorites.remove(product)
     db.session.commit()
     return [p.serialize() for p in user.favorites], 200
-# Endp user routes
-
-# Order routes
-@api.route('/orders/<int:user_id>', methods=['GET'])
-def obtener_ordenes_usuario(user_id):
-    user = User.query.get(user_id)
-
-    if not user:
-        return jsonify({'error': 'Usuario no encontrado'}), 404
-
-    ordenes_activas = Order.query.filter_by(user_id=user_id, status='activa').all()
-
-    ordenes_confirmadas = OrderItems.query.filter_by(order_id=user_id).all()
-
-    if not ordenes_activas and not ordenes_confirmadas:
-        return jsonify({'message': 'No se encontraron órdenes para el usuario'}), 200
-
-    ordenes_confirmadas_data = []
-    for orden_confirmada in ordenes_confirmadas:
-        orden_confirmada_data = {
-            'order_id': orden_confirmada.order_id,
-            'product': orden_confirmada.product.serialize(),
-            'quantity': orden_confirmada.quantity
-        }
-        ordenes_confirmadas_data.append(orden_confirmada_data)
-    response = {
-        'ordenes_activas': [orden.serialize() for orden in ordenes_activas],
-        'ordenes_confirmadas': ordenes_confirmadas_data
-    }
-    return jsonify(response), 200
-
-@api.route('/orders/<int:user_id>/neworder', methods=['POST'])
-def crear_orden_confirmada(user_id):
-    # Obtener los datos de la orden confirmada enviados en la solicitud
-    data = request.get_json()
-
-    # Verificar que se hayan proporcionado los datos necesarios
-    if not data or 'product_id' not in data or 'quantity' not in data:
-        return jsonify({'error': 'Datos incompletos para crear la orden confirmada'}), 400
-
-    # Buscar el producto en la base de datos por su ID
-    product = Product.query.get(data['product_id'])
-
-    if not product:
-        return jsonify({'error': 'Producto no encontrado'}), 404
-
-    # Crear una nueva orden confirmada en la tabla Order
-    nueva_orden = Order(user_id=user_id, status='confirmada')
-    db.session.add(nueva_orden)
-    db.session.commit()
-
-    # Crear un nuevo registro en la tabla OrderItems con la información de la orden confirmada
-    orden_item = OrderItems(order_id=nueva_orden.id, product_id=product.id, quantity=data['quantity'])
-    db.session.add(orden_item)
-    db.session.commit()
-
-    # Devolver la información de la nueva orden confirmada creada
-    response = {
-        'message': 'Nueva orden confirmada creada exitosamente',
-        'order_id': nueva_orden.id,
-        'product': product.serialize(),
-        'quantity': data['quantity']
-    }
-    return jsonify(response), 201
-
-@api.route('/orders/<int:user_id>/<int:orden_id>', methods=['DELETE'])
-def borrar_orden_activa(user_id, orden_id):
-    # Busca la orden activa en la base de datos
-    orden = Order.query.filter_by(id=orden_id, user_id=user_id, status='activa').first()
-
-    if not orden:
-        # Si la orden activa no se encuentra, devuelve un mensaje de error
-        return jsonify({'error': 'Orden activa no encontrada'}), 404
-
-    # Si la orden activa existe, la eliminamos de la base de datos
-    db.session.delete(orden)
-    db.session.commit()
-
-    # Devuelve una respuesta exitosa con un mensaje
-    return jsonify({'message': 'Orden activa eliminada exitosamente'}), 200
-
-@api.route('/orders/<int:user_id>/<int:orden_id>', methods=['POST'])
-def actualizar_orden_activa(user_id, orden_id):
-    # Busca la orden activa en la base de datos
-    orden = Order.query.filter_by(id=orden_id, user_id=user_id, status='activa').first()
-
-    if not orden:
-        # Si la orden activa no se encuentra, devuelve un mensaje de error
-        return jsonify({'error': 'Orden activa no encontrada'}), 404
-
-    # Obtener los datos de la orden actualizados enviados en la solicitud
-    data = request.get_json()
-
-    # Verificar que se hayan proporcionado los datos necesarios
-    if not data or 'productos' not in data:
-        return jsonify({'error': 'Datos incompletos para actualizar la orden activa'}), 400
-
-    # Eliminar los productos actuales de la orden
-    orden.products.clear()
-
-    # Agregar los nuevos productos a la orden
-    for producto_id in data['productos']:
-        producto = Product.query.get(producto_id)
-        if producto:
-            orden.products.append(producto)
-
-    # Guardar los cambios en la base de datos
-    db.session.commit()
-
-    # Devolver una respuesta exitosa con un mensaje
-    return jsonify({'message': 'Orden activa actualizada exitosamente'}), 200
-# End order routes
+# End user routes
 
 # Product routes
 @api.route('/products', methods=['GET'])
@@ -722,6 +611,7 @@ def all_shoes_types():
 
 # Paypal routes
 @api.route('/create-paypal-order', methods=['POST'])
+@jwt_required()
 def create_paypal_order():
     request_body = request.get_json()
     cart = request_body.get('cart')
@@ -731,12 +621,23 @@ def create_paypal_order():
     if len(cart) == 0:
         raise APIException(message='Cart is empty', status_code=422)
     
-    amount = request_body.get('amount')
-    if amount is None:
-        raise APIException(message='Amount is missing', status_code=422)
-    if amount <= 0:
-        raise APIException(message='Amount must be greater than 0', status_code=422)
-    
+    amount = 0
+   
+    # Checks the stock of the products in the cart
+    for cartItem in cart:
+        product = Product.query.get(cartItem['product']['id'])
+        if product is None:
+            raise APIException(message='Product not found', status_code=404)
+        size = Size.query.get(cartItem['size']['id'])
+        if size is None:
+            raise APIException(message='Size not found', status_code=404)
+        
+        product_size_stock = ProductSizeStock.query.filter_by(product=product, size=size).first()
+        if product_size_stock is None:
+            raise APIException(message='Product does not have stock for this size', status_code=400)
+        if product_size_stock.stock < cartItem['quantity']:
+            raise APIException(message='Not enough stock', status_code=409, payload={'stock': product_size_stock.stock})
+        amount += product.price * cartItem['quantity']
 
     access_token = generate_paypal_access_token()
     headers = {
@@ -765,18 +666,73 @@ def create_paypal_order():
     
 
 @api.route('/capture-paypal-order', methods=['POST'])
+@jwt_required()
 def capture_paypal_order():
     request_body = request.get_json()
-    order_id = request_body.get('orderID')
-    if order_id is None:
-        raise APIException(message='Order ID is missing', status_code=422)
+    current_user_id = get_jwt_identity()
+    paypal_order_id = request_body.get('orderID')
+    cart = request_body.get('cart')
+    billing_info = request_body.get('billingInfo')
+    fromCart = request_body.get('fromCart')
+    user = User.query.get(current_user_id)
 
     paypal_access_token = generate_paypal_access_token()
-    response = requests.post(
-        f'https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}/capture',
+    paypal_response = requests.post(
+        f'https://api-m.sandbox.paypal.com/v2/checkout/orders/{paypal_order_id}/capture',
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {paypal_access_token}"
         }
     )
-    return handle_paypal_response(response)
+    
+    if paypal_response.ok:
+        # Creates the order
+        new_order = Order(
+            user=user, 
+            paypal_order_id=paypal_order_id, 
+            status='in progress', 
+            order_date=datetime.datetime.now(),
+            full_name=billing_info['fullName'],
+            email=billing_info['email'],
+            address=billing_info['address'],
+            phone_number=billing_info['phoneNumber'],
+        )
+        db.session.add(new_order)
+        # Creates the order items
+        for cartItem in cart:
+            product = Product.query.get(cartItem['product']['id'])
+            size = Size.query.get(cartItem['size']['id'])
+            # Reduce the sotck of each product
+            product_size_stock = ProductSizeStock.query.filter_by(product=product, size=size).first()
+            product_size_stock.stock -= cartItem['quantity']
+            new_order_item = OrderItem(
+                order=new_order,
+                product=product,
+                size=size,
+                quantity=cartItem['quantity'],
+            )
+            db.session.add(new_order_item)
+            if fromCart:
+                # Clears shopping cart
+                for cart_item in user.shopping_cart:
+                    db.session.delete(cart_item)
+
+            db.session.commit()
+            response = {
+                'order': new_order.serialize(),
+                'message': 'Order created successfully',
+            }
+            return response, 200
+            
+        else:
+            error_message = paypal_response.text
+            raise APIException(message=error_message, status_code=paypal_response.status_code)
+
+ # End paypal routes
+@api.route('/user/orders', methods=['GET'])
+@jwt_required()
+def get_orders():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    
+    return jsonify([o.serialize() for o in user.orders]), 200

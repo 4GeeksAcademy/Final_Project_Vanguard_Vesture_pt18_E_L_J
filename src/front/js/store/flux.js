@@ -1,7 +1,5 @@
 import * as api from '../utils/apiCalls.js'
-const API_URL = process.env.BACKEND_URL + 'api'
-
-import { CATEGORIES } from '../utils/contants.js'
+import { CATEGORIES } from '../utils/constants.js'
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -22,6 +20,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         shoes: [],
         accessories: [],
       },
+      orders: [],
     },
     actions: {
       login: async (email, password) => {
@@ -42,7 +41,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         last_name,
         phone,
         location,
-        address,
+        address
       ) => {
         const response = await api.signup(
           email,
@@ -51,7 +50,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           last_name,
           phone,
           location,
-          address,
+          address
         )
         console.log(response)
         console.log('Succefully created user')
@@ -109,19 +108,19 @@ const getState = ({ getStore, getActions, setStore }) => {
         )
         console.log('Succefully created product')
         console.log(createdProduct)
-        
+
         // Create a new list of types with the new type if it doesn't exist
         const newTypes = [
           ...getStore()[`${CATEGORIES[category_id]}_types`],
           type,
         ].filter((type, index, self) => self.indexOf(type) === index)
-        
+
         setStore({
           [CATEGORIES[category_id]]: [
             ...getStore()[CATEGORIES[category_id]],
             createdProduct,
           ],
-          [`${CATEGORIES[category_id]}_types`]: newTypes
+          [`${CATEGORIES[category_id]}_types`]: newTypes,
         })
         return createdProduct
       },
@@ -163,7 +162,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         console.log('Favorite deleted')
         return response
       },
-      
+
       postShoppingCart: async (product_id, quantity, size_id) => {
         const response = await api.postShoppingCart(
           product_id,
@@ -237,43 +236,61 @@ const getState = ({ getStore, getActions, setStore }) => {
           getStore().token
         )
         setStore({
-          sizes: { ...getStore().sizes, [CATEGORIES[category_id]]: [...getStore().sizes[CATEGORIES[category_id]],newSize] },
+          sizes: {
+            ...getStore().sizes,
+            [CATEGORIES[category_id]]: [
+              ...getStore().sizes[CATEGORIES[category_id]],
+              newSize,
+            ],
+          },
         })
       },
-      deleteUser : async () => {
+      deleteUser: async () => {
         const response = await api.deleteCallUser(getStore().token)
         setStore({ user: {} })
         console.log(response)
         getActions().logout()
         return response
-        
       },
-      editUser : async (user) => {
+      editUser: async (user) => {
         const response = await api.editCallUser(getStore().token, user)
         setStore({ user: response.user })
-				return console.log(response)
-			
+        return console.log(response)
+      },
+      deleteProduct: async (product_id) => {
+        const response = await api.deleteCallProduct(
+          getStore().token,
+          product_id
+        )
+        // setStore({ products: response })
+        console.log(response)
+
+        return response
+      },
+      editProduct: async (product_id, product) => {
+        const response = await api.editCallProduct(
+          getStore().token,
+          product_id,
+          product
+        )
+        const products = getStore()[CATEGORIES[response.category_id]].map(
+          (product) => {
+            if (product.id === product_id) return response
+            return product
+          }
+        )
+        setStore({ [CATEGORIES[product.category_id]]: products })
+        return response
+      },
+      clearLocalCart: () => {
+        setStore({ shopping_cart: [] })
+      },
+      getUserOrders: async () => {
+        const response = await api.getUserOrders(getStore().token)
+        setStore({ orders: response })
+      }
     },
-    deleteProduct : async (product_id ) => {
-      const response = await api.deleteCallProduct(getStore().token, product_id )
-      // setStore({ products: response })
-      console.log(response)
-      
-      return response
-      
-    },
-    editProduct : async (product_id , product) => {
-      const response = await api.editCallProduct(getStore().token, product_id , product)
-      const products = getStore()[CATEGORIES[response.category_id]].map((product) => {
-        if (product.id === product_id) return response
-        return product
-      })
-      setStore({ [CATEGORIES[product.category_id]]: products })
-      return response
-    
-  },
   }
 }
-  }
 
 export default getState

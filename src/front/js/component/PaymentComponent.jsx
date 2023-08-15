@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
+
 import { PayPalButtons } from '@paypal/react-paypal-js'
+
 import { Context } from '../store/appContext.js'
 
-const PaymentComponent = () => {
-  const { store, actions } = useContext(Context)
-
+const PaymentComponent = ({ cartItems, billingInfo, isBillingInfoValid, fromCart = false }) => {
+  const { actions, store } = useContext(Context)
   const stylePay = {
     layout: 'vertical',
     color: 'black',
@@ -12,38 +13,46 @@ const PaymentComponent = () => {
     shape: 'pill',
   }
 
+
   const createOrder = async () => {
-    const backendUrl =
-      process.env.BACKEND_URL + `api/create-paypal-order/`
+    const backendUrl = process.env.BACKEND_URL + `api/create-paypal-order/`
+
     return await fetch(backendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${store.token}`
       },
       body: JSON.stringify({
-        cart: store.shopping_cart,
-        amount: actions.getTotalCart(),
+        cart: cartItems,
+        amount: cartItems.reduce(
+          (acc, item) => acc + item.product.price * item.quantity,
+          0
+        ),
       }),
     })
       .then((response) => response.json())
       .then((order) => order.id)
   }
   const onApprove = async (data) => {
-    // Order is captured on the server and the response is returned to the browser
-    const backendUrl =
-      process.env.BACKEND_URL + `api/capture-paypal-order`
+    const backendUrl = process.env.BACKEND_URL + `api/capture-paypal-order`
     return await fetch(backendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${store.token}`
       },
       body: JSON.stringify({
         orderID: data.orderID,
+        cart: cartItems,
+        billingInfo,
+        fromCart,
       }),
     })
       .then((response) => response.json())
       .then((responseData) => {
         console.log('Successfully payment:', responseData)
+        actions.clearLocalCart()
       })
       .catch((error) => {
         console.error('Error capturing payment:', error)
@@ -52,12 +61,19 @@ const PaymentComponent = () => {
 
   return (
     <PayPalButtons
-      createOrder={(data, actions) => createOrder(data, actions)}
+    onClick={() => {
+      if (!isBillingInfoValid) {
+        alert('Please, fill all billing information and select a size')
+      }
+    }}
+      createOrder={(data, actions) => {
+        return createOrder(data, actions)
+      }}
       onApprove={(data, actions) => onApprove(data, actions)}
       style={stylePay}
-      disabled={undefined}
-      forceReRender={[stylePay]}
+      disabled={!isBillingInfoValid}
       fundingSource={undefined}
+      forceReRender={[cartItems, isBillingInfoValid, billingInfo]}
     />
   )
 }
