@@ -230,3 +230,8 @@ export async function editCallProduct(token, product_id , product) {
   )
   return response
 }
+
+export async function getUserOrders(token) {
+  const response = await makeRequest('/user/orders', 'GET', null, token)
+  return response
+}

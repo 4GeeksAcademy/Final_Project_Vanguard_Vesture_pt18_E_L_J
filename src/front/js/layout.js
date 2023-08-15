@@ -18,6 +18,7 @@ import PrivateRoute from './component/PrivateRoute.jsx'
 import ProductList from './views/ProductList.jsx'
 import CheckoutProduct from './views/CheckoutProduct.jsx'
 import { PayPalScriptProvider } from '@paypal/react-paypal-js'
+import UserOrders from './views/UserOrders.jsx'
 
 import injectContext from './store/appContext'
 
@@ -76,6 +77,7 @@ const Layout = () => {
                     path='/checkout/:productID'
                     element={<CheckoutProduct />}
                   />
+                  <Route path='/my-orders' element={<UserOrders />} />
                 </Route>
               </Routes>
             </PayPalScriptProvider>

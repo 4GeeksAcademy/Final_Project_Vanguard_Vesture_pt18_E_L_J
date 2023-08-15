@@ -52,7 +52,7 @@ class Product(db.Model):
 
     images = db.relationship('ProductImage', back_populates='product', cascade='all, delete-orphan')
     category = db.relationship('Category', back_populates='products')
-    orders = db.relationship('OrderItems', back_populates='product')
+    orders = db.relationship('OrderItem', back_populates='product')
     sizes_stock = db.relationship('ProductSizeStock', back_populates='product', cascade='all, delete-orphan')
     users_ratings = db.relationship('ProductsRating', back_populates='product')
     shopping_carts = db.relationship('ShoppingCart', back_populates='product', cascade='all, delete-orphan')
@@ -164,10 +164,16 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     order_date = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.String(50))
+    status = db.Column(db.String(50), nullable=False, default='in progress')
+    paypal_order_id = db.Column(db.String(50), nullable=False)
+    # Billing info
+    full_name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    address = db.Column(db.String(150), nullable=False)
+    phone_number = db.Column(db.String(50), nullable=False)
 
     user = db.relationship('User', back_populates='orders')
-    products = db.relationship('OrderItems', back_populates='order')
+    order_items = db.relationship('OrderItem', back_populates='order')
 
     def serialize(self):
         return {
@@ -175,22 +181,32 @@ class Order(db.Model):
             'user': self.user.serialize(),
             'order_date': self.order_date,
             'status': self.status,
-            'products': [p.serialize() for p in self.products]
+            'order_items': [p.serialize() for p in self.order_items],
+            'billing_info': {
+                'full_name': self.full_name,
+                'email': self.email,
+                'address': self.address,
+                'phone_number': self.phone_number,
+            },
+            'total_price': sum(item.product.price * item.quantity for item in self.order_items),
         }
 
-class OrderItems(db.Model):
+class OrderItem(db.Model):
     __tablename__ = 'order_items'
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), primary_key=True)
+    size_id = db.Column(db.Integer, db.ForeignKey('sizes.id'), primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), primary_key=True)
     quantity = db.Column(db.Integer, nullable=False, default=1)
 
     product = db.relationship('Product', back_populates='orders')
-    order = db.relationship('Order', back_populates='products')
+    order = db.relationship('Order', back_populates='order_items')
+    size = db.relationship('Size')
 
     def serialize(self):
         return {
             'product': self.product.serialize(),
-            'quantity': self.quantity
+            'quantity': self.quantity,
+            'size': self.size.serialize(),
         }
 
     

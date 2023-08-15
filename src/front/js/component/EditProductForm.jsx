@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Context } from '../store/appContext';
 import { useNavigate } from 'react-router-dom'
 import NewSize from './NewSize.jsx'
-import { CATEGORIES } from '../utils/contants.js'
+import { CATEGORIES } from '../utils/constants.js'
 
 const EditProductForm = ({ isOpen, onClose, product_id , setProduct}) => {
 

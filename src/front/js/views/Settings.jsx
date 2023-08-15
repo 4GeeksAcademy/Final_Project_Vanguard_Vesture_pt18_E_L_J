@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-// import Navbar from '../component/Navbar.jsx';
 import SettingsForm from '../component/SettingsForm.jsx';
 import { Context } from '../store/appContext';
 
