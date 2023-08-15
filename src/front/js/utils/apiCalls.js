@@ -230,3 +230,38 @@ export async function editCallProduct(token, product_id , product) {
   )
   return response
 }
+
+export async function createImage(image, token) {
+  // const createdImage = await makeRequest('/images', 'POST', image, token)
+  const imagesFromCloudinary = await Promise.all(
+    image.images.map((image) => {
+      const imgFormData = new FormData()
+      imgFormData.append('file', image)
+      imgFormData.append('cloud_name', 'dspkak5d0')
+      imgFormData.append('upload_preset', 'vanguar_vesture_preset')
+      return fetch('https://api.cloudinary.com/v1_1/dspkak5d0/image/upload', {
+        method: 'POST',
+        body: imgFormData,
+      })
+    })
+  ).then((responses) => Promise.all(responses.map((res) => res.json())))
+  
+  const imagesFromDB = await Promise.all(
+    imagesFromCloudinary.map((img, index) => {
+      
+      return makeRequest(
+        `/images/`,
+        'POST',
+        { image_url: img.url.toString(), name:image.name , order: index },
+        token
+      )
+    })
+  )
+  console.log(imagesFromDB)
+  return  imagesFromDB[0] 
+}
+
+export async function getImages(category) {
+  const response = await makeRequest(`/images/${category}`)
+  return response
+}

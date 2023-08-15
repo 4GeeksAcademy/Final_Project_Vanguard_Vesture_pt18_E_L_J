@@ -22,6 +22,12 @@ const getState = ({ getStore, getActions, setStore }) => {
         shoes: [],
         accessories: [],
       },
+      images: {
+        clothes: "",
+        shoes: "",
+        accessories: "",
+        logo: "",
+      },
     },
     actions: {
       login: async (email, password) => {
@@ -272,6 +278,41 @@ const getState = ({ getStore, getActions, setStore }) => {
       return response
     
   },
+
+  addNewImage: async ({
+    name,
+    images,
+  }) => {
+    const image = {
+      name,
+      images,
+    }
+    const createdImage = await api.createImage(
+      image,
+      getStore().token
+    )
+    console.log('Succefully updated image')
+    setStore({ 
+      images: {
+          ...getStore().images,  
+          [name]: createdImage.image_url,  
+      }
+      
+  });
+  
+    return createdImage
+  },
+
+  getImages: async (category) => {
+    const images = await api.getImages(category);
+    setStore({ 
+      images: {
+          ...getStore().images,  
+          [category]: images,  
+      }
+  });
+},
+
   }
 }
   }

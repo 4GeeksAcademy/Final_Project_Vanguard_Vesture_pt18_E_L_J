@@ -26,7 +26,7 @@ const Navbar = () => {
         <Link className='navbar-brand' to='/'>
           <img
             style={{ width: '100px', objectFit: '', border: 'none' }}
-            src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5Kwl4gT7z8mc8Ug0BaVPrzvedTvuLAZ8VFQ&usqp=CAU</img'
+            src={store.images.logo.length > 1 ? store.images.logo :'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5Kwl4gT7z8mc8Ug0BaVPrzvedTvuLAZ8VFQ&usqp=CAU</img'}
             alt='logo'
           />
           {store.token && (
@@ -138,7 +138,7 @@ const Navbar = () => {
                 <>
                   <li className='nav-item'>
                     <Link className='nav-link text-white' to='/admin'>
-                      EDIT USERS
+                      EDIT
                     </Link>
                   </li>
                   <li className='nav-item'>

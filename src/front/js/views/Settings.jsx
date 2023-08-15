@@ -46,9 +46,9 @@ const Settings = () => {
         <p><strong>Phone:</strong> {phone}</p>
         <p><strong>Location:</strong> {location}</p>
         <p><strong>Address:</strong> {address}</p>
-        <button className="btn btn-danger" onClick={changeModalDelete}>
+        {!store.user.is_admin && <button className="btn btn-danger" onClick={changeModalDelete}>
           Delete Account
-        </button>
+        </button>}
         <button className="btn btn-primary" onClick={openModal}>
           Edit Account
         </button>

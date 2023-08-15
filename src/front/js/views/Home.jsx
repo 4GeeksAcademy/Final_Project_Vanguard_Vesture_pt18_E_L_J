@@ -27,7 +27,7 @@ const Home = () => {
 			<div className="container-fluid card-group">
 				<div className="card">
 					<Link className='clothesImage' to='/clothes'>
-						<img src="https://images.unsplash.com/photo-1564859228273-274232fdb516?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+						<img src={store.images.clothes ? store.images.clothes :"https://images.unsplash.com/photo-1564859228273-274232fdb516?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D&auto=format&fit=crop&w=500&q=60"}
 							className="card-img-top"
 							alt="..."
 							style={cardImageStyle}
@@ -43,7 +43,7 @@ const Home = () => {
 				</div>
 				<div className="card">
 					<Link className='FootwearImage' to='/footwear'>
-						<img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80"
+						<img src={store.images.shoes ? store.images.shoes :"https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80"}
 							className="card-img-top" alt="..."
 							style={cardImageStyle}
 						/>
@@ -58,7 +58,7 @@ const Home = () => {
 				</div>
 				<div className="card">
 					<Link className='accesoriesImage' to='/accesories'>
-						<img src="https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+						<img src={store.images.accessories ? store.images.accessories :"https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"}
 							className="card-img-top"
 							alt="..."
 							style={cardImageStyle}

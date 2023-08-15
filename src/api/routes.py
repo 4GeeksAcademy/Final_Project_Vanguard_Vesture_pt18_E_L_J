@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, Response
-from src.api.models import db, User, Product, Order , OrderItems, Category, Size, ShoppingCart, ProductSizeStock, ProductsRating, ProductImage
+from src.api.models import db, User, Product, Order , OrderItems, Category, Size, ShoppingCart, ProductSizeStock, ProductsRating, ProductImage , Images
 from src.api.utils import generate_sitemap, APIException
 from src.api.utils import save_new_product, update_product_by_id, update_category_by_id
 from src.api.utils import check_is_admin_by_user_id
@@ -780,3 +780,29 @@ def capture_paypal_order():
         }
     )
     return handle_paypal_response(response)
+
+
+@api.route('/images', methods=['POST'])
+def create_image():
+        data = request.json 
+
+        if 'image_url' not in data or 'name' not in data:
+            return jsonify({'error': 'Both "image_url" and "name" fields are required.'}), 400
+
+        image = Images(image_url=data['image_url'], name=data['name'])
+        db.session.add(image)
+        db.session.commit()
+
+        return jsonify(image.serialize()), 201
+
+    
+
+@api.route('/images', methods=['GET'])
+def get_all_images():
+    
+        images = Images.query.all()
+        serialized_images = [image.serialize() for image in images]
+        return jsonify(serialized_images), 200
+
+    
+   
