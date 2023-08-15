@@ -131,6 +131,11 @@ const Navbar = () => {
                       SETTINGS
                     </Link>
                   </li>
+                  <li className='nav-item'>
+                    <Link className='nav-link text-white' to='/my-orders'>
+                      MY ORDERS
+                    </Link>
+                  </li>
                 </>
               )}
 

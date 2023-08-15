@@ -9,5 +9,4 @@ export const ORDER_STATUS_COLORS = {
     'on the way': 'info',
     'delivered': 'success',
     'canceled': 'danger',
-
 }

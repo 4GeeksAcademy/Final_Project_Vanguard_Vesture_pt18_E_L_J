@@ -90,7 +90,7 @@ const CartProduct = ({ cartItem }) => {
               <span>Price: U$S</span> {cartItem.product.price}
             </p>
             <p className='card-text'>
-              <span>Total: U$S</span> {actions.getTotalCart()}
+              <span>Total: U$S</span> {cartItem.product.price * quantity}
             </p>
           </div>
 

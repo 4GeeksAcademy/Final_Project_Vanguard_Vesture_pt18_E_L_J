@@ -42,7 +42,7 @@ export async function signup(
   last_name,
   phone,
   location,
-  address,
+  address
 ) {
   const response = await makeRequest('/signup', 'POST', {
     email: email,
@@ -76,7 +76,7 @@ export async function createProduct(product, token) {
       })
     })
   ).then((responses) => Promise.all(responses.map((res) => res.json())))
-  
+
   const imagesFromDB = await Promise.all(
     imagesFromCloudinary.map((img, index) => {
       return makeRequest(
@@ -176,14 +176,10 @@ export async function createSize(name, category_id, token) {
   return response
 }
 export async function deleteCallUser(token) {
-  const response = await makeRequest(
-    '/user/',
-    'DELETE',
-    null,
-    token
-  )
+  const response = await makeRequest('/user/', 'DELETE', null, token)
   return response
 }
+
 export async function editCallUser(token, user) {
   const response = await makeRequest(
     '/user/',
@@ -195,36 +191,32 @@ export async function editCallUser(token, user) {
       password: user.password,
       address: user.address,
       location: user.location,
-      
-      
     },
     token
   )
   return response
 }
-export async function deleteCallProduct(token , product_id) {
+export async function deleteCallProduct(token, product_id) {
   const response = await makeRequest(
-    '/products/'+ product_id,
+    '/products/' + product_id,
     'DELETE',
     null,
     token
   )
   return response
 }
-export async function editCallProduct(token, product_id , product) {
+export async function editCallProduct(token, product_id, product) {
   const response = await makeRequest(
-    '/products/'+ product_id,
+    '/products/' + product_id,
     'PUT',
     {
-      
-            name: product.name ,
-            price: product.price,
-            description: product.description,
-            color: product.color,
-            type: product.type,
-            sizes_stock: product.sizes_stock,
-            category_id: product.category_id ,
-      
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      color: product.color,
+      type: product.type,
+      sizes_stock: product.sizes_stock,
+      category_id: product.category_id,
     },
     token
   )
@@ -233,5 +225,25 @@ export async function editCallProduct(token, product_id , product) {
 
 export async function getUserOrders(token) {
   const response = await makeRequest('/user/orders', 'GET', null, token)
+  return response
+}
+
+export async function getOrderDetials(orderID, token) {
+  const response = await makeRequest(
+    '/orders/' + orderID,
+    'GET',
+    null,
+    token
+  )
+  return response
+}
+
+export async function cancelOrder(orderID, token) {
+  const response = await makeRequest(
+    '/orders/' + orderID + '/cancel',
+    'PUT',
+    null,
+    token
+  )
   return response
 }

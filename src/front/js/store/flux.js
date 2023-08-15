@@ -288,7 +288,18 @@ const getState = ({ getStore, getActions, setStore }) => {
       getUserOrders: async () => {
         const response = await api.getUserOrders(getStore().token)
         setStore({ orders: response })
-      }
+      },
+      getOrderDetails: async (orderID) => {
+        const response = await api.getOrderDetials(orderID, getStore().token)
+        return response
+      },
+      cancelOrder: async (orderID) => {
+        const response = await api.cancelOrder(orderID, getStore().token)
+        alert(
+          'Order cancelled successfully. Refund is being processed, if you have any doubt contact us via email or chat'
+        )
+        return response
+      },
     },
   }
 }
