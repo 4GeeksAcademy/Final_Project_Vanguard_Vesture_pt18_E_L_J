@@ -1,6 +1,4 @@
 import React from "react";
-// import Navbar from "../component/Navbar.jsx";
-// import Styles from "../views/styles/features.css"
 
 const Features = () => {
     return (

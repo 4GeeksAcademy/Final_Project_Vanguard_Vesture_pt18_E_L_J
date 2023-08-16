@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react'
 import { Context } from '../store/appContext.js'
 
-// import Navbar from '../component/Navbar.jsx'
 import ProductCard from '../component/ProductCard.jsx'
 import Loader from '../component/Loader.jsx'
-// import { CATEGORIES } from '../utils/contants.js'
 
 const ProductList = ({ category }) => {
   const { actions, store } = useContext(Context)
@@ -42,7 +40,7 @@ const ProductList = ({ category }) => {
     [store[category], search, selectedTypes, selectedSizesID, minPrice, maxPrice]
   )
 
-  const handleSubmit = (e) => {
+  const handleSetPriceFilter = (e) => {
     e.preventDefault()
     setMinPrice(e.target[0].value || 0)
     setMaxPrice(e.target[1].value || 0)
@@ -142,7 +140,7 @@ const ProductList = ({ category }) => {
           {/* Price filter */}
           <form
             className='d-flex gap-1 align-items-center'
-            onSubmit={handleSubmit}
+            onSubmit={handleSetPriceFilter}
           >
             <div className='input-group' style={{ width: '100px' }}>
               <input
@@ -184,8 +182,12 @@ const ProductList = ({ category }) => {
 
         {isLoading && <Loader />}
 
+
         <div className='d-flex flex-wrap gap-2 justify-content-center '>
-          {filteredProducts.map((product) => (
+         
+        
+          {!isLoading && filteredProducts.map((product) => (
+
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

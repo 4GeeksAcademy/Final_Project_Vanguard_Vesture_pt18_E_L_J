@@ -1,8 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { Context } from '../store/appContext.js'
 
-import { CATEGORIES } from '../utils/contants.js'
-
 const NewSize = ({ setSizes, selectedCategory }) => {
   const [newSizeName, setNewSizeName] = useState('')
   const { actions } = useContext(Context)

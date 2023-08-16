@@ -231,6 +231,7 @@ export async function editCallProduct(token, product_id , product) {
   return response
 }
 
+
 export async function createImage(image, token) {
   // const createdImage = await makeRequest('/images', 'POST', image, token)
   const imagesFromCloudinary = await Promise.all(
@@ -263,5 +264,9 @@ export async function createImage(image, token) {
 
 export async function getImages(category) {
   const response = await makeRequest(`/images/${category}`)
+
+export async function getUserOrders(token) {
+  const response = await makeRequest('/user/orders', 'GET', null, token)
+
   return response
 }

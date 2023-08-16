@@ -7,7 +7,7 @@ import PreviewImages from './PreviewImages.jsx'
 import NewSize from './NewSize.jsx'
 
 import uuid from 'react-uuid'
-import { CATEGORIES } from '../utils/contants.js'
+import { CATEGORIES } from '../utils/constants.js'
 
 const NewProduct = () => {
   const { actions, store } = useContext(Context)
