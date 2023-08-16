@@ -6,7 +6,7 @@ const Footer = () => {
     <div>
       <footer
         style={{ '--bs-gutter-x': ' 0' }}
-        className='row border-top bg-black text-light p-2'
+        className='row  bg-black text-light p-2'
       >
         <div className='col'>
           <ul className='nav flex-row listaFooter justify-content-center'>

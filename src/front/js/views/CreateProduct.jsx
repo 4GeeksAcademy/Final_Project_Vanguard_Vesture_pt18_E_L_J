@@ -12,9 +12,9 @@ const Create = () => {
   if (!store.user.is_admin) return <Navigate to='/' />
 
   return (
-    <div>
-      <div className='container'>
-        <h1 className='my-2'>Create product</h1>
+    <div className='bg-white p-3'>
+      <div className='container '>
+        <h1 className='mb-2'>Create product</h1>
         <NewProduct />
       </div>
     </div>

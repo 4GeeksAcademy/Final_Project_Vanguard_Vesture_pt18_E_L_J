@@ -16,9 +16,9 @@ const Navbar = () => {
     actions.logout()
   }
 
-  if (location.pathname === '/signup') {
-    return null
-  }
+  // if (location.pathname === '/signup') {
+  //   return null
+  // }
 
   return (
     <nav className='navbar navbar-dark bg-black '>
@@ -27,7 +27,7 @@ const Navbar = () => {
           <img
             style={{ width: '100px', objectFit: '', border: 'none' }}
             src={store.images.logo.length > 1 ? store.images.logo :'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5Kwl4gT7z8mc8Ug0BaVPrzvedTvuLAZ8VFQ&usqp=CAU</img'}
-            alt='logo'
+            alt='logo' className='rounded-pill'
           />
           {store.token && (
             <>

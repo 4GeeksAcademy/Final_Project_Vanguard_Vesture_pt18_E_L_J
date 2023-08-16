@@ -247,7 +247,7 @@ const NewProduct = () => {
           </div>
         </div>
 
-        <button type='submit' className='btn btn-dark'>
+        <button type='submit' className='btn bg-black text-white mb-5'>
           Submit
         </button>
       </form>

@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { Context } from '../store/appContext'
 import { useNavigate, Navigate, useLocation } from 'react-router'
-// import Navbar from '../component/Navbar.jsx'
 
 export const Login = () => {
   const [email, setEmail] = useState('')
@@ -31,12 +30,13 @@ export const Login = () => {
   if (JSON.stringify(store.user) !== '{}') return <Navigate to={from} />
 
   return (
-    <div>
-      <h1 className='mx-auto p-5 text-center' style={{ fontSize: '3rem' }}>
-        Welcome Back!
+    <div style={{background: "linear-gradient(0deg, rgba(0,0,0,1) 6%, rgba(128,128,128,1) 30%, rgba(255,255,255,1) 50%, rgba(138,138,138,1) 60%, rgba(0,0,0,1) 84%)"}} className='p-5'>
+      <h1 className='mx-auto pb-3 text-center text-white' style={{ fontSize: '3rem' }}>
+        Welcome Back to Vanguard Vesture!
       </h1>
       <form
-        className='card w-75 mx-auto mb-5 text-white bg-black'
+      style={{borderRadius:"25px"}}
+        className=' card col-12 col-lg-6 mx-auto text-white bg-black'
         onSubmit={handleSubmit}
       >
         <div className='m-3'>
@@ -62,13 +62,13 @@ export const Login = () => {
             id='exampleInputPassword1'
           />
         </div>
-        <button type='submit' className='btn btn-success  mx-auto m-3'>
-          Enter
+        <button type='submit' className='btn btn-light rounded-pill   mx-auto m-3'>
+         <h5>Enter</h5> 
         </button>
       </form>
-      <h5
-        className='mt-3 text-center card w-75 mx-auto'
-        style={{ cursor: 'pointer' }}
+      <h5 
+        className='mt-3 text-center  w-75 mx-auto text-white'
+        style={{ cursor: 'pointer' , padding:"20px"}}
         onClick={handleRedirect}
       >
         You haven't account? Click Here to Register!

@@ -24,19 +24,19 @@ const CartProduct = ({ cartItem }) => {
   console.log(cartItem)
 
   return (
-    <div className='text-center mt-1 mx-auto  '>
-      <div style={{ width: '50%' }} className='card '>
+    <div className='text-center mt-1 mx-auto d-flex flex-wrap gap-2 justify-content-center text-black  '>
+      <div style={{ width: '100%' }} className='card shadow-lg '>
         <div className='card-body  mx-auto row'>
           <h5 className='card-title'> {cartItem.product.name}</h5>
           <div
-            style={{ width: '200px' }}
+            style={{ width: '220px' }}
             className='rounded-circle m-1 overflow-hidden d-flex justify-content-center p-1 col-2'
           >
             <img
               style={{
                 objectFit: 'scale-down',
                 width: '200px',
-                height: '350px',
+                height: '400px',
               }}
               className='w-75 h-75 img-cover d-flex justify-content-center text-center rounded-circle'
               src={cartItem.product.images[0]?.image_url}
@@ -67,7 +67,7 @@ const CartProduct = ({ cartItem }) => {
                 onChange={(e) =>
                   e.target.value > 0 && setQuantity(e.target.value)
                 }
-                className='border-0 text-center'
+                className='border-0 text-center ms-3'
                 style={{ width: '50px' }}
               />
               <button

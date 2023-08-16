@@ -263,7 +263,7 @@ const getState = ({ getStore, getActions, setStore }) => {
     deleteProduct : async (product_id ) => {
       const response = await api.deleteCallProduct(getStore().token, product_id )
       // setStore({ products: response })
-      console.log(response)
+      
       
       return response
       

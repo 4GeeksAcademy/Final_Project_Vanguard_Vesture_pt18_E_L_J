@@ -27,7 +27,7 @@ const NewSize = ({ setSizes, selectedCategory }) => {
         />
         <button
           type='button'
-          className='btn btn-dark'
+          className='btn bg-black text-white'
           onClick={handleCreateSize}
         >
           Add

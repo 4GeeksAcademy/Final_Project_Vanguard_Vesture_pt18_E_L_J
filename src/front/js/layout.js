@@ -38,7 +38,7 @@ const Layout = () => {
     return <BackendURL />
 
   return (
-    <div className='d-flex flex-column h-100 min-vh-100'>
+    <div style={{background: "linear-gradient(0deg, rgba(0,0,0,1) 6%, rgba(128,128,128,1) 30%, rgba(255,255,255,1) 50%, rgba(138,138,138,1) 70%, rgba(0,0,0,1) 94%)"}} className='d-flex text-black flex-column h-100 min-vh-100'>
       <BrowserRouter basename={basename}>
         <ScrollToTop>
           <Navbar />

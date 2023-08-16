@@ -53,7 +53,7 @@ const ProductList = ({ category }) => {
   }, [])
 
   return (
-      <div className='container'>
+      <div className=' bg-white w-100'>
         <h1 className='text-capitalize'>{category}</h1>
 
         <div className='d-flex gap-2 flex-wrap'>
@@ -163,7 +163,7 @@ const ProductList = ({ category }) => {
                 aria-describedby='button-addon2'
               />
             </div>
-            <button type='submit' className='btn btn-dark'>
+            <button type='submit' className='btn bg-black text-white'>
               $
             </button>
           </form>
@@ -184,7 +184,7 @@ const ProductList = ({ category }) => {
 
         {isLoading && <Loader />}
 
-        <div className='d-flex flex-wrap gap-2 justify-content-center justify-content-md-start'>
+        <div className='d-flex flex-wrap gap-2 justify-content-center '>
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

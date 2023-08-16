@@ -48,7 +48,7 @@ const ProductDetails = () => {
   if (!product) return <Loader />
 
   return (
-    <div className='container p-3'>
+    <div className='bg-white p-3 bg-white'>
       <div className='row justify-content-between py-3'>
         <h1 className='col-5 m-0'>{product.name}</h1>
         <div className='col-5 d-flex flex-column align-items-end'>
@@ -144,18 +144,24 @@ const ProductDetails = () => {
         </div>
       </div>
       {/* End carousel */}
-
-      <h3 className='my-3'>Description</h3>
+<div className="row container-fluid">
+  <div className=" ms-3 col-4">
+  <h3 className='my-3'>Description</h3>
       <p>{product.description}</p>
-
+</div>
+<div className="col-4">
       {/* Sizes */}
-      <h3 className='mt-3'>Sizes</h3>
+      <h3 className='ms-5 mt-3'>Sizes</h3>
       <SizesSelector
         sizes={product.sizes_stock}
         setSelectedSizeID={setSelectedSizeID}
         selectedSizeID={selectedSizeID}
       />
       {/* End sizes */}
+
+      </div>
+
+      <div className="col-4">
 
       {/* Quantity */}
       <h3 className='mt-3'>Quantity</h3>
@@ -188,48 +194,55 @@ const ProductDetails = () => {
           <i className='fa-solid fa-plus' style={{ color: '#000000' }}></i>
         </button>
       </div>
+  </div>
+  </div>
 
-      {/* Price */}
-      <h3 className='my-3'>${product.price.toLocaleString('en-US')}</h3>
+<div className=" d-flex align-items-end flex-column">
+{/* Price */}
+<h3 className='my-3'>${product.price.toLocaleString('en-US')}</h3>
 
-      {/* Buttons */}
-      <div className='d-flex flex-wrap gap-2'>
-        {!store.user.is_admin && (
-          <>
-            <button
-              type='button'
-              className='btn btn-outline-dark'
-              onClick={() => {
-                if (!selectedSizeID) return
-                actions.postShoppingCart(product.id, quantity, selectedSizeID)
-              }}
-            >
-              Add to cart
-            </button>
-            <button
-              type='button'
-              className='btn btn-outline-dark'
-              onClick={() => {
-                navigate('/checkout/' + product.id)
-              }}
-            >
-              Buy now
-            </button>
-            <button
-              onClick={() => actions.postFavorites(product.id)}
-              className={`btn bg-black ${
-                store.favorites.some((favorite) => favorite.id === product.id)
-                  ? 'text-danger'
-                  : 'text-white'
-              }`}
-            >
-              <strong>♥</strong>
-            </button>
-          </>
-        )}
-      </div>
-      <EditProductForm setProduct={setProduct} product_id={product.id} isOpen={isOpen} onClose={closeModal} />
-    </div>
+{/* Buttons */}
+<div className='d-flex flex-wrap gap-2'>
+  {!store.user.is_admin && (
+    <>
+      <button
+        type='button'
+        className='btn btn-outline-dark'
+        onClick={() => {
+          if (!selectedSizeID) return
+          actions.postShoppingCart(product.id, quantity, selectedSizeID)
+        }}
+      >
+        Add to cart
+      </button>
+      <button
+        type='button'
+        className='btn btn-outline-dark'
+        onClick={() => {
+          navigate('/checkout/' + product.id)
+        }}
+      >
+        Buy now
+      </button>
+      <button
+        onClick={() => actions.postFavorites(product.id)}
+        className={`btn bg-black ${
+          store.favorites.some((favorite) => favorite.id === product.id)
+            ? 'text-danger'
+            : 'text-white'
+        }`}
+      >
+        <strong>♥</strong>
+      </button>
+    </>
+  )}
+</div>
+<EditProductForm setProduct={setProduct} product_id={product.id} isOpen={isOpen} onClose={closeModal} />
+</div>
+  </div>
+      
+
+      
   )
 }
 

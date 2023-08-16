@@ -37,19 +37,19 @@ const Settings = () => {
   };
 
   return (
-    <div>
-      <div className="container mx-auto">
-        <h2>Account Settings</h2>
-        <p><strong>Email:</strong> {email}</p>
-        <p><strong>First Name:</strong> {first_name}</p>
-        <p><strong>Last Name:</strong> {last_name}</p>
-        <p><strong>Phone:</strong> {phone}</p>
-        <p><strong>Location:</strong> {location}</p>
-        <p><strong>Address:</strong> {address}</p>
-        {!store.user.is_admin && <button className="btn btn-danger" onClick={changeModalDelete}>
+    <div className="bg-white pt-5 pb-5">
+      <div className=" container mx-auto d-flex row justify-content-center mt-5">
+        <h1 className='pb-5'>Account Settings</h1>
+        <p className=' col-4 overflow-hidden'><strong>Email:</strong> {email}</p>
+        <p className=' col-3'><strong>First Name:</strong> {first_name}</p>
+        <p className=' col-3'><strong>Last Name:</strong> {last_name}</p>
+        <p className=' col-3'><strong>Phone:</strong> {phone}</p>
+        <p className=' col-3'><strong>Location:</strong> {location}</p>
+        <p className=' col-3'><strong>Address:</strong> {address}</p>
+        {!store.user.is_admin && <button className="btn btn-danger mt-3" onClick={changeModalDelete}>
           Delete Account
         </button>}
-        <button className="btn btn-primary" onClick={openModal}>
+        <button style={{maxHeight:"60px"}} className="btn bg-black mt-3 mb-5 text-white mx-auto col" onClick={openModal}>
           Edit Account
         </button>
       </div>

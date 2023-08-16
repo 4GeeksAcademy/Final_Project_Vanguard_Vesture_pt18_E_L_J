@@ -8,7 +8,7 @@ import uuid from 'react-uuid'
 
 const Admin = () => {
   const { store , actions} = useContext(Context)
-  const [open, setOpen] = useState(false)
+  
   const [images, setImages] = useState([])
   const [selectedCategory, setSelectedCategory] = useState(4)
   const [name, setName] = useState("logo")
@@ -29,6 +29,7 @@ const Admin = () => {
       images,
     }
     actions.addNewImage(image)
+     setSelectedCategory(4)
   }
 
   const handleImageOnChage = (e) => {
@@ -48,16 +49,12 @@ const Admin = () => {
 
 
   return (
-    <div className='container'>
-      <h1>Edit app</h1>
-      <button className="btn btn-warning" onClick={() => setOpen(!open)}>
-        Home Images
-      </button>
-      {open &&
+    <div className=' bg-white'>
+      <h1 className="mb-3 pt-3 ms-5">Edit app web</h1>
         <>
-          <h1>ACA VA LA MAGIA</h1>
-          <form onSubmit={handleSubmit}>
-          <div className='col-6 col-lg-6 ps-lg-5'>
+          <form className="container" onSubmit={handleSubmit}>
+            <div className="row">
+          <div className='col-4 '>
             <h4>Category</h4>
             <div className='form-check'>
               <input
@@ -116,7 +113,7 @@ const Admin = () => {
               </label>
             </div>
           </div>
-            <div className='col-12'>
+            <div className='col-4'>
               <h4>Images</h4>
               <InputImage inputOnChange={handleImageOnChage} />
               <PreviewImages
@@ -124,12 +121,16 @@ const Admin = () => {
                 onDelete={handleDeleteImage}
               />
             </div>
-            <button type='submit' className='btn btn-dark'>
+            <div className="col-12 mt-5 mb-5">
+            <button type='submit' className='btn bg-black text-white'>
               Submit
             </button>
+            </div>
+            </div>
+            
           </form>
         </>
-      }
+      
     </div>
   )
 }
