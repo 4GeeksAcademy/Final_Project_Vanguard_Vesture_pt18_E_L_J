@@ -6,7 +6,7 @@ const Footer = () => {
     <div>
       <footer
         style={{ '--bs-gutter-x': ' 0' }}
-        className='row border-top bg-black text-light p-2'
+        className='row bg-black text-light p-2'
       >
         <div className='col'>
           <ul className='nav flex-row listaFooter justify-content-center'>
@@ -26,7 +26,7 @@ const Footer = () => {
               </Link>
             </li>
           </ul>
-          <div className='container-fluid d-flex justify-content-between '>
+          <div className='container-fluid d-flex justify-content-around '>
             <span className='text-white'>© 2023</span>
             <div>
               <div className='list-unstyled m-0'>

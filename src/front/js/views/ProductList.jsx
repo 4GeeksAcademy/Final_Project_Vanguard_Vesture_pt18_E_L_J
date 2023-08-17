@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react'
 import { Context } from '../store/appContext.js'
-
 import ProductCard from '../component/ProductCard.jsx'
 import Loader from '../component/Loader.jsx'
+
 
 const ProductList = ({ category }) => {
   const { actions, store } = useContext(Context)
@@ -40,7 +40,7 @@ const ProductList = ({ category }) => {
     [store[category], search, selectedTypes, selectedSizesID, minPrice, maxPrice]
   )
 
-  const handleSetPriceFilter = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     setMinPrice(e.target[0].value || 0)
     setMaxPrice(e.target[1].value || 0)
@@ -51,143 +51,143 @@ const ProductList = ({ category }) => {
   }, [])
 
   return (
-      <div className='container'>
-        <h1 className='text-capitalize'>{category}</h1>
+    <div className="bg-white container-fluid pt-2" style={{ minHeight: '100vh' }}>
+      <h1 className='text-capitalize'>{category}</h1>
 
-        <div className='d-flex gap-2 flex-wrap'>
-          {/* Type filter */}
-          <div className='dropdown'>
-            <button
-              className='btn btn-secondary dropdown-toggle bg-black text-white'
-              type='button'
-              id='typeFilter'
-              data-bs-toggle='dropdown'
-              aria-expanded='false'
-            >
-              Filter by type
-            </button>
-            <ul className='dropdown-menu' aria-labelledby='typeFilter'>
-              {store[`${category}_types`].map((type) => (
-                <li className='dropdown-item d-flex gap-2' key={type}>
-                  <input
-                    className=' form-check-input'
-                    type='checkbox'
-                    value={type}
-                    onChange={(e) => {
-                      if (e.target.checked)
-                        setSelectedTypes([...selectedTypes, type])
-                      else
-                        setSelectedTypes(
-                          selectedTypes.filter(
-                            (selectedType) => selectedType !== type
-                          )
-                        )
-                    }}
-                    id={type}
-                  />
-                  <label
-                    className='form-check-label text-capitalize'
-                    htmlFor={type}
-                  >
-                    {type}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Size filter */}
-          <div className='dropdown'>
-            <button
-              className='btn btn-secondary dropdown-toggle bg-black text-white'
-              type='button'
-              id='sizeFilter'
-              data-bs-toggle='dropdown'
-              aria-expanded='false'
-            >
-              Filter by size
-            </button>
-            <ul className='dropdown-menu' aria-labelledby='sizeFilter'>
-              {store.sizes[category].map((size) => (
-                <li className='dropdown-item d-flex gap-2' key={size.id}>
-                  <input
-                    className=' form-check-input'
-                    type='checkbox'
-                    value={size.name}
-                    onChange={(e) => {
-                      if (e.target.checked)
-                        setSelectedSizesID([...selectedSizesID, size.id])
-                      else
-                        setSelectedSizesID(
-                          selectedTypes.filter(
-                            (selectedSizeID) => selectedSizeID !== size.id
-                          )
-                        )
-                    }}
-                    id={size.name}
-                  />
-                  <label
-                    className='form-check-label text-capitalize'
-                    htmlFor={size.name}
-                  >
-                    {size.name}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Price filter */}
-          <form
-            className='d-flex gap-1 align-items-center'
-            onSubmit={handleSetPriceFilter}
+      <div className='d-flex gap-2 flex-wrap'>
+        {/* Type filter */}
+        <div className='dropdown'>
+          <button
+            className='btn btn-secondary dropdown-toggle bg-black text-white'
+            type='button'
+            id='typeFilter'
+            data-bs-toggle='dropdown'
+            aria-expanded='false'
           >
-            <div className='input-group' style={{ width: '100px' }}>
-              <input
-                type='number'
-                className='form-control'
-                placeholder='Min price'
-                aria-label='Min price'
-                aria-describedby='button-addon2'
-              />
-            </div>
-            <i className='fa-solid fa-minus'></i>
-            <div className='input-group' style={{ width: '100px' }}>
-              <input
-                type='number'
-                className='form-control'
-                placeholder='Max price'
-                aria-label='Max price'
-                aria-describedby='button-addon2'
-              />
-            </div>
-            <button type='submit' className='btn btn-dark'>
-              $
-            </button>
-          </form>
-          {/* End price filter */}
+            Filter by type
+          </button>
+          <ul className='dropdown-menu' aria-labelledby='typeFilter'>
+            {store[`${category}_types`].map((type) => (
+              <li className='dropdown-item d-flex gap-2' key={type}>
+                <input
+                  className=' form-check-input'
+                  type='checkbox'
+                  value={type}
+                  onChange={(e) => {
+                    if (e.target.checked)
+                      setSelectedTypes([...selectedTypes, type])
+                    else
+                      setSelectedTypes(
+                        selectedTypes.filter(
+                          (selectedType) => selectedType !== type
+                        )
+                      )
+                  }}
+                  id={type}
+                />
+                <label
+                  className='form-check-label text-capitalize'
+                  htmlFor={type}
+                >
+                  {type}
+                </label>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className='input-group my-3'>
-          <input
-            type='text'
-            className='form-control'
-            placeholder="Search a product by it's name"
-            aria-label="Search a product by it's name"
-            aria-describedby='button-addon2'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        {/* Size filter */}
+        <div className='dropdown'>
+          <button
+            className='btn btn-secondary dropdown-toggle bg-black text-white'
+            type='button'
+            id='sizeFilter'
+            data-bs-toggle='dropdown'
+            aria-expanded='false'
+          >
+            Filter by size
+          </button>
+          <ul className='dropdown-menu' aria-labelledby='sizeFilter'>
+            {store.sizes[category].map((size) => (
+              <li className='dropdown-item d-flex gap-2' key={size.id}>
+                <input
+                  className=' form-check-input'
+                  type='checkbox'
+                  value={size.name}
+                  onChange={(e) => {
+                    if (e.target.checked)
+                      setSelectedSizesID([...selectedSizesID, size.id])
+                    else
+                      setSelectedSizesID(
+                        selectedTypes.filter(
+                          (selectedSizeID) => selectedSizeID !== size.id
+                        )
+                      )
+                  }}
+                  id={size.name}
+                />
+                <label
+                  className='form-check-label text-capitalize'
+                  htmlFor={size.name}
+                >
+                  {size.name}
+                </label>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {isLoading && <Loader />}
-
-        <div className='d-flex flex-wrap gap-2 justify-content-center justify-content-md-start'>
-          {!isLoading && filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {/* Price filter */}
+        <form
+          className='d-flex gap-1 align-items-center'
+          onSubmit={handleSubmit}
+        >
+          <div className='input-group' style={{ width: '100px' }}>
+            <input
+              type='number'
+              className='form-control'
+              placeholder='Min price'
+              aria-label='Min price'
+              aria-describedby='button-addon2'
+            />
+          </div>
+          <i className='fa-solid fa-minus'></i>
+          <div className='input-group' style={{ width: '100px' }}>
+            <input
+              type='number'
+              className='form-control'
+              placeholder='Max price'
+              aria-label='Max price'
+              aria-describedby='button-addon2'
+            />
+          </div>
+          <button type='submit' className='btn bg-black text-white'>
+            $
+          </button>
+        </form>
+        {/* End price filter */}
       </div>
+
+      <div className='input-group my-3'>
+        <input
+          type='text'
+          className='form-control'
+          placeholder="Search a product by it's name"
+          aria-label="Search a product by it's name"
+          aria-describedby='button-addon2'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      {isLoading && <Loader />}
+
+      <div className='d-flex flex-wrap gap-2 justify-content-center '>
+        {filteredProducts.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </div>
   )
 }
 

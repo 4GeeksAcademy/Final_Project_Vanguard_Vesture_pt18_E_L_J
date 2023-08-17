@@ -61,10 +61,12 @@ const EditProductForm = ({ isOpen, onClose, product_id , setProduct}) => {
             tabIndex="-1"
             style={{ display: isOpen ? 'block' : 'none' }}
         >
-            <div className="modal-dialog">
+            <div className="modal-dialog text-white bg-black  border rounded-3">
                 <div className="modal-content">
-                
-                    <div className="modal-body">
+                    <div className="modal-title p-3 h4  bg-black ">
+                        Edit Product
+                    </div>
+                    <div className="modal-body bg-black">
                         <form onSubmit={handleSubmit}>
                             <div className='row mb-3 g-3'>
                                 {/* Name */}
@@ -195,33 +197,37 @@ const EditProductForm = ({ isOpen, onClose, product_id , setProduct}) => {
                                     </div>
                                 </div>
 
-                                Add new size
-                                <div className='col-12 col-lg-4'>
+                                <div className='row'>
+                                <div className='col-6 '>
                                     <h4>Add new size</h4>
                                     <NewSize setSizes={setSizes} selectedCategory={selectedCategory} />
                                 </div>
-                            </div>
+                            
 
-                            <button type='submit' className='btn btn-dark'>
+                            <div className='col-6 p-4'>
+                            <button type='submit' className='ms-3 btn btn-dark'>
                                 Submit
                             </button>
                             <button
                         type="button"
-                        className="btn btn-dark add"
+                        className="btn btn-danger add ms-2"
                         data-bs-dismiss="modal"
                         onClick={onClose}
                     >
                         Cancel
                     </button>
+                            </div>
+                            </div>
+                            </div>
                         </form>
                     </div>
 
                 </div>
-                <div className="modal-footer">
+                
                    
 
                 </div>
-            </div>
+           
         </div>
 
     );

@@ -24,19 +24,17 @@ const CartProduct = ({ cartItem }) => {
   console.log(cartItem)
 
   return (
-    <div className='text-center mt-1 mx-auto  '>
-      <div style={{ width: '50%' }} className='card '>
-        <div className='card-body  mx-auto row'>
+    <div className='text-center mt-1 mx-auto d-flex flex-wrap gap-2 justify-content-center text-black '>
+      <div style={{ width: '80%' }} className='card shadow-lg'>
+        <div className='card-body  d-flex justify-content-center row'>
           <h5 className='card-title'> {cartItem.product.name}</h5>
           <div
-            style={{ width: '200px' }}
-            className='rounded-circle m-1 overflow-hidden d-flex justify-content-center p-1 col-2'
+            style={{ width: '200px'}}
+            className='rounded-circle  overflow-hidden d-flex justify-content-center  col-2'
           >
             <img
               style={{
-                objectFit: 'scale-down',
-                width: '200px',
-                height: '350px',
+                objectFit: 'cover',
               }}
               className='w-75 h-75 img-cover d-flex justify-content-center text-center rounded-circle'
               src={cartItem.product.images[0]?.image_url}

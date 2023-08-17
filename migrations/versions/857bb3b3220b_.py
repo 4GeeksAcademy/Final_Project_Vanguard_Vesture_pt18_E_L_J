@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: d8e8c181c813
+Revision ID: 857bb3b3220b
 Revises: 
-Create Date: 2023-08-14 01:56:45.113433
+Create Date: 2023-08-17 01:07:57.417347
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd8e8c181c813'
+revision = '857bb3b3220b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -41,7 +41,12 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('order_date', sa.DateTime(), nullable=False),
-    sa.Column('status', sa.String(length=50), nullable=True),
+    sa.Column('status', sa.String(length=50), nullable=False),
+    sa.Column('paypal_order_id', sa.String(length=50), nullable=False),
+    sa.Column('full_name', sa.String(length=150), nullable=False),
+    sa.Column('email', sa.String(length=150), nullable=False),
+    sa.Column('address', sa.String(length=150), nullable=False),
+    sa.Column('phone_number', sa.String(length=50), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -72,11 +77,13 @@ def upgrade():
     )
     op.create_table('order_items',
     sa.Column('order_id', sa.Integer(), nullable=False),
+    sa.Column('size_id', sa.Integer(), nullable=False),
     sa.Column('product_id', sa.Integer(), nullable=False),
     sa.Column('quantity', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
-    sa.PrimaryKeyConstraint('order_id', 'product_id')
+    sa.ForeignKeyConstraint(['size_id'], ['sizes.id'], ),
+    sa.PrimaryKeyConstraint('order_id', 'size_id', 'product_id')
     )
     op.create_table('product_images',
     sa.Column('id', sa.Integer(), nullable=False),

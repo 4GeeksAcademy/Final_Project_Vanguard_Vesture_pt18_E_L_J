@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Context } from '../store/appContext.js'
 
 const Navbar = () => {
-  const location = useLocation()
   const { actions, store } = useContext(Context)
 
   useEffect(() => {
@@ -16,24 +15,20 @@ const Navbar = () => {
     actions.logout()
   }
 
-  if (location.pathname === '/signup') {
-    return null
-  }
+  
 
   return (
     <nav className='navbar navbar-dark bg-black '>
-      <div className='container-fluid'>
+      <div className='container'>
         <Link className='navbar-brand' to='/'>
           <img
             style={{ width: '100px', objectFit: '', border: 'none' }}
-            src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5Kwl4gT7z8mc8Ug0BaVPrzvedTvuLAZ8VFQ&usqp=CAU</img'
-            alt='logo'
+            src={store.images.logo.length > 1 ? store.images.logo :'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5Kwl4gT7z8mc8Ug0BaVPrzvedTvuLAZ8VFQ&usqp=CAU</img'}
+            alt='logo' className='rounded-pill'
           />
           {store.token && (
             <>
-              <span className='nav-item text-white p-2'>
-                WELCOME, {store.user.first_name.toUpperCase()}
-              </span>
+           
             </>
           )}
         </Link>
@@ -79,7 +74,7 @@ const Navbar = () => {
                           <img
                             style={{ objectFit: 'cover' }}
                             className='w-100 h-100 img-cover'
-                            src={product.image_url}
+                            src={product.images[0].image_url}
                             alt=''
                           />
                         </div>
@@ -117,6 +112,13 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
+                 <li className='nav-item' style={{maxWidth:"90px",overflow:"hidden"}}>
+                    
+                    <span className='nav-item text-white h6'>
+                         Hi, {store.user.first_name.toUpperCase()}
+                    </span>
+                   
+                  </li>
                   <li className='nav-item'>
                     <span
                       className='nav-link text-white'
@@ -138,7 +140,7 @@ const Navbar = () => {
                 <>
                   <li className='nav-item'>
                     <Link className='nav-link text-white' to='/admin'>
-                      EDIT USERS
+                      EDIT
                     </Link>
                   </li>
                   <li className='nav-item'>

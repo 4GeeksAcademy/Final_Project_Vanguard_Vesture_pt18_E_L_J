@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext , useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Context } from '../store/appContext'
 
@@ -7,17 +7,35 @@ const ProductCard = ({ product }) => {
 
   const navigate = useNavigate()
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const scaleStyle = {
+    transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+    transition: 'transform 0.3s',
+  };
+
   return (
-    <div className='text-center'>
+    <div onMouseEnter={handleMouseEnter}
+    onMouseLeave={handleMouseLeave}
+    style={scaleStyle} className='text-center'>
       <div
-        className='card m-2'
-        style={{ width: '18rem', height: '500px', borderRadius: '20px' }}
+        className='card m-2 shadow-lg text-white bg-black'
+        style={{ width: '300px', height: '450px', borderRadius: '20px' }}
       >
         <img
+        onClick={() => navigate(`/product/${product.id}`)}
           src={product.images.length > 0 ? product.images[0].image_url : ''}
           className=''
           style={{
-            height: '18rem',
+            height: '14rem',
             objectFit: 'cover',
             borderTopLeftRadius: '20px',
             borderTopRightRadius: '20px',
@@ -40,17 +58,18 @@ const ProductCard = ({ product }) => {
 
           <button
             onClick={() => navigate(`/product/${product.id}`)}
-            className='btn bg-black text-white m-3'
+            className='btn btn-light p-1 m-3'
+            // style={{maxWidth:"30px"}}
           >
             Details
           </button>
 
           <button
             onClick={() => actions.postFavorites(product.id)}
-            className={`btn bg-black m-3 ${
+            className={`btn bg-white m-3 ${
               store.favorites.some((favorite) => favorite.id === product.id)
                 ? 'text-danger'
-                : 'text-white'
+                : 'text-black'
             }`}
           >
             <strong>♥</strong>

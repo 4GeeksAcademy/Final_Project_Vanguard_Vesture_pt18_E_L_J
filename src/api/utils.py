@@ -5,6 +5,8 @@ import re
 import os
 import requests
 import base64
+import bcrypt
+
 
 class APIException(Exception):
     status_code = 400
@@ -67,11 +69,12 @@ def load_firts_admin_user(app, db):
             if User.query.count() > 0:
                 print('Admin user already exists')
                 return
+            hashed_password = bcrypt.hashpw('admin'.encode('utf-8'), bcrypt.gensalt())
             user = User(
                 first_name='Admin',
                 last_name='Admin',
                 email='admin@admin.com',
-                password='admin',
+                password=hashed_password.decode('utf-8'),
                 address='Admin address',
                 phone='123456789',
                 location='Admin location',
