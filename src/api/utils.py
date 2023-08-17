@@ -1,6 +1,6 @@
 from flask import jsonify, url_for
 from sqlalchemy import exc
-from src.api.models import db, Category, Product, User, Size, ProductSizeStock
+from src.api.models import db, Category, Product, User, Size, ProductSizeStock, AppImage
 import re
 import os
 import requests
@@ -85,6 +85,40 @@ def load_firts_admin_user(app, db):
             print('Created admin user')
     except:
         print('Error')
+
+def load_default_images(app, db):
+    try:
+        with app.app_context():
+            logo = AppImage(
+                url='https://res.cloudinary.com/dspkak5d0/image/upload/v1692261881/default-images/cuq17vakmy0rvdegei32.png',
+                location='logo'
+            )
+            clothes_image = AppImage(
+                url='https://res.cloudinary.com/dspkak5d0/image/upload/v1692261983/default-images/trclsys6mat4h9mqbge3.avif',
+                location='clothes'
+            )
+            accessories_image = AppImage(
+                url='https://res.cloudinary.com/dspkak5d0/image/upload/v1692262030/default-images/ijzjkiitnjzu0fc6w5rm.avif',
+                location='accessories'
+            )
+            shoes_image = AppImage(
+                url='https://res.cloudinary.com/dspkak5d0/image/upload/v1692262011/default-images/rzgkhfc582gq5kxvo4jz.avif',
+                location='shoes'
+            )
+            favicon = AppImage(
+                url='https://res.cloudinary.com/dspkak5d0/image/upload/v1692261941/default-images/gy0sgfgt8s7sxpa5dk1l.png',
+                location='favicon'
+            )
+
+            db.session.add(logo)
+            db.session.add(clothes_image)
+            db.session.add(accessories_image)
+            db.session.add(shoes_image)
+            db.session.add(favicon)
+            db.session.commit()
+            print('Created default images')
+    except:
+        print('Images already created')
 
 
 def generate_error_message(error_text):

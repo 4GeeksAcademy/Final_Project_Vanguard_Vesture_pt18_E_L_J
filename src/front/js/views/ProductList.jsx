@@ -40,7 +40,7 @@ const ProductList = ({ category }) => {
     [store[category], search, selectedTypes, selectedSizesID, minPrice, maxPrice]
   )
 
-  const handleSubmit = (e) => {
+  const handleApplyPriceFilter = (e) => {
     e.preventDefault()
     setMinPrice(e.target[0].value || 0)
     setMaxPrice(e.target[1].value || 0)
@@ -51,7 +51,7 @@ const ProductList = ({ category }) => {
   }, [])
 
   return (
-    <div className="bg-white container-fluid pt-2" style={{ minHeight: '100vh' }}>
+    <div className="bg-white container pt-4">
       <h1 className='text-capitalize'>{category}</h1>
 
       <div className='d-flex gap-2 flex-wrap'>
@@ -140,7 +140,7 @@ const ProductList = ({ category }) => {
         {/* Price filter */}
         <form
           className='d-flex gap-1 align-items-center'
-          onSubmit={handleSubmit}
+          onSubmit={handleApplyPriceFilter}
         >
           <div className='input-group' style={{ width: '100px' }}>
             <input
@@ -162,12 +162,13 @@ const ProductList = ({ category }) => {
             />
           </div>
           <button type='submit' className='btn bg-black text-white'>
-            $
+            Apply
           </button>
         </form>
         {/* End price filter */}
       </div>
 
+      {/* Name filter */}
       <div className='input-group my-3'>
         <input
           type='text'

@@ -239,16 +239,15 @@ class Size(db.Model):
             'name': self.name,
         }
 
-class Images(db.Model):
-    __tablename__ = 'images'
+class AppImage(db.Model):
+    __tablename__ = 'app_images'
     id = db.Column(db.Integer, primary_key=True)
-    image_url = db.Column(db.String(500), nullable=False)
-    name = db.Column(db.String(500), nullable=False)
+    url = db.Column(db.String(500), nullable=False)
+    location = db.Column(db.String(50), nullable=False, unique=True)
     
-
     def serialize(self):
         return {
             'id': self.id,
-            'image_url': self.image_url,
-            'name': self.name
+            'url': self.url,
+            'location': self.location
         } 

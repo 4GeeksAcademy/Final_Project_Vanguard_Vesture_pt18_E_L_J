@@ -27,7 +27,23 @@ const injectContext = (PassedComponent) => {
       state.actions.getTypes('shoes')
       state.actions.getTypes('accessories')
       state.actions.getSizes()
+      state.actions.getAppImages()
+      const link = document.querySelector("link[rel~='icon']")
+      if (link) {
+        link.href = state.store.images.favicon
+      }
     }, [])
+
+    useEffect(() => {
+      const links = document.querySelectorAll("link[rel~='icon']")
+      if (links) {
+        links.forEach((link) => {
+          link.href = state.store.images.favicon
+        })
+      }
+    
+      
+    }, [state.store.images.favicon])
 
     // The initial value for the context is not null anymore, but the current state of this component,
     // the context will now have a getStore, getActions and setStore functions available, because they were declared

@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, Product, Order, Category, OrderItem, ProductSizeStock, Size, ProductsRating, ShoppingCart, ProductImage , Images
+from .models import db, User, Product, Order, Category, OrderItem, ProductSizeStock, Size, ProductsRating, ShoppingCart, ProductImage , AppImage
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -12,7 +12,7 @@ def setup_admin(app):
     
     # Add your models here, for example this is how we add a the User model to the admin
     admin.add_view(ModelView(User, db.session))
-    admin.add_view(ModelView(Images, db.session))
+    admin.add_view(ModelView(AppImage, db.session))
     admin.add_view(ModelView(Product, db.session))
     admin.add_view(ModelView(ProductImage, db.session))
     admin.add_view(ModelView(ProductSizeStock, db.session))

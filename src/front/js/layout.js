@@ -24,7 +24,6 @@ import UserOrders from './views/UserOrders.jsx'
 import OrderDetials from './views/OrderDetials.jsx'
 import AdminOrders from './views/AdminOrders.jsx'
 
-
 const initialOptions = {
   clientId: process.env.PAYPAL_CLIENT_ID,
   currency: 'USD',
@@ -41,11 +40,11 @@ const Layout = () => {
     return <BackendURL />
 
   return (
-    <div>
+    <div className='d-flex flex-column' style={{ minHeight: '100vh' }}>
       <BrowserRouter basename={basename}>
         <ScrollToTop>
           <Navbar />
-          <div>
+          <div className='d-flex flex-grow-1' id='content'>
             <PayPalScriptProvider option={initialOptions}>
               <Routes>
                 <Route path='/' element={<Home />} />
@@ -84,10 +83,9 @@ const Layout = () => {
                   <Route path='/order/:orderID' element={<OrderDetials />} />
                 </Route>
               </Routes>
+              <Outlet />
             </PayPalScriptProvider>
           </div>
-
-          <Outlet />
           <Footer />
         </ScrollToTop>
       </BrowserRouter>

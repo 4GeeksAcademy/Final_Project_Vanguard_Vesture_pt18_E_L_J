@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Context } from '../store/appContext.js'
+import logo from '../../img/logo.png'
 
 const Navbar = () => {
   const { actions, store } = useContext(Context)
@@ -22,9 +23,9 @@ const Navbar = () => {
       <div className='container'>
         <Link className='navbar-brand' to='/'>
           <img
-            style={{ width: '100px', objectFit: '', border: 'none' }}
-            src={store.images.logo.length > 1 ? store.images.logo :'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5Kwl4gT7z8mc8Ug0BaVPrzvedTvuLAZ8VFQ&usqp=CAU</img'}
-            alt='logo' className='rounded-pill'
+            style={{ width: '100px', objectFit: 'contain', border: 'none' }}
+            src={store.images.logo || logo}
+            alt='logo'
           />
           {store.token && (
             <>

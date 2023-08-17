@@ -23,7 +23,7 @@ const NewProduct = () => {
 
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
+  const handleUploadImage = (event) => {
     event.preventDefault()
     const product = {
       name: event.target.name.value,
@@ -87,7 +87,7 @@ const NewProduct = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleUploadImage}>
         <div className='row mb-3 g-3'>
           {/* Name */}
           <div className='col-12 col-lg-6'>

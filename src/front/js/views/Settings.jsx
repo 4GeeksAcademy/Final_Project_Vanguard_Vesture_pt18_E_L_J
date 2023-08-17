@@ -36,7 +36,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="bg-white container-fluid pt-2" style={{ minHeight: '100vh' }}>
+    <div className="bg-white container-fluid pt-2">
       <div style={{ heigth: "600px" }} className=" container mx-auto d-flex row justify-content-center mt-5">
         <h1 className='pb-5'>Account Settings</h1>
         <p className=' col-4 overflow-hidden'><strong>Email:</strong> {email}</p>
