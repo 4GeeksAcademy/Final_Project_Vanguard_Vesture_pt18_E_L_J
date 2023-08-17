@@ -21,18 +21,21 @@ const getState = ({ getStore, getActions, setStore }) => {
         accessories: [],
       },
       orders: [],
+      admin_orders: {
+        'in progress': [],
+        shipping: [],
+        completed: [],
+        canceled: [],
+      },
     },
     actions: {
       login: async (email, password) => {
         const actions = getActions()
         const data = await api.login(email, password)
         setStore({ user: data.user, token: data.token })
-        const obj = { ...data.user }
-        obj.is_admin = false
-        delete obj.is_admin
-        localStorage.setItem('user', JSON.stringify(obj))
         actions.getFavorites()
-        if (!data.user.is_admin) localStorage.setItem('myToken', data.token)
+        // if (!data.user.is_admin)
+        localStorage.setItem('myToken', data.token)
       },
       signup: async (
         email,
@@ -285,8 +288,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       clearLocalCart: () => {
         setStore({ shopping_cart: [] })
       },
-      getUserOrders: async () => {
-        const response = await api.getUserOrders(getStore().token)
+      getOrdersUser: async () => {
+        const response = await api.getOrdersUser(getStore().token)
         setStore({ orders: response })
       },
       getOrderDetails: async (orderID) => {
@@ -297,6 +300,26 @@ const getState = ({ getStore, getActions, setStore }) => {
         const response = await api.cancelOrder(orderID, getStore().token)
         alert(
           'Order cancelled successfully. Refund is being processed, if you have any doubt contact us via email or chat'
+        )
+        return response
+      },
+      getAllOrdersByStatus: async (status) => {
+        const response = await api.getAllOrdersByStatus(
+          status,
+          getStore().token
+        )
+        setStore({
+          admin_orders: {
+            ...getStore().admin_orders,
+            [status]: response,
+          },
+        })
+      },
+      updateOrderStatus: async (orderID, status) => {
+        const response = await api.updateOrderStatus(
+          orderID,
+          status,
+          getStore().token
         )
         return response
       },

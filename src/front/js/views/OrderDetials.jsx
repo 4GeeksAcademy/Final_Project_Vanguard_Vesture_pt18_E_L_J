@@ -30,24 +30,28 @@ const OrderDetials = () => {
       .finally(() => setIsLoading(false))
   }, [])
 
+  const handleUpdateStatus = (status) => {
+    if (order.status === status) return alert('Order already in this status')
+    actions.updateOrderStatus(order.id, status).then((order) => setOrder(order))
+  }
+
   if (isLoading || !order) return <Loader />
 
   return (
     <div className='container py-3'>
-      <h1 className='mb-3'>Order information</h1>
       <div className='row justify-content-center'>
         <div className='col-12 col-lg-8'>
           <div className='card border-dark'>
             <div className='card-header border-dark d-flex justify-content-between'>
               <span className='fw-bold'>Order #{order.id}</span>
-              <small className='text-muted'>
-                {new Date(order.order_date).toLocaleDateString()}
-              </small>
               <span
                 className={`ms-1 badge bg-${ORDER_STATUS_COLORS[order.status]}`}
               >
                 {order.status}
               </span>
+              <small className='text-muted'>
+                {new Date(order.order_date).toLocaleDateString()}
+              </small>
             </div>
             <div className='card-body'>
               <p className='card-text'>
@@ -112,8 +116,73 @@ const OrderDetials = () => {
               </div>
             </div>
 
-            {order.status === 'in progress' && (
-              <div className='card-footer border-dark text-muted'>
+            {store.user.is_admin && (
+              <div className='card-footer border-dark'>
+                <div className='dropdown d-inline-block ms-2'>
+                  <button
+                    className='btn btn-primary dropdown-toggle'
+                    type='button'
+                    id='dropdownMenuButton1'
+                    data-bs-toggle='dropdown'
+                    aria-expanded='false'
+                  >
+                    Change status
+                  </button>
+                  <ul
+                    className='dropdown-menu'
+                    aria-labelledby='dropdownMenuButton1'
+                  >
+                    <li>
+                      <button
+                        className={`dropdown-item text-${
+                          ORDER_STATUS_COLORS['in progress']
+                        } ${
+                          order.status === 'in progress'
+                            ? 'active text-white'
+                            : ''
+                        }`}
+                        onClick={() => handleUpdateStatus('in progress')}
+                      >
+                        In Progress
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className={`dropdown-item text-${
+                          ORDER_STATUS_COLORS['shipping']
+                        } ${order.status === 'shipping' ? 'active' : ''}`}
+                        onClick={() => handleUpdateStatus('shipping')}
+                      >
+                        Shipping
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className={`dropdown-item text-${
+                          ORDER_STATUS_COLORS['completed']
+                        } ${order.status === 'completed' ? 'active' : ''}`}
+                        onClick={() => handleUpdateStatus('completed')}
+                      >
+                        Completed
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className={`dropdown-item text-${
+                          ORDER_STATUS_COLORS['canceled']
+                        } ${order.status === 'canceled' ? 'active' : ''}`}
+                        onClick={() => handleUpdateStatus('canceled')}
+                      >
+                        Canceled
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {!store.user.is_admin && order.status === 'in progress' && (
+              <div className='card-footer border-dark'>
                 <button
                   className='btn btn-danger'
                   data-bs-toggle='modal'

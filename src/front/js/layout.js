@@ -22,6 +22,7 @@ import CheckoutProduct from './views/CheckoutProduct.jsx'
 import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import UserOrders from './views/UserOrders.jsx'
 import OrderDetials from './views/OrderDetials.jsx'
+import AdminOrders from './views/AdminOrders.jsx'
 
 
 const initialOptions = {
@@ -78,7 +79,8 @@ const Layout = () => {
                     path='/checkout/:productID'
                     element={<CheckoutProduct />}
                   />
-                  <Route path='/my-orders' element={<UserOrders />} />
+                  <Route path='/orders' element={<UserOrders />} />
+                  <Route path='/manage-orders' element={<AdminOrders />} />
                   <Route path='/order/:orderID' element={<OrderDetials />} />
                 </Route>
               </Routes>

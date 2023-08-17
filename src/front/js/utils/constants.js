@@ -6,7 +6,7 @@ export const CATEGORIES = {
 
 export const ORDER_STATUS_COLORS = {
     'in progress': 'primary',
-    'on the way': 'info',
-    'delivered': 'success',
+    'shipping': 'info',
+    'completed': 'success',
     'canceled': 'danger',
 }

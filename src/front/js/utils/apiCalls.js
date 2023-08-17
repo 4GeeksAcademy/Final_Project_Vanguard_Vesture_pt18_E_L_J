@@ -223,18 +223,13 @@ export async function editCallProduct(token, product_id, product) {
   return response
 }
 
-export async function getUserOrders(token) {
+export async function getOrdersUser(token) {
   const response = await makeRequest('/user/orders', 'GET', null, token)
   return response
 }
 
 export async function getOrderDetials(orderID, token) {
-  const response = await makeRequest(
-    '/orders/' + orderID,
-    'GET',
-    null,
-    token
-  )
+  const response = await makeRequest('/orders/' + orderID, 'GET', null, token)
   return response
 }
 
@@ -243,6 +238,26 @@ export async function cancelOrder(orderID, token) {
     '/orders/' + orderID + '/cancel',
     'PUT',
     null,
+    token
+  )
+  return response
+}
+
+export async function getAllOrdersByStatus(status, token) {
+  const response = await makeRequest(
+    `/orders/${status === 'in progress' ? 'in-progress' : status}`,
+    'GET',
+    null,
+    token
+  )
+  return response
+}
+
+export async function updateOrderStatus(orderID, status, token) {
+  const response = await makeRequest(
+    '/orders/' + orderID + '/status',
+    'PUT',
+    { status },
     token
   )
   return response

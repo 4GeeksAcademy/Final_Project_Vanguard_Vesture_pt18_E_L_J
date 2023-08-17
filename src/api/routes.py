@@ -741,29 +741,89 @@ def get_orders():
     
     return jsonify([o.serialize() for o in user.orders]), 200
 
+#  Admin orders
+@api.route('/orders', methods=['GET'])
+@jwt_required()
+def get_all_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.all()]), 200
+
 @api.route('/orders/<int:order_id>', methods=['GET'])
 @jwt_required()
 def get_order_by_id(order_id):
     current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
     order = Order.query.get(order_id)
     if order is None:
         raise APIException(message='Order not found', status_code=404)
+    if user.is_admin:
+        return jsonify(order.serialize()), 200
+    
     if order.user_id != current_user_id:
         raise APIException(message='Order not found', status_code=404)
+  
     return jsonify(order.serialize()), 200
 
 @api.route('/orders/<int:order_id>/cancel', methods=['PUT'])
 @jwt_required()
 def cancel_order(order_id):
     current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
     order = Order.query.get(order_id)
     if order is None:
         raise APIException(message='Order not found', status_code=404)
-    if order.user_id != current_user_id:
+    if not user.is_admin or order.user_id != current_user_id:
         raise APIException(message='Order not found', status_code=404)
     if order.status != 'in progress':
         raise APIException(message='Order cannot be canceled', status_code=400)
     order.status = 'canceled'
     db.session.commit()
     return jsonify(order.serialize()), 200
+
+@api.route('/orders/<int:order_id>/status', methods=['PUT'])
+@jwt_required()
+def update_order_status(order_id):
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    request_body = request.get_json()
+    order = Order.query.get(order_id)
+    if order is None:
+        raise APIException(message='Order not found', status_code=404)
+    if 'status' not in request_body:
+        raise APIException(message='Status is required', status_code=422)
+    if request_body['status'] not in ['in progress', 'shipping' ,'completed', 'canceled']:
+        raise APIException(message='Invalid status', status_code=422)
+    order.status = request_body['status']
+    db.session.commit()
+    return jsonify(order.serialize()), 200
+
+@api.route('/orders/in-progress', methods=['GET'])
+@jwt_required()
+def get_in_progress_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.filter_by(status='in progress')]), 200
+
+@api.route('/orders/shipping', methods=['GET'])
+@jwt_required()
+def get_on_the_way_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.filter_by(status='shipping')]), 200
+
+@api.route('/orders/completed', methods=['GET'])
+@jwt_required()
+def get_completed_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.filter_by(status='completed')]), 200
+
+@api.route('/orders/canceled', methods=['GET'])
+@jwt_required()
+def get_canceled_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.filter_by(status='canceled')]), 200
+
 # End order routes
