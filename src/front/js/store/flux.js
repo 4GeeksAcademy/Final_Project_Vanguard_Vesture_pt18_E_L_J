@@ -32,6 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         shoes: '',
         accessories: '',
         logo: '',
+        favicon: '',
       },
     },
     actions: {
@@ -296,64 +297,49 @@ const getState = ({ getStore, getActions, setStore }) => {
         const response = await api.getOrdersUser(getStore().token)
         setStore({ orders: response })
       },
-      addNewImage: async ({ name, images }) => {
-        const image = {
-          name,
-          images,
-        }
-        const createdImage = await api.createImage(image, getStore().token)
-        console.log('Succefully updated image')
+      updateAppImage: async (location, image) => {
+        const newImage = await api.updateAppImage(image, location, getStore().token)
         setStore({
           images: {
             ...getStore().images,
-            [name]: createdImage.image_url,
+            [location]: newImage.url,
           },
         })
-
-        return createdImage
       },
-      getImages: async (category) => {
-        const images = await api.getImages(category)
+      getAppImages: async () => {
+        const images = await api.getAppImages()
+        setStore({ images })
+      },
+      getOrderDetails: async (orderID) => {
+        const response = await api.getOrderDetials(orderID, getStore().token)
+        return response
+      },
+      cancelOrder: async (orderID) => {
+        const response = await api.cancelOrder(orderID, getStore().token)
+        alert(
+          'Order cancelled successfully. Refund is being processed, if you have any doubt contact us via email or chat'
+        )
+        return response
+      },
+      getAllOrdersByStatus: async (status) => {
+        const response = await api.getAllOrdersByStatus(
+          status,
+          getStore().token
+        )
         setStore({
-          images: {
-            ...getStore().images,
-            [category]: images,
-          },
-          getOrderDetails: async (orderID) => {
-            const response = await api.getOrderDetials(
-              orderID,
-              getStore().token
-            )
-            return response
-          },
-          cancelOrder: async (orderID) => {
-            const response = await api.cancelOrder(orderID, getStore().token)
-            alert(
-              'Order cancelled successfully. Refund is being processed, if you have any doubt contact us via email or chat'
-            )
-            return response
-          },
-          getAllOrdersByStatus: async (status) => {
-            const response = await api.getAllOrdersByStatus(
-              status,
-              getStore().token
-            )
-            setStore({
-              admin_orders: {
-                ...getStore().admin_orders,
-                [status]: response,
-              },
-            })
-          },
-          updateOrderStatus: async (orderID, status) => {
-            const response = await api.updateOrderStatus(
-              orderID,
-              status,
-              getStore().token
-            )
-            return response
+          admin_orders: {
+            ...getStore().admin_orders,
+            [status]: response,
           },
         })
+      },
+      updateOrderStatus: async (orderID, status) => {
+        const response = await api.updateOrderStatus(
+          orderID,
+          status,
+          getStore().token
+        )
+        return response
       },
     },
   }

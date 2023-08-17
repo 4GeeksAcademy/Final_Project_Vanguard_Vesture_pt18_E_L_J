@@ -30,12 +30,21 @@ export const Login = () => {
   if (JSON.stringify(store.user) !== '{}') return <Navigate to={from} />
 
   return (
-    <div style={{ background: "linear-gradient(0deg, rgba(0,0,0,1) 6%, rgba(128,128,128,1) 30%, rgba(255,255,255,1) 50%, rgba(138,138,138,1) 60%, rgba(0,0,0,1) 84%)" }} className='p-5'>
-      <h1 className='mx-auto pb-3 text-center text-white' style={{ fontSize: '3rem' }}>
+    <div
+      style={{
+        background:
+          'linear-gradient(0deg, rgba(0,0,0,1) 6%, rgba(128,128,128,1) 30%, rgba(255,255,255,1) 50%, rgba(138,138,138,1) 60%, rgba(0,0,0,1) 84%)',
+      }}
+      className='p-5'
+    >
+      <h1
+        className='mx-auto pb-3 text-center text-white'
+        style={{ fontSize: '3rem' }}
+      >
         Welcome Back to Vanguard Vesture!
       </h1>
       <form
-        style={{ borderRadius: "25px" }}
+        style={{ borderRadius: '25px' }}
         className=' card col-12 col-lg-6 mx-auto text-white bg-black'
         onSubmit={handleSubmit}
       >
@@ -62,13 +71,16 @@ export const Login = () => {
             id='exampleInputPassword1'
           />
         </div>
-        <button type='submit' className='btn btn-light rounded-pill   mx-auto m-3'>
+        <button
+          type='submit'
+          className='btn btn-light rounded-pill   mx-auto m-3'
+        >
           <h5>Enter</h5>
         </button>
       </form>
       <h5
         className='mt-3 text-center  w-75 mx-auto text-white'
-        style={{ cursor: 'pointer', padding: "20px" }}
+        style={{ cursor: 'pointer', padding: '20px' }}
         onClick={handleRedirect}
       >
         You haven't account? Click Here to Register!

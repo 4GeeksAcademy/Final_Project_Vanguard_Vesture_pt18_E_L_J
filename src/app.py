@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
-from src.api.utils import APIException, generate_sitemap, db_load_categories, load_firts_admin_user
+from src.api.utils import APIException, generate_sitemap, db_load_categories, load_firts_admin_user, load_default_images
 from src.api.models import db
 from src.api.routes import api
 from src.api.admin import setup_admin
@@ -43,8 +43,10 @@ setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
+
 db_load_categories(app, db)
 load_firts_admin_user(app, db)
+load_default_images(app, db)
 
 
 

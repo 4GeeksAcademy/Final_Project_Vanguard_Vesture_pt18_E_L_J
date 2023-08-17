@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, Response
-from src.api.models import db, User, Product, Order , OrderItem, Category, Size, ShoppingCart, ProductSizeStock, ProductsRating, ProductImage , Images
+from src.api.models import db, User, Product, Order , OrderItem, Category, Size, ShoppingCart, ProductSizeStock, ProductsRating, ProductImage , AppImage
 from src.api.utils import generate_sitemap, APIException
 from src.api.utils import save_new_product, update_product_by_id, update_category_by_id
 from src.api.utils import check_is_admin_by_user_id
@@ -828,26 +828,37 @@ def get_canceled_orders():
 
 # End order routes
 
-# ImagesApp Routes
-
-@api.route('/images', methods=['POST'])
+# ImageApp Routes
+@api.route('/app/images', methods=['POST'])
 def create_image():
-        data = request.json 
+    request_body = request.get_json()
+    if 'url' not in request_body:
+        raise APIException(message='Image URL is required', status_code=422)
+    if 'location' not in request_body:
+        raise APIException(message='Location is required', status_code=422)
+    
+    image = AppImage.query.filter_by(location=request_body['location']).first()
+    if image is None:
+        image = AppImage(url=request_body['url'], location=request_body['location'])
 
-        if 'image_url' not in data or 'name' not in data:
-            return jsonify({'error': 'Both "image_url" and "name" fields are required.'}), 400
-
-        image = Images(image_url=data['image_url'], name=data['name'])
-        db.session.add(image)
-        db.session.commit()
-
-        return jsonify(image.serialize()), 201
+    image.url = request_body['url']
+    db.session.commit()
+    return jsonify(image.serialize()), 200
 
     
 
-@api.route('/images', methods=['GET'])
+@api.route('/app/images', methods=['GET'])
 def get_all_images():
-    
-        images = Images.query.all()
-        serialized_images = [image.serialize() for image in images]
-        return jsonify(serialized_images), 200
+    logo = AppImage.query.filter_by(location='logo').first()
+    clothes = AppImage.query.filter_by(location='clothes').first()
+    accessories = AppImage.query.filter_by(location='accessories').first()
+    shoes = AppImage.query.filter_by(location='shoes').first()
+    favicon = AppImage.query.filter_by(location='favicon').first()
+
+    return jsonify({
+        'logo': logo.url,
+        'clothes': clothes.url,
+        'accessories': accessories.url,
+        'shoes': shoes.url,
+        'favicon': favicon.url,
+    }), 200

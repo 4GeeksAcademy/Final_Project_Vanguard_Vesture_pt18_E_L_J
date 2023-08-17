@@ -263,37 +263,31 @@ export async function updateOrderStatus(orderID, status, token) {
   return response
 }
 
+export async function updateAppImage(image, location, token) {
+  const imgFormData = new FormData()
+  imgFormData.append('file', image)
+  imgFormData.append('cloud_name', 'dspkak5d0')
+  imgFormData.append('upload_preset', 'vanguar_vesture_preset')
 
-export async function createImage(image, token) {
-  const imagesFromCloudinary = await Promise.all(
-    image.images.map((image) => {
-      const imgFormData = new FormData()
-      imgFormData.append('file', image)
-      imgFormData.append('cloud_name', 'dspkak5d0')
-      imgFormData.append('upload_preset', 'vanguar_vesture_preset')
-      return fetch('https://api.cloudinary.com/v1_1/dspkak5d0/image/upload', {
-        method: 'POST',
-        body: imgFormData,
-      })
-    })
-  ).then((responses) => Promise.all(responses.map((res) => res.json())))
-  
-  const imagesFromDB = await Promise.all(
-    imagesFromCloudinary.map((img, index) => {
-      
-      return makeRequest(
-        `/images/`,
-        'POST',
-        { image_url: img.url.toString(), name:image.name , order: index },
-        token
-      )
-    })
+  const imageFromCloudinary = await fetch(
+    'https://api.cloudinary.com/v1_1/dspkak5d0/image/upload',
+    {
+      method: 'POST',
+      body: imgFormData,
+    }
+  ).then((res) => res.json())
+
+  const imageFromDB = await makeRequest(
+    '/app/images',
+    'POST',
+    { url: imageFromCloudinary.url.toString(), location },
+    token
   )
-  console.log(imagesFromDB)
-  return  imagesFromDB[0] 
+
+  return imageFromDB
 }
 
-export async function getImages(category) {
-  const response = await makeRequest(`/images/${category}`)
+export async function getAppImages() {
+  const response = await makeRequest('/app/images/')
   return response
 }
