@@ -173,7 +173,7 @@ class Order(db.Model):
     phone_number = db.Column(db.String(50), nullable=False)
 
     user = db.relationship('User', back_populates='orders')
-    order_items = db.relationship('OrderItem', back_populates='order')
+    order_items = db.relationship('OrderItem', back_populates='order', cascade='all, delete-orphan')
 
     def serialize(self):
         return {
@@ -188,7 +188,7 @@ class Order(db.Model):
                 'address': self.address,
                 'phone_number': self.phone_number,
             },
-            'total_price': sum(item.product.price * item.quantity for item in self.order_items),
+            'total': sum(item.product.price * item.quantity for item in self.order_items),
         }
 
 class OrderItem(db.Model):

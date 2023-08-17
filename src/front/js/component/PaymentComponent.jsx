@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
+import { Context } from '../store/appContext.js'
+import { useNavigate } from 'react-router-dom'
 
 import { PayPalButtons } from '@paypal/react-paypal-js'
-
-import { Context } from '../store/appContext.js'
 
 const PaymentComponent = ({ cartItems, billingInfo, isBillingInfoValid, fromCart = false }) => {
   const { actions, store } = useContext(Context)
@@ -12,6 +12,8 @@ const PaymentComponent = ({ cartItems, billingInfo, isBillingInfoValid, fromCart
     label: 'buynow',
     shape: 'pill',
   }
+
+  const navigate = useNavigate()
 
 
   const createOrder = async () => {
@@ -53,6 +55,7 @@ const PaymentComponent = ({ cartItems, billingInfo, isBillingInfoValid, fromCart
       .then((responseData) => {
         console.log('Successfully payment:', responseData)
         actions.clearLocalCart()
+        navigate('/order/' + responseData.order.id)
       })
       .catch((error) => {
         console.error('Error capturing payment:', error)
@@ -73,7 +76,7 @@ const PaymentComponent = ({ cartItems, billingInfo, isBillingInfoValid, fromCart
       style={stylePay}
       disabled={!isBillingInfoValid}
       fundingSource={undefined}
-      forceReRender={[cartItems, isBillingInfoValid, billingInfo]}
+      forceReRender={[cartItems, isBillingInfoValid, billingInfo, store.shopping_cart]}
     />
   )
 }

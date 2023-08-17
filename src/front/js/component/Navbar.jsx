@@ -97,7 +97,7 @@ const Navbar = () => {
             id='navbarSupportedContent'
           >
             <ul className='navbar-nav  text-end mb-2  '>
-              {!store.token ? (
+              {JSON.stringify(store.user) === '{}' ? (
                 <>
                   <li className='nav-item'>
                     <Link className='nav-link text-white' to='/login'>
@@ -131,6 +131,11 @@ const Navbar = () => {
                   <li className='nav-item'>
                     <Link className='nav-link text-white' to='/settings'>
                       SETTINGS
+                    </Link>
+                  </li>
+                  <li className='nav-item'>
+                    <Link className='nav-link text-white' to={store.user.is_admin ? '/manage-orders' : '/orders'}>
+                      ORDERS
                     </Link>
                   </li>
                 </>

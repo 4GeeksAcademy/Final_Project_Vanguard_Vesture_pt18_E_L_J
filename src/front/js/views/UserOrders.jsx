@@ -1,61 +1,39 @@
-import React, { useContext, useState, useEffect } from 'react'
-
+import React, { useContext, useState, useEffect, useMemo } from 'react'
 import { Context } from '../store/appContext.js'
-import { ORDER_STATUS_COLORS } from '../utils/constants.js'
 
-import { Link } from 'react-router-dom'
 import Loader from '../component/Loader.jsx'
+import OrderCard from '../component/OrderCard.jsx'
 
 const UserOrders = () => {
   const { actions, store } = useContext(Context)
   const [isLoading, setIsLoading] = useState(true)
 
+  const sortedOrders = useMemo(
+    () =>
+      store.orders.sort((a, b) => {
+        if (a.status === b.status)
+          return new Date(b.order_date) - new Date(a.order_date)
+        else if (a.status === 'in progress') return -1
+        else if (a.status === 'shipping' && b.status === 'completed') return -1
+        else if (a.status === 'shipping' && b.status === 'canceled') return -1
+        else if (a.status === 'completed' && b.status === 'canceled') return -1
+        else return 1
+      }),
+    [store.orders]
+  )
+
   useEffect(() => {
-    actions.getUserOrders().finally(() => setIsLoading(false))
+    actions.getOrdersUser().finally(() => setIsLoading(false))
   }, [])
 
   return (
-    // Display user orders in
-    <div className='container'>
-      <h1 className='text-center'>Your Orders</h1>
-      {isLoading && store.orders.length < 1  && <Loader />}
-      <div className='row g-2'>
-        <div className='col-12'>
-          {store.orders.map((order) => {
-
-            const total = order.order_items.reduce(
-              (acc, i) => i.product.price * i.quantity,
-              0
-            )
-            return (
-              <div key={order.id} className='card mb-2'>
-                <div className='card-body'>
-                  <h5 className='card-title'>Order #{order.id}</h5>
-                  <h6 className='card-subtitle mb-2 text-muted small'>
-                    {new Date(order.order_date).toLocaleDateString()}
-                  </h6>
-                  <p className='card-text'>
-                    Total: <strong>${total}</strong>
-                  </p>
-                  <p className='card-text'>
-                    Status:
-                    <span className={`ms-1 badge bg-${ORDER_STATUS_COLORS[order.status]}`}>
-                      {order.status}
-                    </span>
-                  </p>
-                    <p className='card-text'>
-                        <small className='text-muted'>
-                            {order.order_items.length} items
-                        </small>
-                    </p>
-                  <Link to={`/order/${order.id}`} className='card-link'>
-                    View
-                  </Link>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+    <div className='container py-4'>
+      <h1 className='text-center mb-4'>Your Orders</h1>
+      {isLoading && store.orders.length < 1 && <Loader />}
+      <div className='vstack gap-1 pt-2'>
+        {sortedOrders.map((order, index) => (
+          <OrderCard key={order.id} order={order} />
+        ))}
       </div>
     </div>
   )

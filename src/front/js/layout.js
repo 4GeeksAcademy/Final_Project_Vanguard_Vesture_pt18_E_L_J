@@ -2,6 +2,8 @@ import React from 'react'
 import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom'
 import ScrollToTop from './component/scrollToTop'
 import { BackendURL } from './component/backendURL'
+import injectContext from './store/appContext'
+
 import Login from './views/Login.jsx'
 import Navbar from './component/Navbar.jsx'
 import Home from './views/Home.jsx'
@@ -19,12 +21,12 @@ import ProductList from './views/ProductList.jsx'
 import CheckoutProduct from './views/CheckoutProduct.jsx'
 import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import UserOrders from './views/UserOrders.jsx'
+import OrderDetials from './views/OrderDetials.jsx'
+import AdminOrders from './views/AdminOrders.jsx'
 
-import injectContext from './store/appContext'
 
 const initialOptions = {
-  clientId:
-    'AbO_LEPpQ-uq7z8NWvdqLth9q1Rgi-MxjpTnGfOe809Ruy-TBzJk2wJg9-0bKzvMU243cIiyVuAcMKMD',
+  clientId: process.env.PAYPAL_CLIENT_ID,
   currency: 'USD',
   intent: 'capture',
 }
@@ -77,7 +79,9 @@ const Layout = () => {
                     path='/checkout/:productID'
                     element={<CheckoutProduct />}
                   />
-                  <Route path='/my-orders' element={<UserOrders />} />
+                  <Route path='/orders' element={<UserOrders />} />
+                  <Route path='/manage-orders' element={<AdminOrders />} />
+                  <Route path='/order/:orderID' element={<OrderDetials />} />
                 </Route>
               </Routes>
             </PayPalScriptProvider>

@@ -711,24 +711,28 @@ def capture_paypal_order():
                 size=size,
                 quantity=cartItem['quantity'],
             )
+            print('ADDED ORDER ITEM',new_order_item.product_id)
+
             db.session.add(new_order_item)
             if fromCart:
-                # Clears shopping cart
                 for cart_item in user.shopping_cart:
                     db.session.delete(cart_item)
-
             db.session.commit()
-            response = {
-                'order': new_order.serialize(),
-                'message': 'Order created successfully',
-            }
-            return response, 200
             
-        else:
-            error_message = paypal_response.text
-            raise APIException(message=error_message, status_code=paypal_response.status_code)
+    else:
+        error_message = paypal_response.text
+        raise APIException(message=error_message, status_code=paypal_response.status_code)
+
+    response = {
+        'order': new_order.serialize(),
+        'message': 'Order created successfully',
+    }
+    return response, 200
+            
 
  # End paypal routes
+
+#  Order routes
 @api.route('/user/orders', methods=['GET'])
 @jwt_required()
 def get_orders():
@@ -736,6 +740,93 @@ def get_orders():
     user = User.query.get(current_user_id)
     
     return jsonify([o.serialize() for o in user.orders]), 200
+
+#  Admin orders
+@api.route('/orders', methods=['GET'])
+@jwt_required()
+def get_all_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.all()]), 200
+
+@api.route('/orders/<int:order_id>', methods=['GET'])
+@jwt_required()
+def get_order_by_id(order_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    order = Order.query.get(order_id)
+    if order is None:
+        raise APIException(message='Order not found', status_code=404)
+    if user.is_admin:
+        return jsonify(order.serialize()), 200
+    
+    if order.user_id != current_user_id:
+        raise APIException(message='Order not found', status_code=404)
+  
+    return jsonify(order.serialize()), 200
+
+@api.route('/orders/<int:order_id>/cancel', methods=['PUT'])
+@jwt_required()
+def cancel_order(order_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    order = Order.query.get(order_id)
+    if order is None:
+        raise APIException(message='Order not found', status_code=404)
+    if not user.is_admin or order.user_id != current_user_id:
+        raise APIException(message='Order not found', status_code=404)
+    if order.status != 'in progress':
+        raise APIException(message='Order cannot be canceled', status_code=400)
+    order.status = 'canceled'
+    db.session.commit()
+    return jsonify(order.serialize()), 200
+
+@api.route('/orders/<int:order_id>/status', methods=['PUT'])
+@jwt_required()
+def update_order_status(order_id):
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    request_body = request.get_json()
+    order = Order.query.get(order_id)
+    if order is None:
+        raise APIException(message='Order not found', status_code=404)
+    if 'status' not in request_body:
+        raise APIException(message='Status is required', status_code=422)
+    if request_body['status'] not in ['in progress', 'shipping' ,'completed', 'canceled']:
+        raise APIException(message='Invalid status', status_code=422)
+    order.status = request_body['status']
+    db.session.commit()
+    return jsonify(order.serialize()), 200
+
+@api.route('/orders/in-progress', methods=['GET'])
+@jwt_required()
+def get_in_progress_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.filter_by(status='in progress')]), 200
+
+@api.route('/orders/shipping', methods=['GET'])
+@jwt_required()
+def get_on_the_way_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.filter_by(status='shipping')]), 200
+
+@api.route('/orders/completed', methods=['GET'])
+@jwt_required()
+def get_completed_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.filter_by(status='completed')]), 200
+
+@api.route('/orders/canceled', methods=['GET'])
+@jwt_required()
+def get_canceled_orders():
+    current_user_id = get_jwt_identity()
+    check_is_admin_by_user_id(current_user_id)
+    return jsonify([o.serialize() for o in Order.query.filter_by(status='canceled')]), 200
+
+# End order routes
 
 # ImagesApp Routes
 

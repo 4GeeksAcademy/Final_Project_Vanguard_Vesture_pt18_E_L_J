@@ -21,11 +21,17 @@ const getState = ({ getStore, getActions, setStore }) => {
         accessories: [],
       },
       orders: [],
+      admin_orders: {
+        'in progress': [],
+        shipping: [],
+        completed: [],
+        canceled: [],
+      },
       images: {
-        clothes: "",
-        shoes: "",
-        accessories: "",
-        logo: "",
+        clothes: '',
+        shoes: '',
+        accessories: '',
+        logo: '',
       },
     },
     actions: {
@@ -33,10 +39,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         const actions = getActions()
         const data = await api.login(email, password)
         setStore({ user: data.user, token: data.token })
-        const obj = { ...data.user }
-        obj.is_admin = false
-        delete obj.is_admin
-        localStorage.setItem('user', JSON.stringify(obj))
         actions.getFavorites()
         if (!data.user.is_admin) localStorage.setItem('myToken', data.token)
       },
@@ -290,41 +292,68 @@ const getState = ({ getStore, getActions, setStore }) => {
       clearLocalCart: () => {
         setStore({ shopping_cart: [] })
       },
-      getUserOrders: async () => {
-        const response = await api.getUserOrders(getStore().token)
+      getOrdersUser: async () => {
+        const response = await api.getOrdersUser(getStore().token)
         setStore({ orders: response })
       },
-      addNewImage: async ({
-        name,
-        images,
-      }) => {
+      addNewImage: async ({ name, images }) => {
         const image = {
           name,
           images,
         }
-        const createdImage = await api.createImage(
-          image,
-          getStore().token
-        )
+        const createdImage = await api.createImage(image, getStore().token)
         console.log('Succefully updated image')
-        setStore({ 
+        setStore({
           images: {
-              ...getStore().images,  
-              [name]: createdImage.image_url,  
-          }
-          
-      });
-      
+            ...getStore().images,
+            [name]: createdImage.image_url,
+          },
+        })
+
         return createdImage
       },
       getImages: async (category) => {
-        const images = await api.getImages(category);
-        setStore({ 
+        const images = await api.getImages(category)
+        setStore({
           images: {
-              ...getStore().images,  
-              [category]: images,  
-          }
-      });
+            ...getStore().images,
+            [category]: images,
+          },
+          getOrderDetails: async (orderID) => {
+            const response = await api.getOrderDetials(
+              orderID,
+              getStore().token
+            )
+            return response
+          },
+          cancelOrder: async (orderID) => {
+            const response = await api.cancelOrder(orderID, getStore().token)
+            alert(
+              'Order cancelled successfully. Refund is being processed, if you have any doubt contact us via email or chat'
+            )
+            return response
+          },
+          getAllOrdersByStatus: async (status) => {
+            const response = await api.getAllOrdersByStatus(
+              status,
+              getStore().token
+            )
+            setStore({
+              admin_orders: {
+                ...getStore().admin_orders,
+                [status]: response,
+              },
+            })
+          },
+          updateOrderStatus: async (orderID, status) => {
+            const response = await api.updateOrderStatus(
+              orderID,
+              status,
+              getStore().token
+            )
+            return response
+          },
+        })
       },
     },
   }
