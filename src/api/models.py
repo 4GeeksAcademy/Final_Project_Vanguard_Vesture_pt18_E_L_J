@@ -238,3 +238,17 @@ class Size(db.Model):
             'id': self.id,
             'name': self.name,
         }
+
+class Images(db.Model):
+    __tablename__ = 'images'
+    id = db.Column(db.Integer, primary_key=True)
+    image_url = db.Column(db.String(500), nullable=False)
+    name = db.Column(db.String(500), nullable=False)
+    
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'image_url': self.image_url,
+            'name': self.name
+        } 

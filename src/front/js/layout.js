@@ -39,11 +39,11 @@ const Layout = () => {
     return <BackendURL />
 
   return (
-    <div className='d-flex flex-column h-100 min-vh-100'>
+    <div>
       <BrowserRouter basename={basename}>
         <ScrollToTop>
           <Navbar />
-          <div className='flex-grow-1'>
+          <div>
             <PayPalScriptProvider option={initialOptions}>
               <Routes>
                 <Route path='/' element={<Home />} />

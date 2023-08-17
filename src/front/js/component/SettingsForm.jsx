@@ -42,11 +42,11 @@ const SettingsForm = ({ isOpen, onClose }) => {
             tabIndex="-1"
             style={{ display: isOpen ? 'block' : 'none' }}
         >
-            <div className="modal-dialog">
-                <div className="modal-content">
+            <div className="modal-dialog text-white bg-black  border rounded-3">
+                <div className="modal-content bg-black ">
                     <div className="modal-header">
                         <h5 className="modal-title" id="contactModalLabel">
-                            Edit User
+                            Edit Information
                         </h5>
                         <button
                             type="button"
@@ -145,7 +145,7 @@ const SettingsForm = ({ isOpen, onClose }) => {
                     <div className="modal-footer">
                         <button
                             type="button"
-                            className="btn btn-dark add"
+                            className="btn btn-danger add"
                             data-bs-dismiss="modal"
                             onClick={onClose}
                         >

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Navbar from '../component/Navbar.jsx'
 import CartProduct from '../component/CartProduct.jsx'
 import PaymentComponent from '../component/PaymentComponent.jsx'
 
@@ -40,15 +39,11 @@ const Cart = () => {
   }
 
   return (
-    <div className='container'>
+    <div className="bg-black text-white container-fluid pt-2 pb-5" style={{ minHeight: '100vh' }}>
       <h1 className=' d-flex justify-content-center align-items-center'>
-        Cart
-      </h1>
-      {store.shopping_cart.length === 0 && (
-        <h1 className='text-center'>You haven't items in you cart</h1>
-      )}
-    
-      {store.shopping_cart.length > 0 && (
+        Your Shopping Cart
+      </h1>   
+      {store.shopping_cart.length > 0 ? (
         <>
           {store.shopping_cart.map((cartItem) => (
             <div className='d-flex text-center w-100' key={cartItem.product.id}>
@@ -140,11 +135,19 @@ const Cart = () => {
                 fullName && email && phoneNumber && address
               )}
             />
-            <button onClick={() => clearCart()} className='btn btn-danger m-3'>
+            <button
+              onClick={() => clearCart()}
+              style={{ maxHeight: '40px' }}
+              className="btn btn-danger m-3 rounded-pill"
+            >
               CANCEL ORDER
             </button>
           </div>
         </>
+        ) : (
+          <div className="bg-black text-white container-fluid pt-2" style={{ minHeight: '100vh' }}>
+            <h2 className='text-center'>You haven't items in your cart</h2>
+          </div>
       )}
     </div>
   )

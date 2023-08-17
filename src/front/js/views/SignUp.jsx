@@ -36,20 +36,19 @@ const Signup = () => {
       })
   }
 
-  const handlePaymentSelection = (event) => {
-    setPaymentMethod(event.target.value)
-  }
+
 
   const handleLogin = () => {
     navigate('/login')
   }
 
   return (
-    <div className='p-5 '>
-      <h1 className='mx-auto text-center p-3' style={{ fontSize: '3rem' }}>
-        Welcome to Vanguard Vesture!
+    <div className='p-5 ' style={{ background: "linear-gradient(0deg, rgba(0,0,0,1) 6%, rgba(128,128,128,1) 30%, rgba(255,255,255,1) 50%, rgba(138,138,138,1) 70%, rgba(0,0,0,1) 94%)" }}>
+      <h1 className='mx-auto text-center text-white p-3' style={{ fontSize: '3rem' }}>
+        Join the Vanguard Vesture!
       </h1>
-      <form className='card w-75 mx-auto mb-5 bg-black text-white' onSubmit={handleSubmit}>
+      <form
+        style={{ borderRadius: "25px" }} className='  card col-12 col-lg-6 mx-auto mb-5 bg-black text-white' onSubmit={handleSubmit}>
         <div className='m-3 '>
           <label htmlFor='exampleInputEmail1' className='form-label'>
             <h5>Email address</h5>
@@ -130,14 +129,14 @@ const Signup = () => {
         <button
           style={{ cursor: 'pointer' }}
           type='submit'
-          className='btn btn-success  mx-auto m-3'
+          className='btn btn-light  mx-auto m-3 rounded-pill'
         >
-          Create account
+          <h5>Create account</h5>
         </button>
       </form>
-      <div className=' mb-5 card w-50 mx-auto'>
+      <div className=' mb-5  w-50 mx-auto'>
         <h5
-          className='text-center'
+          className='text-center text-white'
           style={{ cursor: 'pointer' }}
           onClick={handleLogin}
         >
