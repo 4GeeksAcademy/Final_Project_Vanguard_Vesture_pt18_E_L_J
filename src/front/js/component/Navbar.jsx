@@ -52,11 +52,11 @@ const Navbar = () => {
                   <i className='fa-sharp text-white fa-solid fa-heart'></i>
                 </a>
                 <ul
-                  style={{ width: '250px' }}
-                  className='dropdown-menu bg-black text-white'
+                  style={{ width: '200px' }}
+                  className='dropdown-menu bg-black text-white rounded'
                   aria-labelledby='favoritesDropdown'
                 >
-                  <li className='p-3 text-center'>
+                  <li className='p-3 text-center border border-light rounded'>
                     <span>FAVORITES</span>
                   </li>
                   {store.favorites.map((product) => (

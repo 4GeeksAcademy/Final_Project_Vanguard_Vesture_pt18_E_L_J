@@ -1,15 +1,16 @@
 import React from "react";
 
+
 const AboutUs = () => {
     return (
         <div className="bg-black text-white container-fluid pt-2 pb-5" style={{ minHeight: '100vh' }}>
             <br />
-            <h1 style={{ display: "flex", justifyContent: "center", fontStyle: "italic" }}>About us</h1>
+            <h1 style={{ display: "flex", justifyContent: "center", fontStyle: "italic",fontFamily: 'Helvetica' }}>About us</h1>
 
             <p className="m-5" style={{ display: "flex", justifyContent: "center" }}>"Vanguard Vesture is a web e-commerce app developed to streamline the buying and selling activities of men's clothing. It features a PayPal payment system, search filters, a favorites list, and a web chat with immediate response for its customers. On the seller's side, it offers an article publishing system, editing capabilities, and app management, including images and order processing.
 
                 We aim to innovate using the latest technologies such as React, Python, Flask, and JavaScript for efficient development with room for future implementations to enhance the experience."</p>
-            <h1 className="pb-3" style={{ display: "flex", justifyContent: "center" , fontStyle: "italic" }}>Where to find us</h1>
+            <h1 className="pb-3" style={{ display: "flex", justifyContent: "center" , fontStyle: "italic",fontFamily: 'Helvetica' }}>Where to find us</h1>
             <div className="container" style={{ display: "flex", justifyContent: "center" }}>
                 <br />
 
@@ -25,7 +26,7 @@ const AboutUs = () => {
                 ></iframe>
             </div>
             <br />
-            <h1 className="pb-3" style={{ display: "flex", justifyContent: "center", fontStyle: "italic" }}>Who worked on this project?</h1>
+            <h1 className="pb-3" style={{ display: "flex", justifyContent: "center", fontStyle: "italic" ,fontFamily: 'Helvetica'}}>Who worked on this project?</h1>
             <div className="card-group m-5 bg-black text-white">
                 <div className="card bg-black text-white mx-auto" style={{ width: "300px" }}>
                     <img

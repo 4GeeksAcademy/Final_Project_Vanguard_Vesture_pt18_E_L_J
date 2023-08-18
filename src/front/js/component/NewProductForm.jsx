@@ -38,6 +38,7 @@ const NewProduct = () => {
       ),
       images,
     }
+    images.length == 0 ? alert("You have to upload a image for your product") :
     actions.addNewProduct(product).then((res) => navigate(`/product/${res.id}`))
   }
 

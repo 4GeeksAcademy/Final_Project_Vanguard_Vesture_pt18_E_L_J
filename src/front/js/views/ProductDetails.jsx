@@ -144,7 +144,7 @@ const ProductDetails = () => {
       </div>
       {/* End carousel */}
       <div className="row container-fluid">
-        <div className=" ms-3 col-4">
+        <div className=" ms-3 col-7">
           <h3 className='my-3'>Description</h3>
           <p>{product.description}</p>
         </div>
@@ -160,7 +160,7 @@ const ProductDetails = () => {
 
         </div>
 
-        <div className="col-4">
+        <div className="col-12 mt-3 d-flex justify-content-center">
 
           {/* Quantity */}
           <h3 className='mt-3'>Quantity</h3>

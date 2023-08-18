@@ -51,7 +51,7 @@ const Cart = () => {
             </div>
           ))}
           {/* Billing form */}
-          <div className='row g-3'>
+          <div className='row mt-3 g-3'>
             <h3 className='col-12'>Billing Info</h3>
             <div className='col-12'>
               <input
@@ -120,7 +120,7 @@ const Cart = () => {
             </div>
           </div>
           {/* End billing form */}
-          <h1 className='text-center'>Total Pay: ${actions.getTotalCart()}</h1>
+          <h1 className='text-center mt-3'>Total Pay: ${actions.getTotalCart()}</h1>
           <div className='d-flex justify-content-center'>
             <PaymentComponent
               fromCart

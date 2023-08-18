@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-// import { useNavigate } from "react-router-dom";
-// import Navbar from "../component/Navbar.jsx";
 import { Context } from '../store/appContext.js'
 import { Link } from 'react-router-dom'
 
@@ -98,7 +96,7 @@ const Home = () => {
                   position: 'absolute',
                   fontFamily: 'Helvetica',
                   fontStyle: 'italic',
-                  fontSize: '3rem',
+                  fontSize: '2rem',
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
@@ -172,7 +170,7 @@ const Home = () => {
                 style={{
                   position: 'absolute',
                   fontFamily: 'Helvetica',
-                  fontSize: '3rem',
+                  fontSize: '2rem',
                   top: '50%',
                   fontStyle: 'italic',
                   left: '50%',
@@ -248,7 +246,7 @@ const Home = () => {
                 style={{
                   position: 'absolute',
                   fontFamily: 'Helvetica',
-                  fontSize: '3rem',
+                  fontSize: '2rem',
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
