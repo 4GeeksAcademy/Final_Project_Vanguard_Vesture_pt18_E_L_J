@@ -24,7 +24,10 @@ const SettingsForm = ({ isOpen, onClose }) => {
             address,
         };
         
-        actions.editUser(user);
+        actions
+        .editUser(user)
+        .then((res)=>actions.showNotification("User updated","success"))
+        .catch((err)=>actions.showNotification("Error updating user","danger"))
         
         setEmail('');
         setPassword('');

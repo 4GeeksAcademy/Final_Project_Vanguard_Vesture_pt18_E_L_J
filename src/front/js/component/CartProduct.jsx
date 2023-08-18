@@ -25,18 +25,18 @@ const CartProduct = ({ cartItem }) => {
 
   return (
     <div className='text-center mt-1 mx-auto d-flex flex-wrap gap-2 justify-content-center text-black '>
-      <div style={{ width: '80%' }} className='card shadow-lg'>
+      <div style={{ width: '100%', height: "100%" }} className='card shadow-lg'>
         <div className='card-body  d-flex justify-content-center row'>
           <h5 className='card-title'> {cartItem.product.name}</h5>
           <div
-            style={{ width: '200px'}}
-            className='rounded-circle  overflow-hidden d-flex justify-content-center  col-2'
+            style={{ width: '200px', height: "200px" }}
+            className='ms-3 rounded-circle border border-dark  overflow-hidden d-flex justify-content-center  col-2'
           >
             <img
               style={{
                 objectFit: 'cover',
               }}
-              className='w-75 h-75 img-cover d-flex justify-content-center text-center rounded-circle'
+              className=' img-cover d-flex justify-content-center text-center rounded-circle'
               src={cartItem.product.images[0]?.image_url}
               alt=''
             />
@@ -60,13 +60,13 @@ const CartProduct = ({ cartItem }) => {
               </button>
 
               <input
-                type='number'
+                type='text'
                 value={quantity}
                 onChange={(e) =>
-                  e.target.value > 0 && setQuantity(e.target.value)
+                  e.target.value > 0 && setQuantity(Number(e.target.value))
                 }
-                className='border-0 text-center'
-                style={{ width: '50px' }}
+                className='border-0 text-center mx-1'
+                style={{ width: '30px' }}
               />
               <button
                 onClick={() => {
@@ -103,10 +103,12 @@ const CartProduct = ({ cartItem }) => {
             <button
               href='#'
               onClick={() =>
-                actions.deleteShoppingCart(
-                  cartItem.product.id,
-                  cartItem.size.id
-                )
+                actions
+                  .deleteShoppingCart(
+                    cartItem.product.id,
+                    cartItem.size.id
+                  )
+                  .then((res) => actions.showNotification("Cart product deleted", "success"))
               }
               className='btn btn-black m-3 '
             >

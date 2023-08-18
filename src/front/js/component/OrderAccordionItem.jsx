@@ -15,6 +15,7 @@ const OrderAccordionItem = ({ status, first }) => {
     if (first) {
       actions
         .getAllOrdersByStatus('in progress')
+        .then((res) => actions.showNotification("Orders status loaded", "success"))
         .finally(() => setIsLoading(false))
     }
   }, [])
@@ -44,9 +45,8 @@ const OrderAccordionItem = ({ status, first }) => {
     <div className='accordion-item'>
       <h2 className='accordion-header' id={headerID}>
         <button
-          className={`accordion-button text-${
-            ORDER_STATUS_COLORS[status]
-          } fw-bold fs-5 text-capitalize ${!first && 'collapsed'}`}
+          className={`accordion-button text-${ORDER_STATUS_COLORS[status]
+            } fw-bold fs-5 text-capitalize ${!first && 'collapsed'}`}
           type='button'
           data-bs-toggle='collapse'
           data-bs-target={'#' + collapseID}

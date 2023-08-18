@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom'
 import ScrollToTop from './component/scrollToTop'
 import { BackendURL } from './component/backendURL'
 import injectContext from './store/appContext'
-
+import Notification from './component/Notification.jsx'
 import Login from './views/Login.jsx'
 import Navbar from './component/Navbar.jsx'
 import Home from './views/Home.jsx'
@@ -43,6 +43,7 @@ const Layout = () => {
     <div className='d-flex flex-column' style={{ minHeight: '100vh' }}>
       <BrowserRouter basename={basename}>
         <ScrollToTop>
+          <Notification />
           <Navbar />
           <div className='d-flex flex-grow-1' id='content'>
             <PayPalScriptProvider option={initialOptions}>
