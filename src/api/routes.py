@@ -769,11 +769,10 @@ def get_order_by_id(order_id):
 @jwt_required()
 def cancel_order(order_id):
     current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
     order = Order.query.get(order_id)
     if order is None:
         raise APIException(message='Order not found', status_code=404)
-    if not user.is_admin or order.user_id != current_user_id:
+    if order.user_id != current_user_id:
         raise APIException(message='Order not found', status_code=404)
     if order.status != 'in progress':
         raise APIException(message='Order cannot be canceled', status_code=400)
