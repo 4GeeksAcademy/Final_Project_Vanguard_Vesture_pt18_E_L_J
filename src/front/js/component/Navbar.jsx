@@ -15,7 +15,7 @@ const Navbar = () => {
   function handleLogout() {
     actions
       .logout()
-      actions.showNotification("logout successful", "success")
+      actions.showNotification("Logout successful", "success")
   }
 
 

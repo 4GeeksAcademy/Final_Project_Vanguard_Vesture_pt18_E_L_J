@@ -29,10 +29,11 @@ const ProductDetails = () => {
     actions
       .deleteProduct(id)
       .then(() => {
-      navigate('/')
-      actions.showNotification("Product deleted", "success"))
-                  })
+        navigate('/');
+        actions.showNotification("Product deleted", "success");
+      });
   }
+  
 
   useEffect(() => {
     actions
