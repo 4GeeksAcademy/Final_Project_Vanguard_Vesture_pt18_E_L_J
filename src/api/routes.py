@@ -293,19 +293,19 @@ def delete_product_image(product_id, product_image_id):
 
 @api.route('/products/clothes', methods=['GET'])
 def get_clothing_products():
-    products = Product.query.filter_by(category_id=1)
+    products = Product.query.filter_by(category_id=1, deleted=False)
     return jsonify([p.serialize() for p in products]), 200
 
 
 @api.route('/products/accessories', methods=['GET'])
 def get_accessories_accesories():
-    products = Product.query.filter_by(category_id=2)
+    products = Product.query.filter_by(category_id=2, deleted=False)
     return jsonify([p.serialize() for p in products]), 200
 
 
 @api.route('/products/shoes', methods=['GET'])
 def get_accessories_shoes():
-    products = Product.query.filter_by(category_id=3)
+    products = Product.query.filter_by(category_id=3, deleted=False)
     return jsonify([p.serialize() for p in products]), 200
 
 
@@ -327,12 +327,10 @@ def delete_product(product_id):
     product = Product.query.get(product_id)
     if product is None:
         raise APIException(message='Product not found', status_code=404)
-    if len(product.shopping_carts) > 0:
-        for shopping_cart in product.shopping_carts:
-            db.session.delete(shopping_cart)
-    db.session.delete(product)
+    product.deleted = True
     db.session.commit()
-    return Response(message='Product deleted', status=204)
+
+    return jsonify({'message': 'Product deleted successfully'}), 200
 
 
 @api.route('/products/<int:product_id>/rating', methods=['GET'])

@@ -14,17 +14,25 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1)
   const [rating, setRating] = useState(0)
   const { id } = useParams()
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false)
   const navigate = useNavigate()
 
   const openModal = () => {
-    setOpen(true);
-  };
-
+    setOpen(true)
+  }
 
   const closeModal = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
+
+  const handleDelete = () => {
+    actions
+      .deleteProduct(id)
+      .then(() => {
+      navigate('/')
+      actions.showNotification("Product deleted", "success"))
+                  })
+  }
 
   useEffect(() => {
     actions
@@ -66,13 +74,19 @@ const ProductDetails = () => {
       </div>
       {store.user.is_admin && (
         <div className='d-flex gap-2' style={{ marginLeft: '12px' }}>
-          <button onClick={openModal} type='button' className='btn btn-outline-secondary'>
+          <button
+            onClick={openModal}
+            type='button'
+            className='btn btn-outline-secondary'
+          >
             <i className='fa-solid fa-pen-to-square'></i>
           </button>
-          <button onClick={() => actions
-            .deleteProduct(id)
-            .then((res) => actions.showNotification("Product deleted", "success"))
-          } type='button' className='btn btn-danger'>
+
+          <button
+            onClick={handleDelete}
+            type='button'
+            className='btn btn-danger'
+          >
             <i className='fa-solid fa-trash'></i>
           </button>
         </div>
@@ -106,8 +120,9 @@ const ProductDetails = () => {
               return (
                 <div
                   key={image.id}
-                  className={`carousel-item h-100 ${index === 0 ? 'active' : ''
-                    }`}
+                  className={`carousel-item h-100 ${
+                    index === 0 ? 'active' : ''
+                  }`}
                 >
                   <img
                     src={image.image_url}
@@ -151,7 +166,7 @@ const ProductDetails = () => {
           <h3 className='my-3'>Description</h3>
           <p>{product.description}</p>
         </div>
-        <div className="col-4">
+        <div className='col-4'>
           {/* Sizes */}
           <h3 className='ms-5 mt-3'>Sizes</h3>
           <SizesSelector
@@ -160,16 +175,15 @@ const ProductDetails = () => {
             selectedSizeID={selectedSizeID}
           />
           {/* End sizes */}
-
         </div>
-
         <div className="col-12 mt-3 d-flex justify-content-center">
-
           {/* Quantity */}
           <h3 className='mt-3'>Quantity</h3>
           <div className='d-flex align-items-center gap-2'>
             <button
-              onClick={() => setQuantity((prev) => (prev === 1 ? prev : prev - 1))}
+              onClick={() =>
+                setQuantity((prev) => (prev === 1 ? prev : prev - 1))
+              }
               className='btn btn-black'
             >
               <i className='fa-solid fa-minus' style={{ color: '#000000' }}></i>
@@ -178,7 +192,9 @@ const ProductDetails = () => {
             <input
               type='number'
               value={quantity}
-              onChange={(e) => e.target.value > 0 && setQuantity(e.target.value)}
+              onChange={(e) =>
+                e.target.value > 0 && setQuantity(e.target.value)
+              }
               className='border-0 text-center'
               style={{ width: '50px' }}
             />
@@ -199,7 +215,7 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      <div className=" d-flex align-items-end flex-column">
+      <div className=' d-flex align-items-end flex-column'>
         {/* Price */}
         <h3 className='my-3'>${product.price.toLocaleString('en-US')}</h3>
 
@@ -238,18 +254,21 @@ const ProductDetails = () => {
                   ? 'text-danger'
                   : 'text-white'
                   }`}
+
               >
                 <strong>♥</strong>
               </button>
             </>
           )}
         </div>
-        <EditProductForm setProduct={setProduct} product_id={product.id} isOpen={isOpen} onClose={closeModal} />
+        <EditProductForm
+          setProduct={setProduct}
+          product_id={product.id}
+          isOpen={isOpen}
+          onClose={closeModal}
+        />
       </div>
     </div>
-
-
-
   )
 }
 

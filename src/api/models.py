@@ -49,6 +49,8 @@ class Product(db.Model):
     color = db.Column(db.String(50), nullable=False)
     type = db.Column(db.String(100), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+    deleted = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
 
     images = db.relationship('ProductImage', back_populates='product', cascade='all, delete-orphan')
     category = db.relationship('Category', back_populates='products')
