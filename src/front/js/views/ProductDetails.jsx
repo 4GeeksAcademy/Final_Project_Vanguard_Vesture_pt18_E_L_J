@@ -26,7 +26,12 @@ const ProductDetails = () => {
   }
 
   const handleDelete = () => {
-    actions.deleteProduct(id).then(() => navigate('/'))
+    actions
+      .deleteProduct(id)
+      .then(() => {
+      navigate('/')
+      actions.showNotification("Product deleted", "success"))
+                  })
   }
 
   useEffect(() => {
@@ -37,7 +42,7 @@ const ProductDetails = () => {
         if (error.response.status === 404) navigate('/404')
         else {
           showError(true)
-          console.log(error)
+          actions.showNotification("Product not found", "danger")
         }
       })
   }, [id])
@@ -76,6 +81,7 @@ const ProductDetails = () => {
           >
             <i className='fa-solid fa-pen-to-square'></i>
           </button>
+
           <button
             onClick={handleDelete}
             type='button'
@@ -155,8 +161,8 @@ const ProductDetails = () => {
         </div>
       </div>
       {/* End carousel */}
-      <div className='row container-fluid'>
-        <div className=' ms-3 col-4'>
+      <div className="row container-fluid">
+        <div className=" ms-3 col-7">
           <h3 className='my-3'>Description</h3>
           <p>{product.description}</p>
         </div>
@@ -170,8 +176,7 @@ const ProductDetails = () => {
           />
           {/* End sizes */}
         </div>
-
-        <div className='col-4'>
+        <div className="col-12 mt-3 d-flex justify-content-center">
           {/* Quantity */}
           <h3 className='mt-3'>Quantity</h3>
           <div className='d-flex align-items-center gap-2'>
@@ -216,14 +221,17 @@ const ProductDetails = () => {
 
         {/* Buttons */}
         <div className='d-flex flex-wrap gap-2'>
-          {!store.user.is_admin && (
+          {!store.user.is_admin && store.token && (
             <>
               <button
                 type='button'
                 className='btn btn-outline-dark'
                 onClick={() => {
-                  if (!selectedSizeID) return
-                  actions.postShoppingCart(product.id, quantity, selectedSizeID)
+                  selectedSizeID == null ? actions.showNotification("Error, select a size", "danger")
+                    :
+                    actions
+                      .postShoppingCart(product.id, quantity, selectedSizeID)
+                      .then((res) => actions.showNotification("Successfuly added to cart", "success"))
                 }}
               >
                 Add to cart
@@ -238,12 +246,15 @@ const ProductDetails = () => {
                 Buy now
               </button>
               <button
-                onClick={() => actions.postFavorites(product.id)}
-                className={`btn bg-black ${
-                  store.favorites.some((favorite) => favorite.id === product.id)
-                    ? 'text-danger'
-                    : 'text-white'
-                }`}
+                onClick={() => actions
+                  .postFavorites(product.id)
+                  .then((res) => actions.showNotification("Favorited added", "success"))
+                }
+                className={`btn bg-black ${store.favorites.some((favorite) => favorite.id === product.id)
+                  ? 'text-danger'
+                  : 'text-white'
+                  }`}
+
               >
                 <strong>♥</strong>
               </button>

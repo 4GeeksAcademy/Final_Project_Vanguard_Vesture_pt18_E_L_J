@@ -31,7 +31,10 @@ const Settings = () => {
   };
 
   const handleDelete = () => {
-    actions.deleteUser();
+    actions
+    .deleteUser()
+    .then((res)=>actions.showNotification("User deleted","success"))
+    .catch((err)=>actions.showNotification("Error deleting user","danger"))
     closeModal();
   };
 

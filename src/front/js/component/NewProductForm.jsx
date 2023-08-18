@@ -38,7 +38,11 @@ const NewProduct = () => {
       ),
       images,
     }
-    actions.addNewProduct(product).then((res) => navigate(`/product/${res.id}`))
+    images.length == 0 ? actions.showNotification("The image is needed", "danger") :
+      actions.addNewProduct(product).then((res) => {
+        navigate(`/product/${res.id}`)
+        actions.showNotification("New product created", "success")
+      })
   }
 
   const handleCategoryChange = (event) => {

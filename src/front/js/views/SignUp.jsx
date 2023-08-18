@@ -28,11 +28,12 @@ const Signup = () => {
         location,
         address,
       )
-      .then((res) => navigate('/login'))
+      .then((res) =>{ navigate('/login')
+      actions.showNotification(res.message,"success")
+    })
       .catch((error) => {
-        // Cambiar mensajes personalizados (?)
-        if (error.httpStatus === 409) alert(error.message)
-        else alert(error.message)
+        
+       actions.showNotification(error.message,"danger")
       })
   }
 

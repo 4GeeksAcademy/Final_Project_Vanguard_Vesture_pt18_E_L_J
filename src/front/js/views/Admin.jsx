@@ -1,10 +1,13 @@
 import React, { useContext, useState } from 'react'
 import { Context } from '../store/appContext.js'
 import InputImage from '../component/InputImage.jsx'
+import { useNavigate} from 'react-router'
+
 
 const Admin = () => {
   const { store, actions } = useContext(Context)
   const [image, setImage] = useState(null)
+  let navigate = useNavigate()
 
   if (!store.user.is_admin) return <Navigate to='/' />
 
@@ -13,7 +16,13 @@ const Admin = () => {
     const location = event.target.location.value
     if (!location) return alert('Please select a location')
     if (!image) return alert('Please upload an image')
-    actions.updateAppImage(location, image)
+    actions
+  .updateAppImage(location, image)
+  .then((res)=>{actions.showNotification("Image uploaded","success")
+                navigate('/home')
+
+}
+  )
   }
 
   const handleImageOnChage = (e) => {

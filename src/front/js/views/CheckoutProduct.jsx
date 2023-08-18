@@ -20,7 +20,7 @@ const CheckoutProduct = () => {
   const [email, setEmail] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [address, setAddress] = useState('')
-  
+
 
   useEffect(() => {
     actions.getProductDetails(params.productID).then((res) => setProduct(res))

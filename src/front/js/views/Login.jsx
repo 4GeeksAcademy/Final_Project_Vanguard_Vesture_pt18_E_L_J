@@ -15,11 +15,12 @@ export const Login = () => {
     e.preventDefault()
     actions
       .login(email, password)
-      .then((res) => navigate(from, { replace: true }))
+      .then((res) => {navigate(from, { replace: true })
+      actions.showNotification(res.message,"success")
+    })
       .catch((err) => {
-        alert('Incorrect user/password')
-        console.log(err)
-        console.log(err.httpStatus)
+      
+        actions.showNotification(err.message,"danger")
       })
   }
 
