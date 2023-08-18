@@ -53,12 +53,12 @@ const PaymentComponent = ({ cartItems, billingInfo, isBillingInfoValid, fromCart
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log('Successfully payment:', responseData)
+        actions.showNotification("Successful purchase","success")
         actions.clearLocalCart()
         navigate('/order/' + responseData.order.id)
       })
       .catch((error) => {
-        console.error('Error capturing payment:', error)
+        actions.showNotification("Failed purchase","danger")
       })
   }
 
@@ -66,7 +66,7 @@ const PaymentComponent = ({ cartItems, billingInfo, isBillingInfoValid, fromCart
     <PayPalButtons
     onClick={() => {
       if (!isBillingInfoValid) {
-        alert('Please, fill all billing information and select a size')
+        actions.showNotification("Please, fill all billing information and select a size","danger")
       }
     }}
       createOrder={(data, actions) => {

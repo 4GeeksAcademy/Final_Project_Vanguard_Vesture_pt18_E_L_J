@@ -1,4 +1,7 @@
 import React from "react";
+import julio from '../../img/IMG_6953.png'
+import manu from '../../img/manu.jpeg'
+
 
 
 const AboutUs = () => {
@@ -30,7 +33,7 @@ const AboutUs = () => {
             <div className="card-group m-5 bg-black text-white">
                 <div className="card bg-black text-white mx-auto" style={{ width: "300px" }}>
                     <img
-                        src="https://media.admagazine.com/photos/637d11a6e63c8afac40e7a01/16:9/w_2560%2Cc_limit/1442809583"
+                        src={manu}
                         className="card-img-top rounded-circle"
                         alt="..."
                         style={{ width: "300px", height: "300px", objectFit: "cover" }}
@@ -66,7 +69,7 @@ const AboutUs = () => {
                 </div>
                 <div className="card bg-black text-white mx-auto" style={{ width: "300px" }}>
                     <img
-                        src="https://www.baenegocios.com/__export/1653671011341/sites/cronica/img/2022/05/27/mbappe.jpeg_651172604.jpeg"
+                        src={julio}
                         className="card-img-top rounded-circle"
                         alt="..."
                         style={{ width: "300px", height: "300px", objectFit: "cover" }}

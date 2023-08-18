@@ -35,10 +35,13 @@ const EditProductForm = ({ isOpen, onClose, product_id , setProduct}) => {
             ),
            
         }
-        actions.editProduct(product_id,product).then((res) => {
+        actions
+        .editProduct(product_id,product).then((res) => {
             setProduct(res)
             onClose()})
-        console.log(selectedCategory)
+        .then((res)=>actions.showNotification("Success product update","success")
+        .catch((err)=>actions.showNotification("Error, product not updated","danger"))
+        )
     }
 
     const handleCategoryChange = (event) => {
@@ -204,13 +207,13 @@ const EditProductForm = ({ isOpen, onClose, product_id , setProduct}) => {
                                 </div>
                             
 
-                            <div className='col-6 p-4'>
-                            <button type='submit' className='ms-3 btn btn-dark'>
+                            <div className='col-6 '>
+                            <button type='submit' className='ms-3 mt-2 btn btn-dark'>
                                 Submit
                             </button>
                             <button
                         type="button"
-                        className="btn btn-danger add ms-2"
+                        className="btn btn-danger mt-2 add ms-3"
                         data-bs-dismiss="modal"
                         onClick={onClose}
                     >

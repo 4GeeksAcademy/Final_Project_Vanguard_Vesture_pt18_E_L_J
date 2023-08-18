@@ -23,7 +23,10 @@ const UserOrders = () => {
   )
 
   useEffect(() => {
-    actions.getOrdersUser().finally(() => setIsLoading(false))
+    actions
+    .getOrdersUser().finally(() => setIsLoading(false))
+    .then((res)=>actions.showNotification("Orders Loaded","success")
+    )
   }, [])
 
   return (

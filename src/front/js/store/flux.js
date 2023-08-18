@@ -34,6 +34,10 @@ const getState = ({ getStore, getActions, setStore }) => {
         logo: '',
         favicon: '',
       },
+      response: {
+        type: "",
+        message: ""
+      }
     },
     actions: {
       login: async (email, password) => {
@@ -42,6 +46,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         setStore({ user: data.user, token: data.token })
         actions.getFavorites()
         if (!data.user.is_admin) localStorage.setItem('myToken', data.token)
+        return data
       },
       signup: async (
         email,
@@ -61,8 +66,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           location,
           address
         )
-        console.log(response)
-        console.log('Succefully created user')
         return response
       },
 
@@ -316,9 +319,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       cancelOrder: async (orderID) => {
         const response = await api.cancelOrder(orderID, getStore().token)
-        alert(
-          'Order cancelled successfully. Refund is being processed, if you have any doubt contact us via email or chat'
-        )
         return response
       },
       getAllOrdersByStatus: async (status) => {
@@ -341,6 +341,9 @@ const getState = ({ getStore, getActions, setStore }) => {
         )
         return response
       },
+      showNotification: async (message, type) => {
+        setStore({ response: { message, type } })
+      }
     },
   }
 }

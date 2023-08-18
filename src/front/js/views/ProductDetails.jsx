@@ -34,7 +34,7 @@ const ProductDetails = () => {
         if (error.response.status === 404) navigate('/404')
         else {
           showError(true)
-          console.log(error)
+          actions.showNotification("Product not found", "danger")
         }
       })
   }, [id])
@@ -69,7 +69,10 @@ const ProductDetails = () => {
           <button onClick={openModal} type='button' className='btn btn-outline-secondary'>
             <i className='fa-solid fa-pen-to-square'></i>
           </button>
-          <button onClick={() => actions.deleteProduct(id)} type='button' className='btn btn-danger'>
+          <button onClick={() => actions
+            .deleteProduct(id)
+            .then((res) => actions.showNotification("Product deleted", "success"))
+          } type='button' className='btn btn-danger'>
             <i className='fa-solid fa-trash'></i>
           </button>
         </div>
@@ -202,14 +205,17 @@ const ProductDetails = () => {
 
         {/* Buttons */}
         <div className='d-flex flex-wrap gap-2'>
-          {!store.user.is_admin && (
+          {!store.user.is_admin && store.token && (
             <>
               <button
                 type='button'
                 className='btn btn-outline-dark'
                 onClick={() => {
-                  if (!selectedSizeID) return
-                  actions.postShoppingCart(product.id, quantity, selectedSizeID)
+                  selectedSizeID == null ? actions.showNotification("Error, select a size", "danger")
+                    :
+                    actions
+                      .postShoppingCart(product.id, quantity, selectedSizeID)
+                      .then((res) => actions.showNotification("Successfuly added to cart", "success"))
                 }}
               >
                 Add to cart
@@ -224,7 +230,10 @@ const ProductDetails = () => {
                 Buy now
               </button>
               <button
-                onClick={() => actions.postFavorites(product.id)}
+                onClick={() => actions
+                  .postFavorites(product.id)
+                  .then((res) => actions.showNotification("Favorited added", "success"))
+                }
                 className={`btn bg-black ${store.favorites.some((favorite) => favorite.id === product.id)
                   ? 'text-danger'
                   : 'text-white'

@@ -33,7 +33,10 @@ const CancelOrderModal = ({ setOrder, orderID }) => {
               onClick={() => {
                 actions
                   .cancelOrder(orderID)
-                  .then((newOrder) => setOrder(newOrder))
+                  .then((newOrder) => {
+                    setOrder(newOrder)
+                    actions.showNotification("Order cancelled successfully. Refund is being processed, if you have any doubt contact us via email or chat", "success")
+                  })
               }}
             >
               Yes, cancel

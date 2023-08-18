@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Context } from '../store/appContext.js'
 import logo from '../../img/logo.png'
@@ -13,10 +13,12 @@ const Navbar = () => {
   }, [store.token])
 
   function handleLogout() {
-    actions.logout()
+    actions
+      .logout()
+      actions.showNotification("logout successful", "success")
   }
 
-  
+
 
   return (
     <nav className='navbar navbar-dark bg-black '>
@@ -29,7 +31,7 @@ const Navbar = () => {
           />
           {store.token && (
             <>
-           
+
             </>
           )}
         </Link>
@@ -52,7 +54,7 @@ const Navbar = () => {
                   <i className='fa-sharp text-white fa-solid fa-heart'></i>
                 </a>
                 <ul
-                  style={{ width: '200px' }}
+                  style={{ width: '220px' }}
                   className='dropdown-menu bg-black text-white rounded'
                   aria-labelledby='favoritesDropdown'
                 >
@@ -62,7 +64,7 @@ const Navbar = () => {
                   {store.favorites.map((product) => (
                     <li
                       key={product.id}
-                      className='d-flex justify-content-between p-3 align-items-center'
+                      className='d-flex justify-content-between p-3'
                     >
                       <Link
                         className='text-white text-decoration-none d-flex align-items-center'
@@ -79,10 +81,13 @@ const Navbar = () => {
                             alt=''
                           />
                         </div>
-                        <span className='ms-2 flex-grow-1'>{product.name}</span>
+                        <span className='ms-2'>{product.name}</span>
                       </Link>
                       <i
-                        onClick={() => actions.deleteFavorites(product.id)}
+                        onClick={() => actions
+                          .deleteFavorites(product.id)
+                          .then((res) => actions.showNotification("Favorite deleted", "success"))
+                        }
                         className='fa-solid fa-xmark btn'
                         style={{ color: '#eb000c' }}
                       ></i>
@@ -113,12 +118,12 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                 <li className='nav-item' style={{maxWidth:"90px",overflow:"hidden"}}>
-                    
+                  <li className='nav-item' style={{ maxWidth: "90px", overflow: "hidden" }}>
+
                     <span className='nav-item text-white h6'>
-                         Hi, {store.user.first_name.toUpperCase()}
+                      Hi, {store.user.first_name.toUpperCase()}
                     </span>
-                   
+
                   </li>
                   <li className='nav-item'>
                     <span

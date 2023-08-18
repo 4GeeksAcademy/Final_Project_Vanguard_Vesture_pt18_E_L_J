@@ -59,13 +59,15 @@ const ProductCard = ({ product }) => {
           <button
             onClick={() => navigate(`/product/${product.id}`)}
             className='btn btn-light p-1 m-3'
-            // style={{maxWidth:"30px"}}
           >
             Details
           </button>
 
           <button
-            onClick={() => actions.postFavorites(product.id)}
+            onClick={() => actions
+              .postFavorites(product.id)
+              .then((res)=>actions.showNotification("Favorite added","success"))
+            }
             className={`btn bg-white m-3 ${
               store.favorites.some((favorite) => favorite.id === product.id)
                 ? 'text-danger'

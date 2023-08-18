@@ -32,10 +32,10 @@ const Cart = () => {
     const shoppingCart = store.shopping_cart
 
     for (const item of shoppingCart) {
-      await actions.deleteShoppingCart(item.product.id, item.size.id)
+      await actions
+      .deleteShoppingCart(item.product.id, item.size.id)
+      .then((res)=>actions.showNotification("Shopping cart deleted","success"))
     }
-
-    console.log('Cart cleared')
   }
 
   return (
