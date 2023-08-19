@@ -14,6 +14,8 @@ const NewProduct = () => {
   const [selectedCategory, setSelectedCategory] = useState(1)
   const [images, setImages] = useState([])
   const [sizes, setSizes] = useState([])
+  const [sizesValue, setSizesValue] = useState(0)
+
 
   useEffect(() => {
     setSizes(store.sizes[CATEGORIES[selectedCategory]])
@@ -38,7 +40,8 @@ const NewProduct = () => {
       ),
       images,
     }
-    images.length == 0 ? actions.showNotification("The image is needed", "danger") :
+    images.length == 0 ? actions.showNotification("The product image is needed", "danger") :
+    (sizes === []) || (sizesValue === 0 ) ? actions.showNotification("The product must have a size assigned","danger") :
       actions.addNewProduct(product).then((res) => {
         navigate(`/product/${res.id}`)
         actions.showNotification("New product created", "success")
@@ -57,6 +60,7 @@ const NewProduct = () => {
       return size
     })
     setSizes(newSizes)
+    setSizesValue(sizesValue + 1)
   }
 
   const handleOnDragStart = (event, image) => {
