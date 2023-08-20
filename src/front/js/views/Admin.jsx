@@ -14,8 +14,8 @@ const Admin = () => {
   const handleUploadImage = (event) => {
     event.preventDefault()
     const location = event.target.location.value
-    if (!location) return alert('Please select a location')
-    if (!image) return alert('Please upload an image')
+    if (!location) return actions.showNotification("Please,select a location","danger")
+    if (!image) return actions.showNotification("Please upload an image","danger")
     actions
   .updateAppImage(location, image)
   .then((res)=>{actions.showNotification("Image uploaded","success")

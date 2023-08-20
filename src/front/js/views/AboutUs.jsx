@@ -1,6 +1,7 @@
 import React from "react";
-import julio from '../../img/IMG_6953.png'
-import manu from '../../img/manu.jpeg'
+import julio from '../../img/julio.png'
+import manu from '../../img/manu.jpg'
+import luis from '../../img/luis.jpg'
 
 
 
@@ -14,7 +15,7 @@ const AboutUs = () => {
 
                 We aim to innovate using the latest technologies such as React, Python, Flask, and JavaScript for efficient development with room for future implementations to enhance the experience."</p>
             <h1 className="pb-3" style={{ display: "flex", justifyContent: "center" , fontStyle: "italic",fontFamily: 'Helvetica' }}>Where to find us</h1>
-            <div className="container" style={{ display: "flex", justifyContent: "center" }}>
+            <div className="" style={{ display: "flex", justifyContent: "center" }}>
                 <br />
 
                 <br />
@@ -30,63 +31,115 @@ const AboutUs = () => {
             </div>
             <br />
             <h1 className="pb-3" style={{ display: "flex", justifyContent: "center", fontStyle: "italic" ,fontFamily: 'Helvetica'}}>Who worked on this project?</h1>
-            <div className="card-group m-5 bg-black text-white">
-                <div className="card bg-black text-white mx-auto" style={{ width: "300px" }}>
-                    <img
-                        src={manu}
-                        className="card-img-top rounded-circle"
-                        alt="..."
-                        style={{ width: "300px", height: "300px", objectFit: "cover" }}
-                    />
-                    <div className="card-body">
-                        <h5 className="card-title text-center">Emmanuel Vargas</h5>
-                        <p className="card-text text-center">
-                            From Uruguay & 4Geeks Academy
-                        </p>
-                        <a className="text-muted" href="https://github.com/EmmanuelV22" target="_blank" rel="noopener noreferrer" >
-                            <p className="card-text text-center">
-                                <span className="text-muted text-white text-center">https://github.com/EmmanuelV22</span>
-                            </p>
-                        </a>
-                    </div>
-                </div>
-                <div className="card bg-black text-white mx-auto" style={{ width: "300px" }}>
-                    <img
-                        src="https://www.lanacion.com.ar/resizer/ULc2AF1qUigN2EWOfU2mn0KsqPw=/420x280/smart/filters:format(webp):quality(70)/cloudfront-us-east-1.images.arcpublishing.com/lanacionar/UIKEOAARJ5EDLCU32KTDICNHKA.jpg"
-                        className="card-img-top rounded-circle"
-                        alt="..."
-                        style={{ width: "300px", height: "300px", objectFit: "cover" }}
-                    />
-                    <div className="card-body">
-                        <h5 className="card-title text-center">Luis Vela</h5>
-                        <p className="card-text text-center">From Venezuela & 4Geeks Academy</p>
-                        <a className="text-muted" href="https://github.com/luismvl" target="_blank" rel="noopener noreferrer">
-                            <p className="card-text text-center">
-                                <span className="text-muted text-center">https://github.com/luismvl</span>
-                            </p>
-                        </a>
-                    </div>
-                </div>
-                <div className="card bg-black text-white mx-auto" style={{ width: "300px" }}>
-                    <img
-                        src={julio}
-                        className="card-img-top rounded-circle"
-                        alt="..."
-                        style={{ width: "300px", height: "300px", objectFit: "cover" }}
-                    />
-                    <div className="card-body">
-                        <h5 className="card-title text-center">Julio Vargas</h5>
-                        <p className="card-text text-center">
-                            From Costa Rica & 4Geeks Academy
-                        </p>
-                        <a className="text-muted" href="https://github.com/JulioV10" target="_blank" rel="noopener noreferrer">
-                            <p className="card-text text-center">
-                                <span className="text-muted text-center">https://github.com/JulioV10</span>
-                            </p>
-                        </a>
-                    </div>
-                </div>
-            </div>
+           
+
+
+            <div className="container">
+  <div className="row">
+    <div className="col-12 col-md-4 mb-4">
+      <div className="card bg-black text-white  ">
+        <div className="d-flex justify-content-center align-items-center" style={{ height: "200px" }}>
+          <div
+            className="rounded-circle overflow-hidden"
+            style={{
+              width: "200px",
+              height: "200px"
+            }}
+          >
+            <img
+              src={manu}
+              className="w-100 h-100"
+              alt="Emmanuel Vargas"
+              style={{ objectFit: "cover" , objectPosition:"center top"}}
+            />
+          </div>
+        </div>
+        <div className="card-body">
+          <h5 className="card-title text-center">Emmanuel Vargas</h5>
+          <p className="card-text text-center">From Uruguay </p>
+          <p className="card-text text-center">Full Stack Developer</p>
+          <a className="text-muted" href="https://github.com/EmmanuelV22" target="_blank" rel="noopener noreferrer">
+            <p className="card-text text-center">
+              <span className="text-muted text-white text-center">https://github.com/EmmanuelV22</span>
+            </p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div className="col-12 col-md-4 mb-4">
+      <div className="card bg-black text-white  ">
+        <div className="d-flex justify-content-center align-items-center" style={{ height: "200px" }}>
+          <div
+            className="rounded-circle overflow-hidden"
+            style={{
+              width: "200px",
+              height: "200px"
+            }}
+          >
+            <img
+              src={luis}
+              className="w-100 h-100"
+              alt="Luis Vela"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+        </div>
+        <div className="card-body">
+          <h5 className="card-title text-center">Luis Vela</h5>
+          <p className="card-text text-center">From Venezuela </p>
+          <p className="card-text text-center">Full Stack Developer</p>
+          <a className="text-muted" href="https://github.com/luismvl" target="_blank" rel="noopener noreferrer">
+            <p className="card-text text-center">
+              <span className="text-muted text-center">https://github.com/luismvl</span>
+            </p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div className="col-12 col-md-4 mb-4">
+      <div className="card bg-black text-white  ">
+        <div className="d-flex justify-content-center align-items-center" style={{ height: "200px" }}>
+          <div
+            className="rounded-circle overflow-hidden"
+            style={{
+              width: "200px",
+              height: "200px"
+            }}
+          >
+            <img
+              src={julio}
+              className="w-100 h-100"
+              alt="Julio Vargas"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+        </div>
+        <div className="card-body">
+          <h5 className="card-title text-center">Julio Vargas</h5>
+          <p className="card-text text-center">From Costa Rica </p>
+          <p className="card-text text-center">Full Stack Developer</p>
+          <a className="text-muted" href="https://github.com/JulioV10" target="_blank" rel="noopener noreferrer">
+            <p className="card-text text-center">
+              <span className="text-muted text-center">https://github.com/JulioV10</span>
+            </p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
         </div>
     );
 };

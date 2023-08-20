@@ -30,8 +30,8 @@ const Notification = () => {
     <div style={{ position: "fixed", bottom: "20px", left: "50%", transform: "translateX(-50%)", width: "70%", zIndex: "9999999" }}>
 
 
-      <div className={`alert alert-${store.response.type} fade w-100 alert-dismissible show`} role="alert">
-        {store.response.message}
+      <div className={`alert alert-${store.response.type} alert-container fade w-100 alert-dismissible show`} role="alert">
+        <h3>{store.response.message}</h3>
         <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
 

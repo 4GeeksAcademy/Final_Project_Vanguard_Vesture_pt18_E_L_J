@@ -1,4 +1,4 @@
-import React, { useContext , useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Context } from '../store/appContext'
 
@@ -24,14 +24,14 @@ const ProductCard = ({ product }) => {
 
   return (
     <div onMouseEnter={handleMouseEnter}
-    onMouseLeave={handleMouseLeave}
-    style={scaleStyle} className='text-center'>
+      onMouseLeave={handleMouseLeave}
+      style={scaleStyle} className='text-center'>
       <div
         className='card m-2 shadow-lg text-white bg-black'
         style={{ width: '300px', height: '450px', borderRadius: '20px' }}
       >
         <img
-        onClick={() => navigate(`/product/${product.id}`)}
+          onClick={() => navigate(`/product/${product.id}`)}
           src={product.images.length > 0 ? product.images[0].image_url : ''}
           className=''
           style={{
@@ -48,11 +48,11 @@ const ProductCard = ({ product }) => {
 
           <div>
             <p className='card-text'>
-              <span>Color:</span>
+              <span>Color: </span>
               {product.color}
             </p>
             <p className='card-text'>
-              <span>Price:</span> ${product.price}
+              <span>Price: </span> ${product.price}
             </p>
           </div>
 
@@ -60,21 +60,21 @@ const ProductCard = ({ product }) => {
             onClick={() => navigate(`/product/${product.id}`)}
             className='btn btn-light p-1 m-3'
           >
-            Details
+            <i className='fa-solid fa-eye p-2' style={{ color: '#000000' }}></i>
+
           </button>
 
           <button
             onClick={() => actions
               .postFavorites(product.id)
-              .then((res)=>actions.showNotification("Favorite added","success"))
+              .then((res) => actions.showNotification("Favorite added", "success"))
             }
-            className={`btn bg-white m-3 ${
-              store.favorites.some((favorite) => favorite.id === product.id)
+            className={`btn bg-white  p-1 m-3 ${store.favorites.some((favorite) => favorite.id === product.id)
                 ? 'text-danger'
                 : 'text-black'
-            }`}
+              }`}
           >
-            <strong>♥</strong>
+            <strong><h5 className='px-2'>♥</h5></strong>
           </button>
         </div>
       </div>

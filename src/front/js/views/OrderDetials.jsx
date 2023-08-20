@@ -31,7 +31,7 @@ const OrderDetials = () => {
   }, [])
 
   const handleUpdateStatus = (status) => {
-    if (order.status === status) return alert('Order already in this status')
+    if (order.status === status) return actions.showNotification("order already in this status","danger")
     actions.updateOrderStatus(order.id, status).then((order) => setOrder(order))
   }
 

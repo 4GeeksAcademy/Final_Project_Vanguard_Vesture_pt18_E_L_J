@@ -24,6 +24,9 @@ const SettingsForm = ({ isOpen, onClose }) => {
             address,
         };
         
+        (email == "") || (password == "") || (first_name == "") || (last_name == "") || (phone == "" )|| (location == "" )|| (address == "") ?  actions.showNotification("Complete all fields","danger") : 
+
+
         actions
         .editUser(user)
         .then((res)=>actions.showNotification("User updated","success"))
@@ -37,6 +40,7 @@ const SettingsForm = ({ isOpen, onClose }) => {
         setLocation('');
         setAddress('');
         onClose()
+        
     };
 
     return (

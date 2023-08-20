@@ -25,12 +25,12 @@ const CartProduct = ({ cartItem }) => {
 
   return (
     <div className='text-center mt-1 mx-auto d-flex flex-wrap gap-2 justify-content-center text-black '>
-      <div style={{ width: '100%', height: "100%" }} className='card shadow-lg'>
+      <div style={{ width: '100%', height: "100%" , maxWidth:"450px" }} className='card shadow-lg'>
         <div className='card-body  d-flex justify-content-center row'>
-          <h5 className='card-title'> {cartItem.product.name}</h5>
+          <h5  className='card-title'> {cartItem.product.name}</h5>
           <div
             style={{ width: '200px', height: "200px" }}
-            className='ms-3 rounded-circle border border-dark  overflow-hidden d-flex justify-content-center  col-2'
+            className='ms-3 rounded-circle   overflow-hidden d-flex justify-content-center  col'
           >
             <img
               style={{

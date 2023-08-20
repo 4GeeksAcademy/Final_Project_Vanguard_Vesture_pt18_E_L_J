@@ -122,6 +122,7 @@ def update_user():
     user.last_name = data.get('last_name', user.last_name)
     user.password = hashed_password.decode('utf-8')
     user.email = data.get('email', user.email)
+    user.phone = data.get('phone', user.phone)
     user.address = data.get('address', user.address)
     user.location = data.get('location', user.location)
     user.is_admin = data.get('is_admin', user.is_admin)

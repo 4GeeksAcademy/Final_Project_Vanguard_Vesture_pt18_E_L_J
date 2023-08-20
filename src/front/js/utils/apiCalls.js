@@ -188,6 +188,7 @@ export async function editCallUser(token, user) {
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
+      phone: user.phone,
       password: user.password,
       address: user.address,
       location: user.location,
