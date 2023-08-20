@@ -118,9 +118,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           product,
           getStore().token
         )
-        console.log('Succefully created product')
-        console.log(createdProduct)
-
         // Create a new list of types with the new type if it doesn't exist
         const newTypes = [
           ...getStore()[`${CATEGORIES[category_id]}_types`],
@@ -151,18 +148,13 @@ const getState = ({ getStore, getActions, setStore }) => {
         if (store.user.is_admin) return
         const response = await api.getFavorites(store.token)
         setStore({ favorites: response })
-        console.log(response)
-        console.log('Favorites upload')
         return response
       },
 
       postFavorites: async (id) => {
         const store = getStore()
         const response = await api.postFavorites(store.token, id)
-
         setStore({ favorites: response })
-        console.log(response)
-        console.log('Favorite added')
         return response
       },
 
@@ -170,8 +162,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         const store = getStore()
         const response = await api.deleteFavorites(store.token, id)
         setStore({ favorites: response })
-        console.log(response)
-        console.log('Favorite deleted')
         return response
       },
 
@@ -182,10 +172,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           size_id,
           getStore().token
         )
-
         setStore({ shopping_cart: response })
-
-        console.log('Shopping item added')
         return response
       },
 
@@ -210,8 +197,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           shopping_cart: updatedShoppingCart,
           total_cart: updatedTotalCart,
         })
-
-        console.log('Shopping item deleted')
         return response
       },
       updateCartItemQuantity: (product_id, size_id, quantity) => {
@@ -260,21 +245,18 @@ const getState = ({ getStore, getActions, setStore }) => {
       deleteUser: async () => {
         const response = await api.deleteCallUser(getStore().token)
         setStore({ user: {} })
-        console.log(response)
         getActions().logout()
         return response
       },
       editUser: async (user) => {
         const response = await api.editCallUser(getStore().token, user)
         setStore({ user: response.user })
-        return console.log(response)
       },
       deleteProduct: async (product_id) => {
         const response = await api.deleteCallProduct(
           getStore().token,
           product_id
         )
-        console.log(response)
 
         return response
       },

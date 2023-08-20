@@ -18,6 +18,18 @@ const Signup = () => {
   async function handleSubmit(e) {
     e.preventDefault()
 
+    if (
+      email === "" ||
+      password === "" ||
+      firstName === "" ||
+      lastName === "" ||
+      phone === "" ||
+      location === "" ||
+      address === ""
+    ) {
+      actions.showNotification("Complete all fields", "danger");
+    } else {
+
     actions
       .signup(
         email,
@@ -28,6 +40,9 @@ const Signup = () => {
         location,
         address,
       )
+
+       
+
       .then((res) =>{ navigate('/login')
       actions.showNotification(res.message,"success")
     })
@@ -36,6 +51,7 @@ const Signup = () => {
        actions.showNotification(error.message,"danger")
       })
   }
+}
 
 
 
