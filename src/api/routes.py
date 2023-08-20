@@ -128,7 +128,7 @@ def update_user():
     user.is_admin = data.get('is_admin', user.is_admin)
 
     db.session.commit()
-    return jsonify({'message': 'User midified', "user": user.serialize()}), 200
+    return jsonify({'message': 'User modified', "user": user.serialize()}), 200
 
 
 @api.route('/user/', methods=['DELETE'])
@@ -329,6 +329,16 @@ def delete_product(product_id):
     if product is None:
         raise APIException(message='Product not found', status_code=404)
     product.deleted = True
+    # Removes product from favorites, carts and ratings
+    favorites = db.session.query(User).filter(User.favorites.any(id=product_id)).all()
+    for user in favorites:
+        user.favorites.remove(product)
+    for user in product.shopping_carts:
+        user.shopping_cart.remove(product)
+    for rating in product.users_ratings:
+        db.session.delete(rating)
+
+
     db.session.commit()
 
     return jsonify({'message': 'Product deleted successfully'}), 200
@@ -822,8 +832,6 @@ def get_orders():
     return jsonify([o.serialize() for o in user.orders]), 200
 
 #  Admin orders
-
-
 @api.route('/orders', methods=['GET'])
 @jwt_required()
 def get_all_orders():
@@ -861,6 +869,13 @@ def cancel_order(order_id):
     if order.status != 'in progress':
         raise APIException(message='Order cannot be canceled', status_code=400)
     order.status = 'canceled'
+
+    # Increase the stock of each product
+    for order_item in order.order_items:
+        product_size_stock = ProductSizeStock.query.filter_by(
+            product=order_item.product, size=order_item.size).first()
+        product_size_stock.stock += order_item.quantity
+
     db.session.commit()
     return jsonify(order.serialize()), 200
 

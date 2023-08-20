@@ -127,19 +127,6 @@ def generate_error_message(error_text):
     return f'<{key_text}> {text}'
 
 def save_new_product(request_body):
-    required_values = ['name', 'price', 'category_id']
-    missing_values = []
-    for key in required_values:
-        if key not in request_body:
-            missing_values.append(key)
-    
-    if len(missing_values) > 0:
-        raise APIException(
-            message=f'Missing value for: {", ".join(missing_values)}', status_code=422, 
-            payload={'missing_values': missing_values}
-        )
-    
-    
     product = Product(name=request_body['name'], price=request_body['price'],
         description=request_body.get('description'), color=request_body.get('color'), category_id=request_body['category_id'],
         type=request_body.get('type')
@@ -203,6 +190,7 @@ def update_category_by_id(id, request_body):
         if key in request_body:
             setattr(category, key, request_body[key])
 
+    # TODO: refactorizar esto
     try:
         db.session.commit()
     except exc.IntegrityError as e:

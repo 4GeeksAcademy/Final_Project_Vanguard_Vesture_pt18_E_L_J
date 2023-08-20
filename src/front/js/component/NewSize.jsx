@@ -1,11 +1,16 @@
 import React, { useState, useContext } from 'react'
 import { Context } from '../store/appContext.js'
 
-const NewSize = ({ setSizes, selectedCategory }) => {
+const NewSize = ({ selectedCategory }) => {
   const [newSizeName, setNewSizeName] = useState('')
   const { actions } = useContext(Context)
 
   const handleCreateSize = () => {
+    if (!newSizeName) {
+      actions.showNotification('Please enter a size name', 'danger')
+      return
+    }
+
     actions
       .createSize(newSizeName, selectedCategory)
       .then((res) => setNewSizeName(''))
