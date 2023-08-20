@@ -4,6 +4,7 @@ For routes that require auth must use `Authorizarion` header with this format: `
 
 All routes url start with `/api/`
 
+
 ## Table of contents
 
 - [Models](#models)
