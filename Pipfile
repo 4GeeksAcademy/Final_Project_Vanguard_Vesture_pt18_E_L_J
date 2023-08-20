@@ -18,6 +18,12 @@ gunicorn = "*"
 cloudinary = "*"
 flask-admin = "*"
 typing-extensions = "*"
+bcrypt = "*"
+pyjwt = "==2.3.0"
+flask-jwt-extended = "*"
+flask-bcrypt = "*"
+flask-jwt = "*"
+requests = "*"
 
 [requires]
 python_version = "3.10"

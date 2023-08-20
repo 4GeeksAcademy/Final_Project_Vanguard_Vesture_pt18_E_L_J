@@ -1,0 +1,41 @@
+.customFileUpload {
+  height: 100px;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cacaca;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+  box-shadow: 0px 48px 35px -48px rgba(0, 0, 0, 0.1);
+}
+
+.customFileUpload .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.customFileUpload .icon i {
+  color: rgba(75, 85, 99, 1);
+  font-size: 30px;
+}
+
+.customFileUpload .text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.customFileUpload .text span {
+  font-weight: 400;
+  color: rgba(75, 85, 99, 1);
+}
+
+.customFileUpload input {
+  display: none;
+}

@@ -1,0 +1,44 @@
+import React, { useContext, useState, useEffect } from 'react'
+import { Context } from '../store/appContext'
+
+const Notification = () => {
+  const { actions, store } = useContext(Context)
+
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (store.response.type !== '' && store.response.message !== '') {
+      setIsVisible(true);
+
+      const timeout = setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [store.response]);
+
+  if (!isVisible) {
+    return null;
+  }
+
+  if (!isVisible) {
+    return null;
+  }
+
+  return (
+    <div style={{ position: "fixed", bottom: "20px", left: "50%", transform: "translateX(-50%)", width: "70%", zIndex: "9999999" }}>
+
+
+      <div className={`alert d-flex gap-2 align-items-center alert-${store.response.type} alert-container fade w-100 alert-dismissible show`} role="alert">
+      <i className={`fa-solid fa-circle-info h3 text-${store.response.type} `}></i> <h3>{store.response.message}</h3>
+        <button type="button" className="btn-close justify-self-end" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+
+
+    </div>
+  )
+}
+
+export default Notification

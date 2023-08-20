@@ -1,0 +1,15 @@
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+}
+
+#app {
+    min-height: 100vh;
+}
+
+#content > div {
+    flex-grow: 1;
+}

@@ -1,0 +1,18 @@
+.hover:hover {
+    background-color: #f1f1f1;
+}
+
+.selected {
+    background-color: #f1f1f1;
+    border-width: 2px !important;
+}
+
+.stockText {
+    font-size: 12px;
+}
+
+@media (min-width: 576px) {
+    .stockText {
+        font-size: 16px;
+    }
+}
