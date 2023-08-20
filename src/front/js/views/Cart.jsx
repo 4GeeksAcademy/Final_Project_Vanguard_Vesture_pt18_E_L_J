@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import CartProduct from '../component/CartProduct.jsx'
 import PaymentComponent from '../component/PaymentComponent.jsx'
-
+import { Navigate } from 'react-router-dom'
 import { Context } from '../store/appContext.js'
 
 const Cart = () => {
   const { actions, store } = useContext(Context)
   const user = store.user
-
+  if (store.user.is_admin) return <Navigate to='/' />
   const [useProfileInfo, setUseProfileInfo] = useState(false)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')

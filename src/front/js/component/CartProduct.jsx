@@ -21,7 +21,7 @@ const CartProduct = ({ cartItem }) => {
     navigate(`/product/${cartItem.product.id}`)
   }
 
-  console.log(cartItem)
+ 
 
   return (
     <div className='text-center mt-1 mx-auto d-flex flex-wrap gap-2 justify-content-center text-black '>

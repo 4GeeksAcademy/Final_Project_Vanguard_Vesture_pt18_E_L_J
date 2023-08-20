@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
-
 import { Context } from '../store/appContext.js'
-
+import { Navigate } from 'react-router-dom'
 import Loader from '../component/Loader.jsx'
 import SizesSelector from '../component/SizesSelector.jsx'
 import PaymentComponent from '../component/PaymentComponent.jsx'
@@ -14,7 +13,7 @@ const CheckoutProduct = () => {
   const [quantity, setQuantity] = useState(1)
   const [selectedSizeID, setSelectedSizeID] = useState(null)
   const [product, setProduct] = useState(null)
-
+  if (store.user.is_admin) return <Navigate to='/' />
   const [useProfileInfo, setUseProfileInfo] = useState(false)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
