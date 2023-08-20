@@ -26,14 +26,11 @@ const ProductDetails = () => {
   }
 
   const handleDelete = () => {
-    actions
-      .deleteProduct(id)
-      .then(() => {
-        navigate('/');
-        actions.showNotification("Product deleted", "success");
-      });
+    actions.deleteProduct(id).then(() => {
+      navigate('/clothes')
+      actions.showNotification('Product deleted', 'success')
+    })
   }
-  
 
   useEffect(() => {
     actions
@@ -43,7 +40,7 @@ const ProductDetails = () => {
         if (error.response.status === 404) navigate('/404')
         else {
           showError(true)
-          actions.showNotification("Product not found", "danger")
+          actions.showNotification('Product not found', 'danger')
         }
       })
   }, [id])
@@ -57,7 +54,7 @@ const ProductDetails = () => {
   if (!product) return <Loader />
 
   return (
-    <div className='bg-white p-3 bg-white'>
+    <div className='container bg-white p-3 bg-white'>
       <div className='row justify-content-between py-3'>
         <h1 className='col-5 m-0'>{product.name}</h1>
         <div className='col-5 d-flex flex-column align-items-end'>
@@ -162,8 +159,8 @@ const ProductDetails = () => {
         </div>
       </div>
       {/* End carousel */}
-      <div className="row container-fluid">
-        <div className=" ms-3 col-7">
+      <div className='row container-fluid'>
+        <div className=' ms-3 col-7'>
           <h3 className='my-3'>Description</h3>
           <p>{product.description}</p>
         </div>
@@ -177,7 +174,7 @@ const ProductDetails = () => {
           />
           {/* End sizes */}
         </div>
-        <div className="col-12 mt-3 d-flex justify-content-center">
+        <div className='col-12 mt-3'>
           {/* Quantity */}
           <h3 className='mt-3'>Quantity</h3>
           <div className='d-flex align-items-center gap-2'>
@@ -201,7 +198,10 @@ const ProductDetails = () => {
             />
             <button
               onClick={() => {
-                if (!selectedSizeID) return
+                if (!selectedSizeID) {
+                  actions.showNotification('Please select a size', 'danger')
+                  return
+                }
                 const sizeStock = product.sizes_stock.find(
                   (s) => s.id === selectedSizeID
                 ).stock
@@ -228,11 +228,16 @@ const ProductDetails = () => {
                 type='button'
                 className='btn btn-outline-dark'
                 onClick={() => {
-                  selectedSizeID == null ? actions.showNotification("Error, select a size", "danger")
-                    :
-                    actions
-                      .postShoppingCart(product.id, quantity, selectedSizeID)
-                      .then((res) => actions.showNotification("Successfuly added to cart", "success"))
+                  selectedSizeID == null
+                    ? actions.showNotification('Error, select a size', 'danger')
+                    : actions
+                        .postShoppingCart(product.id, quantity, selectedSizeID)
+                        .then((res) =>
+                          actions.showNotification(
+                            'Successfuly added to cart',
+                            'success'
+                          )
+                        )
                 }}
               >
                 Add to cart
@@ -247,15 +252,18 @@ const ProductDetails = () => {
                 Buy now
               </button>
               <button
-                onClick={() => actions
-                  .postFavorites(product.id)
-                  .then((res) => actions.showNotification("Favorited added", "success"))
+                onClick={() =>
+                  actions
+                    .postFavorites(product.id)
+                    .then((res) =>
+                      actions.showNotification('Favorited added', 'success')
+                    )
                 }
-                className={`btn bg-black ${store.favorites.some((favorite) => favorite.id === product.id)
-                  ? 'text-danger'
-                  : 'text-white'
-                  }`}
-
+                className={`btn bg-black ${
+                  store.favorites.some((favorite) => favorite.id === product.id)
+                    ? 'text-danger'
+                    : 'text-white'
+                }`}
               >
                 <strong>♥</strong>
               </button>

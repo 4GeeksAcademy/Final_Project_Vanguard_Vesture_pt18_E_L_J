@@ -48,7 +48,7 @@ const CheckoutProduct = () => {
       <div className='d-flex gap-3 align-items-center mb-3'>
         <h2 className='m-0'>{product.name}</h2>
         <span className='badge bg-secondary ms-1 fs-5'>
-          ${product.price.toLocaleString('en-US')} c/u
+          ${product.price.toLocaleString('en-US')} each
         </span>
       </div>
 

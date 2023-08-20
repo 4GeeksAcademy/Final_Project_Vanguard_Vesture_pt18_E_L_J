@@ -14,8 +14,6 @@ const NewProduct = () => {
   const [selectedCategory, setSelectedCategory] = useState(1)
   const [images, setImages] = useState([])
   const [sizes, setSizes] = useState([])
-  const [sizesValue, setSizesValue] = useState(0)
-
 
   useEffect(() => {
     setSizes(store.sizes[CATEGORIES[selectedCategory]])
@@ -27,6 +25,8 @@ const NewProduct = () => {
 
   const handleUploadImage = (event) => {
     event.preventDefault()
+    // Sizes that have stock > 0 and belong to the selected category
+    const sizes_stock = sizes.filter((s) => Boolean(s.stock))
     const product = {
       name: event.target.name.value,
       price: event.target.price.value,
@@ -35,17 +35,26 @@ const NewProduct = () => {
       type: event.target.type.value,
       category_id: selectedCategory,
       // Sizes that have stock > 0 and belong to the selected category
-      sizes_stock: sizes.filter((s) =>
-        Boolean(s.stock)
-      ),
+      sizes_stock,
       images,
     }
-    images.length == 0 ? actions.showNotification("The product image is needed", "danger") :
-    (sizes === []) || (sizesValue === 0 ) ? actions.showNotification("The product must have a size assigned","danger") :
-      actions.addNewProduct(product).then((res) => {
-        navigate(`/product/${res.id}`)
-        actions.showNotification("New product created", "success")
-      })
+    if (images.length == 0) {
+      actions.showNotification('Please add at least one image', 'danger')
+      return
+    }
+
+    if (sizes_stock.length == 0) {
+      actions.showNotification(
+        'Please add at least one size with stock',
+        'danger'
+      )
+      return
+    }
+
+    actions.addNewProduct(product).then((res) => {
+      navigate(`/product/${res.id}`)
+      actions.showNotification('New product created', 'success')
+    })
   }
 
   const handleCategoryChange = (event) => {
@@ -60,7 +69,6 @@ const NewProduct = () => {
       return size
     })
     setSizes(newSizes)
-    setSizesValue(sizesValue + 1)
   }
 
   const handleOnDragStart = (event, image) => {

@@ -24,9 +24,9 @@ const UserOrders = () => {
 
   useEffect(() => {
     actions
-    .getOrdersUser().finally(() => setIsLoading(false))
-    .then((res)=>actions.showNotification("Orders Loaded","success")
-    )
+      .getOrdersUser()
+      .finally(() => setIsLoading(false))
+      .then((res) => actions.showNotification('Orders Loaded', 'success'))
   }, [])
 
   return (
@@ -37,6 +37,11 @@ const UserOrders = () => {
         {sortedOrders.map((order, index) => (
           <OrderCard key={order.id} order={order} />
         ))}
+        {sortedOrders.length === 0 && !isLoading && (
+          <div className='text-center'>
+            <h3>You have no orders yet</h3>
+          </div>
+        )}
       </div>
     </div>
   )
