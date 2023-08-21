@@ -333,8 +333,8 @@ def delete_product(product_id):
     favorites = db.session.query(User).filter(User.favorites.any(id=product_id)).all()
     for user in favorites:
         user.favorites.remove(product)
-    for user in product.shopping_carts:
-        user.shopping_cart.remove(product)
+    for cart_item in product.shopping_carts:
+        db.session.delete(cart_item)
     for rating in product.users_ratings:
         db.session.delete(rating)
 
