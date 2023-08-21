@@ -28,10 +28,15 @@ if db_url is not None:
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
 
-app.config['SQLALCHEMY_POOL_SIZE'] = 1
-app.config['SQLALCHEMY_MAX_OVERFLOW'] = 0
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_POOL_SIZE'] = 1
+# app.config['SQLALCHEMY_MAX_OVERFLOW'] = 0
+
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_size': 1,
+    'max_overflow': 0
+}
+
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
