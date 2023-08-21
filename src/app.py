@@ -30,11 +30,6 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    'pool_size': 1,
-    'max_overflow': 0
-}
-
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
