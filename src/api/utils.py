@@ -1,6 +1,6 @@
 from flask import jsonify, url_for
 from sqlalchemy import exc
-from src.api.models import db, Category, Product, User, Size, ProductSizeStock, AppImage
+from api.models import db, Category, Product, User, Size, ProductSizeStock, AppImage
 import re
 import os
 import requests
