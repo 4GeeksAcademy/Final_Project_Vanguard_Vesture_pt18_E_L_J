@@ -2,11 +2,11 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint, Response
-from src.api.models import db, User, Product, Order, OrderItem, Category, Size, ShoppingCart, ProductSizeStock, ProductsRating, ProductImage, AppImage
-from src.api.utils import generate_sitemap, APIException
-from src.api.utils import save_new_product, update_product_by_id, update_category_by_id
-from src.api.utils import check_is_admin_by_user_id
-from src.api.utils import generate_paypal_access_token, handle_paypal_response
+from api.models import db, User, Product, Order, OrderItem, Category, Size, ShoppingCart, ProductSizeStock, ProductsRating, ProductImage, AppImage
+from api.utils import generate_sitemap, APIException
+from api.utils import save_new_product, update_product_by_id, update_category_by_id
+from api.utils import check_is_admin_by_user_id
+from api.utils import generate_paypal_access_token, handle_paypal_response
 import bcrypt
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity

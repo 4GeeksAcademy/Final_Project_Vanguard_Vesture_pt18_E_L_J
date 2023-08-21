@@ -6,13 +6,13 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-flask = "2.2.5"
+flask = "==2.2.5"
 sqlalchemy = "==1.4.46"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-swagger = "*"
 psycopg2-binary = "*"
-python-dotenv = "*"
+python-dotenv = "==0.21.1"
 flask-cors = "*"
 gunicorn = "*"
 cloudinary = "*"
