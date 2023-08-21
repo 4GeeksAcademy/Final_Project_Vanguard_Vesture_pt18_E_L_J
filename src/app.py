@@ -18,7 +18,7 @@ static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
-app.config["JWT_SECRET_KEY"] = "wewRe1lpRaJlSpi!lqEr"
+app.config["FLASK_APP_KEY"] = os.getenv("FLASK_APP_KEY")
 jwt = JWTManager(app)
 
 # database condiguration
