@@ -81,9 +81,16 @@ const ProductDetails = () => {
 
   return (
     <div className='container bg-white p-3 bg-white'>
-      <div className='row justify-content-between py-3'>
-        <h1 className='col-5 m-0'>{product.name}</h1>
-        <div className='col-5 d-flex flex-column align-items-end'>
+      <div className='row py-3'>
+        {product.deleted && (
+          <div className='col-12 text-danger text-center'>
+            <h3 className='my-3'>This product is not available anymore</h3>
+          </div>
+        )}
+
+        <h1 className='col-6 m-0'>{product.name}</h1>
+
+        <div className='col-6 d-flex flex-column align-items-end'>
           <Rating
             name='product-rating'
             value={rating}
@@ -248,7 +255,7 @@ const ProductDetails = () => {
 
         {/* Buttons */}
         <div className='d-flex flex-wrap gap-2'>
-          {!store.user.is_admin && store.token && (
+          {!store.user.is_admin && store.token && !product.deleted && (
             <>
               <button
                 type='button'
