@@ -118,7 +118,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <li className='nav-item' style={{ maxWidth: "90px", overflow: "hidden" }}>
+                  <li className='nav-item' style={{ maxWidth: "128px", overflow: "hidden" }}>
 
                     <span className='nav-item text-white h6'>
                       Hi, {store.user.first_name.toUpperCase()}
