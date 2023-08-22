@@ -151,8 +151,6 @@ def update_product_by_id(id, request_body):
     
     for key in product.__dict__.keys():
         if key in request_body:
-            if key == 'price':
-                continue
             setattr(product, key, request_body[key])
             
     if request_body.get('sizes_stock') is not None:

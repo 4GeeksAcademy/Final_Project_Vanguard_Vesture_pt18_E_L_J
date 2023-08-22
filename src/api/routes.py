@@ -116,11 +116,16 @@ def update_user():
     if not user:
         return jsonify({'message': 'User not found'}), 404
     data = request.json
-    hashed_password = bcrypt.hashpw(
-        data['password'].encode('utf-8'), bcrypt.gensalt())
+
+    if 'password' in data and data['password']:
+        hashed_password = bcrypt.hashpw(
+            data['password'].encode('utf-8'), bcrypt.gensalt())
+        user.password = hashed_password.decode('utf-8')
+
+
+    
     user.first_name = data.get('first_name', user.first_name)
     user.last_name = data.get('last_name', user.last_name)
-    user.password = hashed_password.decode('utf-8')
     user.email = data.get('email', user.email)
     user.phone = data.get('phone', user.phone)
     user.address = data.get('address', user.address)
@@ -351,6 +356,26 @@ def get_product_rating(product_id):
         raise APIException(message='Product not found', status_code=404)
     return jsonify(product.serialize_rating()), 200
 
+# Checks if a user can rate a product. A user can rate a product if he has a completed order with the product
+@api.route('/products/<int:product_id>/can-rate', methods=['GET'])
+@jwt_required()
+def can_rate_product(product_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    product = Product.query.get(product_id)
+    if product is None:
+        raise APIException(message='Product not found', status_code=404)
+
+    # chekcs is the user have a completed order with the product
+    for order in user.orders:
+        if order.status != 'completed':
+            continue
+        for order_item in order.order_items:
+            if order_item.product.id == product_id:
+                return jsonify({'can_rate': True}), 200
+
+    return jsonify({'can_rate': False}), 200
+
 
 @api.route('/products/<int:product_id>/rating', methods=['POST'])
 @jwt_required()
@@ -364,49 +389,32 @@ def create_product_rating(product_id):
 
     if request_body.get('rating') is None:
         raise APIException(message='Rating is required', status_code=422)
+    if request_body['rating'] < 0 or request_body['rating'] > 5:
+        raise APIException(
+            message='Rating must be between 0 and 5', status_code=422)
 
-    # check if rating already exists
-    for rating in product.users_ratings:
-        if rating.user_id == current_user_id:
-            raise APIException(
-                message='You already rated this product', status_code=400)
+    # check if rating already exists and updates it
+    rating = ProductsRating.query.filter_by(user=user, product=product).first()
+    if rating is not None:
+        rating.rating = request_body['rating']
+        db.session.commit()
+        return jsonify(product.serialize()), 200
 
     # chekcs is the user have a completed order with the product
     for order in user.orders:
         if order.status != 'completed':
             continue
-        for order_item in order.products:
+        for order_item in order.order_items:
             if order_item.product.id == product_id:
-                rating = ProductsRating(
+                new_rating = ProductsRating(
                     user=user, product=product, rating=request_body['rating'])
-                db.session.add(rating)
+                db.session.add(new_rating)
                 db.session.commit()
-                return jsonify(rating.serialize()), 200
+                return jsonify(product.serialize()), 200
 
     raise APIException(
         message='You need to buy the product to rate it', status_code=400)
 
-
-@api.route('/products/<int:product_id>/rating', methods=['PUT'])
-@jwt_required()
-def update_product_rating(product_id):
-    request_body = request.get_json()
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-    product = Product.query.get(product_id)
-    if product is None:
-        raise APIException(message='Product not found', status_code=404)
-    if request_body.get('rating') is None:
-        raise APIException(message='Rating is required', status_code=422)
-
-    rating = ProductsRating.query.filter_by(user=user, product=product).first()
-    if rating is None:
-        raise APIException(
-            message='You need to rate the product first', status_code=400)
-
-    rating.rating = request_body['rating']
-    db.session.commit()
-    return jsonify(rating.serialize()), 200
 
 
 @api.route('/products/<int:product_id>/rating', methods=['DELETE'])
