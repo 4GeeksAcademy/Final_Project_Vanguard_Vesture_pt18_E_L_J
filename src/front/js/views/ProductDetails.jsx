@@ -13,8 +13,9 @@ const ProductDetails = () => {
   const [selectedSizeID, setSelectedSizeID] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [rating, setRating] = useState(0)
-  const { id } = useParams()
   const [isOpen, setOpen] = useState(false)
+  const [canVote, setCanVote] = useState(false)
+  const { id } = useParams()
   const navigate = useNavigate()
 
   const openModal = () => {
@@ -31,6 +32,31 @@ const ProductDetails = () => {
       actions.showNotification('Product deleted', 'success')
     })
   }
+
+  const handleRate = (event, newValue) => {
+    if (!store.token) {
+      actions.showNotification('You must be logged in to rate', 'danger')
+      return
+    }
+    if (!canVote) {
+      actions.showNotification('You have to buy a product to rate it', 'danger')
+      return
+    }
+
+    actions.rateProduct(id, newValue).then((res) => {
+      actions.showNotification('Product rated successfully', 'success')
+      setProduct(res)
+    })
+  }
+
+  useEffect(() => {
+    if (!store.token) {
+      setCanVote(false)
+      return
+    }
+    if (product)
+      actions.checkIfUserCanRate(id).then((res) => setCanVote(res.can_rate))
+  }, [product, store.token])
 
   useEffect(() => {
     actions
@@ -61,9 +87,9 @@ const ProductDetails = () => {
           <Rating
             name='product-rating'
             value={rating}
-            onChange={(event, newValue) => setRating(newValue)}
+            onChange={handleRate}
             precision={0.5}
-            readOnly={JSON.stringify(store.user) === '{}'}
+            readOnly={!canVote}
           />
           <span className='me-1'>
             <strong>{product.rating}</strong> ({product.rating_count})
@@ -275,6 +301,7 @@ const ProductDetails = () => {
           product_id={product.id}
           isOpen={isOpen}
           onClose={closeModal}
+          product={product}
         />
       </div>
     </div>
