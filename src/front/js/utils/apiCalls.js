@@ -82,7 +82,7 @@ export async function createProduct(product, token) {
       return makeRequest(
         `/products/${createdProduct.id}/images`,
         'POST',
-        { image_url: img.url.toString(), order: index },
+        { image_url: img.secure_url.toString(), order: index },
         token
       )
     })
@@ -122,7 +122,6 @@ export async function getProductByID(id) {
 }
 
 export async function postShoppingCart(product_id, quantity, size_id, token) {
-  console.log('quantity', quantity)
   const response = await makeRequest(
     '/cart',
     'POST',
@@ -281,7 +280,7 @@ export async function updateAppImage(image, location, token) {
   const imageFromDB = await makeRequest(
     '/app/images',
     'POST',
-    { url: imageFromCloudinary.url.toString(), location },
+    { url: imageFromCloudinary.secure_url.toString(), location },
     token
   )
 
