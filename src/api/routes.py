@@ -116,11 +116,16 @@ def update_user():
     if not user:
         return jsonify({'message': 'User not found'}), 404
     data = request.json
-    hashed_password = bcrypt.hashpw(
-        data['password'].encode('utf-8'), bcrypt.gensalt())
+
+    if 'password' in data and data['password']:
+        hashed_password = bcrypt.hashpw(
+            data['password'].encode('utf-8'), bcrypt.gensalt())
+        user.password = hashed_password.decode('utf-8')
+
+
+    
     user.first_name = data.get('first_name', user.first_name)
     user.last_name = data.get('last_name', user.last_name)
-    user.password = hashed_password.decode('utf-8')
     user.email = data.get('email', user.email)
     user.phone = data.get('phone', user.phone)
     user.address = data.get('address', user.address)
