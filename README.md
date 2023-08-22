@@ -1,4 +1,4 @@
-# Vanguar Vesture e-commerce
+# Vanguard Vesture e-commerce
 
 Final project for the Full Stack Web Development Bootcamp at 4Geeks Academy.
 
