@@ -4,7 +4,6 @@ For routes that require auth must use `Authorizarion` header with this format: `
 
 All routes url start with `/api/`
 
-
 ## Table of contents
 
 - [Models](#models)
@@ -17,7 +16,6 @@ All routes url start with `/api/`
 - [Cart routes](#cart-routes)
 - [Types routes](#types-routes)
 - [Orders routes](#orders-routes)
-
 
 ## Models
 
@@ -1105,9 +1103,9 @@ If the product is already in the cart, the quantity will be updated.
 
 ### Responses
 
-> | http code | content-type       | response         |
-> | --------- | ------------------ | ---------------- |
-> | `200`     | `application/json` | `Array <Order>`  |
+> | http code | content-type       | response        |
+> | --------- | ------------------ | --------------- |
+> | `200`     | `application/json` | `Array <Order>` |
 
 </details>
 
@@ -1122,10 +1120,10 @@ If the product is already in the cart, the quantity will be updated.
 
 ### Responses
 
-> | http code | content-type       | response                            |
-> | --------- | ------------------ | ----------------------------------- |
-> | `200`     | `application/json` | `(Order object)`                    |
-> | `404`     | `application/json` | `{"message": "Order not found"}`    |
+> | http code | content-type       | response                         |
+> | --------- | ------------------ | -------------------------------- |
+> | `200`     | `application/json` | `(Order object)`                 |
+> | `404`     | `application/json` | `{"message": "Order not found"}` |
 
 </details>
 
@@ -1134,20 +1132,21 @@ If the product is already in the cart, the quantity will be updated.
     <code>PUT</code>
     <code><b>/orders/{int:order_id}/cancel</b></code>
     <code>
-        Cancels an order. If the order is not in 'in progress' status, it will not be cancelled.
-        If the order is cancelled, the stock of the products will be updated.
+        Cancels an order.
     </code>
 </summary>
+
+ If the order is not in 'in progress' status, it will not be cancelled. If the order is cancelled, the stock of the products will be updated.
 
 **Auth required** : YES
 
 ### Responses
 
-> | http code | content-type       | response                            |
-> | --------- | ------------------ | ----------------------------------- |
-> | `200`     | `application/json` | `(Order object)`                    |
-> | `404`     | `application/json` | `{"message": "Order not found"}`    |
-> | `400`     | `application/json` | `{"message": "Order cannot be canceled"}`    |
+> | http code | content-type       | response                                  |
+> | --------- | ------------------ | ----------------------------------------- |
+> | `200`     | `application/json` | `(Order object)`                          |
+> | `404`     | `application/json` | `{"message": "Order not found"}`          |
+> | `400`     | `application/json` | `{"message": "Order cannot be canceled"}` |
 
 </details>
 
@@ -1182,6 +1181,3 @@ If the product is already in the cart, the quantity will be updated.
 </details>
 
 <!-- End orders routes -->
-
-
-
