@@ -72,6 +72,7 @@ class Product(db.Model):
             'rating': self.calculate_rating(),
             'images': self.serialize_sorted_images(),
             'rating_count': len(self.users_ratings),
+            'deleted': self.deleted,
         }
     
     def serialize_rating(self):

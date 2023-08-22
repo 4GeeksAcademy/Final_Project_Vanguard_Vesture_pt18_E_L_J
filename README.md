@@ -1,4 +1,4 @@
-# Vanguar Vesture e-commerce
+# Vanguard Vesture e-commerce
 
 Final project for the Full Stack Web Development Bootcamp at 4Geeks Academy.
 
@@ -119,6 +119,11 @@ npm run start
 
 Live demo available at [Vanguard Vesture](https://sample-service-name-b95y.onrender.com/)
 
+You can use this sandbox account to test the payment system:
+
+- Email: sb-xsmhg27066186@personal.example.com
+- Password: IR3=ggA<
+
 ## Screenshots
 
 ### User Screenshots
@@ -173,3 +178,5 @@ We would like to express our gratitude to the following individuals and s, whose
 - Add customizable categories for products to expand the app's scope to other markets
 - Enhance filter system to include more options like size, color, brand, etc.
 - Add pagination to the product list
+- Add email notifications when a user makes a purchase
+- Add email notifications when an order status is updated

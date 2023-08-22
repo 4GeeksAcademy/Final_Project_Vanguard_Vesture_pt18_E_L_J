@@ -291,3 +291,23 @@ export async function getAppImages() {
   const response = await makeRequest('/app/images/')
   return response
 }
+
+export async function checkIfUserCanRate(product_id, token) {
+  const response = await makeRequest(
+    '/products/' + product_id + '/can-rate',
+    'GET',
+    null,
+    token
+  )
+  return response
+}
+
+export async function rateProduct(product_id, rating, token) {
+  const response = await makeRequest(
+    '/products/' + product_id + '/rating',
+    'POST',
+    { rating },
+    token
+  )
+  return response
+}

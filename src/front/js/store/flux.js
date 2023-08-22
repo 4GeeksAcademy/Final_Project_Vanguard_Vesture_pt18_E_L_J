@@ -325,6 +325,21 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       showNotification: async (message, type) => {
         setStore({ response: { message, type } })
+      },
+      checkIfUserCanRate: async (product_id) => {
+        const response = await api.checkIfUserCanRate(
+          product_id,
+          getStore().token
+        )
+        return response
+      },
+      rateProduct: async (product_id, rating) => {
+        const response = await api.rateProduct(
+          product_id,
+          rating,
+          getStore().token
+        )
+        return response
       }
     },
   }

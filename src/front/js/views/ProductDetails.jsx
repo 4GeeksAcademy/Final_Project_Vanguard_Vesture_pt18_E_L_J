@@ -13,8 +13,9 @@ const ProductDetails = () => {
   const [selectedSizeID, setSelectedSizeID] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [rating, setRating] = useState(0)
-  const { id } = useParams()
   const [isOpen, setOpen] = useState(false)
+  const [canVote, setCanVote] = useState(false)
+  const { id } = useParams()
   const navigate = useNavigate()
 
   const openModal = () => {
@@ -31,6 +32,31 @@ const ProductDetails = () => {
       actions.showNotification('Product deleted', 'success')
     })
   }
+
+  const handleRate = (event, newValue) => {
+    if (!store.token) {
+      actions.showNotification('You must be logged in to rate', 'danger')
+      return
+    }
+    if (!canVote) {
+      actions.showNotification('You have to buy a product to rate it', 'danger')
+      return
+    }
+
+    actions.rateProduct(id, newValue).then((res) => {
+      actions.showNotification('Product rated successfully', 'success')
+      setProduct(res)
+    })
+  }
+
+  useEffect(() => {
+    if (!store.token) {
+      setCanVote(false)
+      return
+    }
+    if (product)
+      actions.checkIfUserCanRate(id).then((res) => setCanVote(res.can_rate))
+  }, [product, store.token])
 
   useEffect(() => {
     actions
@@ -55,15 +81,22 @@ const ProductDetails = () => {
 
   return (
     <div className='container bg-white p-3 bg-white'>
-      <div className='row justify-content-between py-3'>
-        <h1 className='col-5 m-0'>{product.name}</h1>
-        <div className='col-5 d-flex flex-column align-items-end'>
+      <div className='row py-3'>
+        {product.deleted && (
+          <div className='col-12 text-danger text-center'>
+            <h3 className='my-3'>This product is not available anymore</h3>
+          </div>
+        )}
+
+        <h1 className='col-6 m-0'>{product.name}</h1>
+
+        <div className='col-6 d-flex flex-column align-items-end'>
           <Rating
             name='product-rating'
             value={rating}
-            onChange={(event, newValue) => setRating(newValue)}
+            onChange={handleRate}
             precision={0.5}
-            readOnly={JSON.stringify(store.user) === '{}'}
+            readOnly={!canVote}
           />
           <span className='me-1'>
             <strong>{product.rating}</strong> ({product.rating_count})
@@ -222,7 +255,7 @@ const ProductDetails = () => {
 
         {/* Buttons */}
         <div className='d-flex flex-wrap gap-2'>
-          {!store.user.is_admin && store.token && (
+          {!store.user.is_admin && store.token && !product.deleted && (
             <>
               <button
                 type='button'
@@ -275,6 +308,7 @@ const ProductDetails = () => {
           product_id={product.id}
           isOpen={isOpen}
           onClose={closeModal}
+          product={product}
         />
       </div>
     </div>

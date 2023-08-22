@@ -39,19 +39,20 @@ const Settings = () => {
   };
 
   return (
-    <div className="bg-white container-fluid pt-2">
-      <div style={{ heigth: "600px" }} className=" container mx-auto d-flex row justify-content-center mt-5">
-        <h1 className='pb-5'>Account Settings</h1>
-        <p className=' col-4 overflow-hidden'><strong>Email:</strong> {email}</p>
-        <p className=' col-3'><strong>First Name:</strong> {first_name}</p>
-        <p className=' col-3'><strong>Last Name:</strong> {last_name}</p>
-        <p className=' col-3'><strong>Phone:</strong> {phone}</p>
-        <p className=' col-3'><strong>Location:</strong> {location}</p>
-        <p className=' col-3'><strong>Address:</strong> {address}</p>
-        {!store.user.is_admin && <button className="btn btn-danger mt-3" onClick={changeModalDelete}>
+    <div className="bg-white py-4">
+      <div style={{ heigth: "600px" }} className=" container mx-auto row">
+        <h1 className='mb-3'>Account Settings</h1>
+        <p className='col-6 col-sm-4'><strong>First Name:</strong> {first_name}</p>
+        <p className='col-6 col-sm-4'><strong>Last Name:</strong> {last_name}</p>
+        <p className='col-12 col-sm-4 overflow-hidden'><strong>Email:</strong> {email}</p>
+        <p className='col-6 col-sm-4'><strong>Location:</strong> {location}</p>
+        <p className='col-12 col-sm-8'><strong>Address:</strong> {address}</p>
+        <p className='col-6 col-sm-3'><strong>Phone:</strong> {phone}</p>
+        {!store.user.is_admin && 
+        <button className="btn btn-danger mt-3 col-12" onClick={changeModalDelete}>
           Delete Account
         </button>}
-        <button style={{ maxHeight: "60px" }} className="btn bg-black mt-3 mb-5 text-white mx-auto col" onClick={openModal}>
+        <button style={{ maxHeight: "60px" }} className="btn bg-black mt-3 text-white mx-auto col-12" onClick={openModal}>
           Edit Account
         </button>
       </div>

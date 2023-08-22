@@ -13,3 +13,7 @@ body {
 #content > div {
     flex-grow: 1;
 }
+
+.css-dqr9h-MuiRating-label {
+    top: 4px;
+}
