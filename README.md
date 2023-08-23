@@ -117,7 +117,7 @@ npm run start
 
 ## Preview
 
-Live demo available at [Vanguard Vesture](https://sample-service-name-b95y.onrender.com/)
+Live demo available at [Vanguard Vesture](https://vanguard-vesture.onrender.com/)
 
 You can use this sandbox account to test the payment system:
 
